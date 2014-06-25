@@ -90,6 +90,7 @@
 
     <cargo.tomcat.major.version>7</cargo.tomcat.major.version> 
     <cargo.tomcat.full.version>7.0.54</cargo.tomcat.full.version>
+    <spring.version>3.2.7.RELEASE</spring.version> 
   </properties>
 
   <repositories>
@@ -107,7 +108,37 @@
 
   <dependencyManagement>
     <dependencies>
-      
+ 
+      <dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-web</artifactId>
+	<version>${spring.version}</version>
+      </dependency>
+
+      <dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-beans</artifactId>
+	<version>${spring.version}</version>
+      </dependency>
+
+      <dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-core</artifactId>
+	<version>${spring.version}</version>
+      </dependency>
+
+      <dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-context</artifactId>
+	<version>${spring.version}</version>
+      </dependency>
+
+      <dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-expression</artifactId>
+	<version>${spring.version}</version>
+      </dependency>
+     
       <!-- other predefined runtime scope versioned dependencies -->
       <dependency>
         <groupId>javax.servlet</groupId>
@@ -142,6 +173,7 @@
         <version>${junit.version}</version>
         <scope>test</scope>
       </dependency>
+
 
     </dependencies>
   </dependencyManagement>

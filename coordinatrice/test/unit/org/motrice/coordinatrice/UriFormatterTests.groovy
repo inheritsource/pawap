@@ -39,7 +39,7 @@ class UriFormatterTests {
   final static PROCESS_VER = 3
   final static ACTIVITY_NAME = 'Handläggning'
   final static LOCALE = 'sv'
-
+@Test()
   void testBasics() {
     def f = null
     f = new UriFormatter('')
@@ -62,6 +62,7 @@ class UriFormatterTests {
       'http://localhost:8080/site/Hej%25ForenkladDelgivningProcess03VersionHandl%C3%A4ggningActivitysvLocale'
   }
 
+@Test()
   void testALittleMore() {
     def f = null
     f = new UriFormatter('Hej%%%PProcess%VVersion%AActivity%LLocale')
@@ -77,6 +78,7 @@ class UriFormatterTests {
       'http://localhost:8080/site/ForenkladDelgivning//sv.html'
   }
 
+@Test()
   void testConditionals() {
     def f = null
     f = new UriFormatter('%H/%P%?A{/}%A/%L.html')
@@ -98,6 +100,7 @@ class UriFormatterTests {
       'http://localhost:8080/site/process-generic/doco.html?locale=ru'
   }
 
+@Test()
   void testMoreConditionals() {
     def f = null
     f = new UriFormatter('%?H{!"#¤%&/()=?+|<>;.-:_{|}')

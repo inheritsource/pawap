@@ -36,6 +36,7 @@ grails.project.source.level = 1.6
 //   run: [maxMemory:1024, minMemory:64, debug:false, maxPerm:256]
 //]
 
+// grails.project.dependency.resolver = "maven" // or ivy
 grails.war.resources = { stagingDir ->
   // Servlet JAR should not be included in the war, causes trouble
   // See: http://jira.grails.org/browse/GRAILS-9483
@@ -50,6 +51,7 @@ grails.project.dependency.resolution = {
     // excludes 'ehcache'
   }
   log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
+  // log "verbose" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
   checksums true // Whether to verify checksums on resolve
   legacyResolve false // whether to do a secondary resolve on plugin installation, not advised and here for backwards compatibility
 
@@ -81,32 +83,42 @@ grails.project.dependency.resolution = {
     runtime "postgresql:postgresql:9.2-1002.jdbc4"
 
     // Activiti dependencies
-    compile ("org.activiti:activiti-engine:5.14") {
+    // compile ("org.activiti:activiti-engine:5.14") {
+    compile ("org.activiti:activiti-engine:5.15.1") {
       excludes "livetribe-jsr223"
     }
-    runtime "org.activiti:activiti-bpmn-model:5.14"
-    runtime "org.activiti:activiti-bpmn-converter:5.14"
-    runtime "org.activiti:activiti-spring:5.14"
-    runtime "org.mybatis:mybatis:3.2.3"
-    runtime "joda-time:joda-time:2.2"
+    // runtime "org.activiti:activiti-bpmn-model:5.14"
+    runtime "org.activiti:activiti-bpmn-model:5.15.1"
+    // runtime "org.activiti:activiti-bpmn-converter:5.14"
+    runtime "org.activiti:activiti-bpmn-converter:5.15.1"
+    // runtime "org.activiti:activiti-spring:5.14"
+    runtime "org.activiti:activiti-spring:5.15.1"
+    runtime "org.mybatis:mybatis:3.2.5"
+    runtime "joda-time:joda-time:2.1"
   }
 
   plugins {
     //compile(':rest-client-builder:2.0.0') {
     //  export = false
     //}
-    runtime ":hibernate:$grailsVersion"
+    // runtime ":hibernate:$grailsVersion"
+    runtime ":hibernate:3.6.10.8"
     runtime ":jquery:1.8.3"
     runtime ":resources:1.2"
+
+
+    // compile ":webxml:1.4.1"
 
     // Uncomment these (or add new ones) to enable additional resources capabilities
     //runtime ":zipped-resources:1.0"
     //runtime ":cached-resources:1.0"
     //runtime ":yui-minify-resources:0.1.5"
 
-    build ":tomcat:$grailsVersion"
+    // build ":tomcat:7.0.54"
+    build ":tomcat:7.0.52.1"
+    //build ":tomcat:$grailsVersion"
 
-    runtime ":database-migration:1.3.2"
+    runtime ":database-migration:1.4.0"
 
     compile ':cache:1.0.1'
   }
