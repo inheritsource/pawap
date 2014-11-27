@@ -124,15 +124,45 @@ cp ${BUILD_DIR}/conf/repository.xml ${CONTAINER_ROOT}/${ESERVICE}/conf/
 ################################################################
 
 ##  use for KSERVICE and ESERVICE 
+
 echo "export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64" > ${CONTAINER_ROOT}/${ESERVICE}/bin/setenv.sh
 echo L4J_OPTS=\"-Dlog4j.configuration=file:\${CATALINA_BASE}/conf/log4j.xml\" >>  ${CONTAINER_ROOT}/${ESERVICE}/bin/setenv.sh
 echo JVM_OPTS=\"-server -Xmx4096m -Xms2048m -XX:PermSize=512m\" >>  ${CONTAINER_ROOT}/${ESERVICE}/bin/setenv.sh
 # echo JVM_OPTS=\"-server -Xmx2048m -Xms1024m -XX:PermSize=256m\" >>  ${CONTAINER_ROOT}/${ESERVICE}/bin/setenv.sh
 echo CATALINA_OPTS=\"\$CATALINA_OPTS -Dfile.encoding=UTF-8 \${JVM_OPTS} \${L4J_OPTS} -XX:+HeapDumpOnOutOfMemoryError\" >>  ${CONTAINER_ROOT}/${ESERVICE}/bin/setenv.sh
 echo export CATALINA_OPTS >>  ${CONTAINER_ROOT}/${ESERVICE}/bin/setenv.sh
+if [ "${MOTRICE_CONF}"  ] 
+then
+    echo "Using non default MOTRICE_CONF file:" 
+    echo "export MOTRICE_CONF=${MOTRICE_CONF}" 
+    echo "export MOTRICE_CONF=${MOTRICE_CONF}" >>  ${CONTAINER_ROOT}/${ESERVICE}/bin/setenv.sh
+fi    
+
+
+################################################################
+# change port on eservice tomcat
+################################################################
+if [ "$ESERVICE_PORT" = "8080" ] 
+then
+    echo "standard port used" 
+else 
+    let OFFSET=$ESERVICE_PORT-8080 
+    let PORT2=8009+${OFFSET}
+    let PORT3=8005+${OFFSET}
+    let PORT4=8443+${OFFSET}
+    echo "8080 is changed to ${ESERVICE_PORT}"
+    echo "8009 is changed to ${PORT2}"
+    echo "8005 is changed to ${PORT3}"
+    echo "8443 is changed to ${PORT4}"
+    mv  ${CONTAINER_ROOT}/${ESERVICE}/conf/server.xml  ${CONTAINER_ROOT}/${ESERVICE}/conf/server.xml.orig
+    sed -e "s/8080/${ESERVICE_PORT}/g" -e "s/8009/${PORT2}/g" -e "s/8005/${PORT3}/g" -e "s/8443/${PORT4}/g"  ${CONTAINER_ROOT}/${ESERVICE}/conf/server.xml.orig >  ${CONTAINER_ROOT}/${ESERVICE}/conf/server.xml
+fi 
 
 
 popd
+
+######
+
 ################################################################
 # Install opendj
 ################################################################
