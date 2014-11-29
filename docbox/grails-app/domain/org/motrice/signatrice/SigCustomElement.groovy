@@ -7,13 +7,20 @@ package org.motrice.signatrice
  * id attribute.
  */
 class SigCustomElement {
-  // Custom element name
+
+  /**
+   * Custom element name
+   */
   String elementName
 
-  // Name of the custom id attribute
+  /**
+   * Name of the custom id attribute
+   */
   String idAttrName
 
-  // The properties are read at startup.
+  /**
+   * The properties are read at startup.
+   */
   static mapping = {
     cache usage: 'read-only'
   }

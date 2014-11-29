@@ -7,10 +7,15 @@ import org.motrice.signatrice.cgi.GrpFault
  * A GrpFault wrapper.
  */
 class SigFaultObj {
-  // Fault status (FaultStatusType as String)
+
+  /**
+   * Fault status (FaultStatusType as String)
+   */
   String status
 
-  // Detailed description, almost no size constraint
+  /**
+   * Detailed description, almost no size constraint
+   */
   String details
 
   static mapping = {

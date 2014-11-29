@@ -4,7 +4,10 @@ package org.motrice.signatrice
  * Essentially an enumeration of progress states of a CGI request
  */
 class SigProgress {
-  // Name of the progress state
+
+  /**
+   * Name of the progress state
+   */
   String name
 
   static mapping = {

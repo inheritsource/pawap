@@ -7,22 +7,35 @@ import javax.xml.namespace.QName
  * Actually versions of the main service.
  */
 class SigService implements Comparable {
-  // The name of the service as a URL string
+
+  /**
+   * The name of the service as a URL string
+   */
   String wsdlLocation
 
-  // A user friendly alias name (alphanumeric)
+  /**
+   * A user friendly alias name (alphanumeric)
+   */
   String alias
 
-  // URI part of qualified name of the service
+  /**
+   * URI part of qualified name of the service
+   */
   String qNameUri
 
-  // Local part of qualified name of the service
+  /**
+   * Local part of qualified name of the service
+   */
   String qNameLocalPart
 
-  // Default policy
+  /**
+   * Default policy
+   */
   SigPolicy defaultPolicy
 
-  // Default display name
+  /**
+   * Default display name
+   */
   SigDisplayname defaultDisplayName
 
   static hasMany = [schemes: SigScheme]

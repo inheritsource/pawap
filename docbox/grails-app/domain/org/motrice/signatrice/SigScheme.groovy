@@ -4,17 +4,26 @@ package org.motrice.signatrice
  * A scheme provides the details for invoking a SigService.
  */
 class SigScheme implements Comparable {
-  // Name of this test case
+
+  /**
+   * Name of this scheme
+   */
   String name
 
-  // Creation timestamp
+  /**
+   * Creation timestamp
+   */
   Date dateCreated
 
-  // Display name (see CGI doco)
+  /**
+   * Display name (see CGI doco)
+   */
   SigDisplayname displayName
 
-  // Policy, also known as service ID
-  // Predefined policies for test only
+  /**
+   * Policy, also known as service ID
+   * Predefined policies for test only
+   */
   SigPolicy policy
 
   SortedSet results

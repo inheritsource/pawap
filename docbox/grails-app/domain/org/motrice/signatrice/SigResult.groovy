@@ -9,61 +9,93 @@ import java.util.concurrent.TimeUnit
  * Comparable is based on dateCreated.
  */
 class SigResult implements Comparable {
-  // Age window for collecting the result of a signature request.
+  /**
+   * Age window for collecting the result of a signature request.
+   */
   static final Long MIN_COLLECT_AGE_MILLIS = TimeUnit.SECONDS.toMillis(3)
   static final Long MAX_COLLECT_AGE_MILLIS = TimeUnit.SECONDS.toMillis(190)
 
-  // Window for inserting a signature after it has been obtained.
+  /**
+   * Window for inserting a signature after it has been obtained.
+   */
   static final Long MIN_FINISH_AGE_MILLIS = TimeUnit.SECONDS.toMillis(1)
   static final Long MAX_FINISH_AGE_MILLIS = TimeUnit.MINUTES.toMillis(30)
 
-  // The point in time when the log was created which is probably also when
-  // the test case was run.
-  // Used as the basis for sorting.
+  /**
+   * The point in time when the log was created which is probably also when
+   * the test case was run.
+   * Used as the basis for sorting.
+   */
   Date dateCreated
 
-  // Transaction id used in CGI requests
+  /**
+   * Transaction id used in CGI requests
+   */
   String transactionId
 
-  // Another reference to this transaction created by GPR
+  /**
+   * Another reference to this transaction created by GPR
+   */
   String orderRef
 
-  // A token that must be used when starting the BankID program
+  /**
+   * A token that must be used when starting the BankID program
+   */
   String autoStartToken
 
-  // The display name is required in spite of two other transaction identifiers
+  /**
+   * The display name is required in spite of two other transaction identifiers
+   */
   SigDisplayname displayName
 
-  // Policy, also known as service ID
-  // Predefined policies for test only
+  /**
+   * Policy, also known as service ID
+   * Predefined policies for test only
+   */
   SigPolicy policy
 
-  // Swedish personal identity number (12 digits)
-  // Limits signing to this person.
+  /**
+   * Swedish personal identity number (12 digits)
+   * Limits signing to this person.
+   */
   String personalIdNo
 
-  // Request status returned by the signing service
+  /**
+   * Request status returned by the signing service
+   */
   SigProgress progressStatus
 
-  // Fault status returned by the signing service, or null
+  /**
+   * Fault status returned by the signing service, or null
+   */
   SigFaultObj faultStatus
 
-  // Outcome of signature request: the signature
-  // Returned as String by CollectResponse. Probably Base64.
+  /**
+   * Outcome of signature request: the signature
+   * Returned as String by CollectResponse. Probably Base64.
+   */
   String signature
 
-  // Point in time when the signature was picked up and stored
+  /**
+   * Point in time when the signature was picked up and stored
+   */
   Date sigTstamp
 
-  // Original docboxRef of the document to be signed, if applicable.
+  /**
+   * Original docboxRef of the document to be signed, if applicable.
+   */
   String docboxRefIn
 
-  // Target docboxRef of the document after the signature was added, if applicable.
+  /**
+   * Target docboxRef of the document after the signature was added, if applicable.
+   */
   String docboxRefOut
 
-  // Conflict message if a signature has been acquired, but failed to
-  // add it to the document.
-  // Also indicates end of processing.
+  /**
+   * Conflict message if a signature has been acquired, but failed to
+   * add it to the document.
+   * Also indicates end of processing.
+   */
   String finishConflict
 
   static belongsTo = [scheme: SigScheme]

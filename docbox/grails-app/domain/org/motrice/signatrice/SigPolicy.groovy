@@ -5,7 +5,10 @@ package org.motrice.signatrice
  * There is a set of predefined service ids for test.
  */
 class SigPolicy implements Comparable {
-  // Policy identifier
+
+  /**
+   * Policy identifier
+   */
   String name
   
   static mapping = {
