@@ -4,7 +4,10 @@ package org.motrice.tdocbox
  * One of the HTTP verbs.
  */
 class TdbHttpVerb {
-  // The verb (GET, PUT, etc)
+
+  /**
+   * The verb (GET, PUT, etc)
+   */
   String verb
 
   static mapping = {

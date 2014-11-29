@@ -4,10 +4,15 @@ package org.motrice.tdocbox
  * The way to perform a method call.
  */
 class TdbMode {
-  // The name of the mode
+
+  /**
+   * The name of the mode
+   */
   String name
 
-  // A free text description of the mode
+  /**
+   * A free text description of the mode
+   */
   String description
 
   static mapping = {

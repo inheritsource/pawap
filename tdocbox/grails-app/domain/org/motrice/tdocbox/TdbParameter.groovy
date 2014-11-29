@@ -4,16 +4,25 @@ package org.motrice.tdocbox
  * A name-value pair used by a drill.
  */
 class TdbParameter implements Comparable {
-  // Parameter name
+
+  /**
+   * Parameter name
+   */
   String name
 
-  // Parameter value
+  /**
+   * Parameter value
+   */
   String value
 
-  // Should the parameter value be Base64-encoded?
+  /**
+   * Should the parameter value be Base64-encoded?
+   */
   Boolean b64Encode
 
-  // Parameter description
+  /**
+   * Parameter description
+   */
   String description
 
   static belongsTo = [drill: TdbDrill]

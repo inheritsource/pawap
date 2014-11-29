@@ -1,22 +1,38 @@
 package org.motrice.tdocbox
 
+/**
+ * A drill is a test case.
+ */
 class TdbDrill implements Comparable {
-  // Name of this drill
+
+  /**
+   * Name of this drill
+   */
   String name
 
-  // HTTP verb
+  /**
+   * HTTP verb
+   */
   TdbHttpVerb verb
 
-  // Invocation mode
+  /**
+   * Invocation mode
+   */
   TdbMode mode
 
-  // The method to invoke
+  /**
+   * The method to invoke
+   */
   TdbMethod method
 
-  // Optional query string
+  /**
+   * Optional query string
+   */
   String queryString
 
-  // Optional delay before execution (seconds)
+  /**
+   * Optional delay before execution (seconds)
+   */
   Float delay
 
   SortedSet parameters

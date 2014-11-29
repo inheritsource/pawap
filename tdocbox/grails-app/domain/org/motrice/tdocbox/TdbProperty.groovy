@@ -5,10 +5,15 @@ package org.motrice.tdocbox
  * A few basic properties are created by BootStrap.
  */
 class TdbProperty {
-  // The name of the property
+
+  /**
+   * The name of the property
+   */
   String name
 
-  // The value of the property
+  /**
+   * The value of the property
+   */
   String value
 
   static mapping = {
