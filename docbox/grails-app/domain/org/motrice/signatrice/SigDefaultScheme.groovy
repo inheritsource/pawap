@@ -4,10 +4,15 @@ package org.motrice.signatrice
  * A singleton defining the current default scheme or null.
  */
 class SigDefaultScheme {
-  // The default scheme
+
+  /**
+   * The default scheme
+   */
   SigScheme defaultScheme
 
-  // Last update. Must be nullable to be automatic.
+  /**
+   * Last update. Must be nullable to be automatic.
+   */
   Date lastUpdated
 
   static mapping = {

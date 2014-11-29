@@ -4,13 +4,20 @@ package org.motrice.signatrice
  * A prepared test case.
  */
 class SigTestcase {
-  // Name of this test case
+
+  /**
+   * Name of this test case
+   */
   String name
 
-  // Personal id number (Swedish 12-digit personnummer)
+  /**
+   * Personal id number (Swedish 12-digit personnummer)
+   */
   String personalIdNo
 
-  // Text to be signed
+  /**
+   * Text to be signed
+   */
   String userVisibleText
 
   static belongsTo = [scheme: SigScheme]

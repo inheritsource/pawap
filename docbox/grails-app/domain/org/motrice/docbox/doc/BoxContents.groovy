@@ -26,29 +26,45 @@ package org.motrice.docbox.doc
 import java.security.MessageDigest
 
 /**
- * Contents of a DocBox document
+ * Contents of a DocBox document.
  */
 class BoxContents {
-  // A name distinguishing this from other contents of the same step
+
+  /**
+   * A name distinguishing this from other contents of the same step
+   */
   String name
 
-  // Format: xml, text or binary
+  /**
+   * Format: xml, text or binary
+   */
   String format
 
-  // Auto timestamping
+  /**
+   * Auto timestamping
+   */
   Date dateCreated
   Date lastUpdated
 
-  // Checksum for signing purposes
+  /**
+   * Checksum for signing purposes
+   */
   String checksum
 
-  // Size: number of characters in text, number of bytes in stream
+  /**
+   * Size: number of characters in text, number of bytes in stream
+   */
   Integer size
 
-  // Content is either text or binary
-  // Text content
+  /**
+   * Content is either text or binary.
+   * This is text content.
+   */
   String text
-  // Binary content (PostgreSQL bytea limited to 1 GB)
+
+  /**
+   * Binary content (PostgreSQL bytea limited to 1 GB)
+   */
   byte[] stream
 
   static belongsTo = [step: BoxDocStep]

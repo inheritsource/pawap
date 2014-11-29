@@ -27,23 +27,36 @@ package org.motrice.docbox.doc
  * A form converted to PDF
  */
 class BoxDocStep implements Comparable {
-  // Date format for metadata
+
+  /**
+   * Date format for metadata
+   */
   private static final DFMT = 'yyyy-MM-dd HH:mm'
 
-  // Step number
+  /**
+   * Step number
+   */
   Integer step
 
-  // The document number of the BoxDoc with step number added
+  /**
+   * The document number of the BoxDoc with step number added
+   */
   String docNo
 
-  // Auto timestamping
+  /**
+   * Auto timestamping
+   */
   Date dateCreated
   Date lastUpdated
 
-  // A unique reference to this document
+  /**
+   * A unique reference to this document
+   */
   String docboxRef
 
-  // Number of signatures present in the document
+  /**
+   * Number of signatures present in the document
+   */
   Integer signCount
 
   static mapping = {

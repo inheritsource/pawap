@@ -5,10 +5,15 @@ package org.motrice.signatrice
  * Also known as a property in their terminology.
  */
 class SigAttribute implements Comparable {
-  // Name (usually dot notation)
+
+  /**
+   * Name (usually dot notation)
+   */
   String name
 
-  // Value
+  /**
+   * Value
+   */
   String value
 
   static belongsTo = [result: SigResult]

@@ -30,16 +30,23 @@ package org.motrice.docbox.doc
  * When shown to a user it is converted to a readable format
  */
 class BoxDoc implements Comparable {
-  // The id on display format, called the document number
+
+  /**
+   * The id on display format, called the document number
+   */
   String docNo
 
-  // Auto timestamping
+  /**
+   * Auto timestamping
+   */
   Date dateCreated
   Date lastUpdated
 
-  // The uuid identifying the original form
-  // There may be several versions of the document so the uuid does not
-  // uniquely identify a document
+  /**
+   * The uuid identifying the original form
+   * There may be several versions of the document so the uuid does not
+   * uniquely identify a document
+   */
   String formDataUuid
 
   static mapping = {

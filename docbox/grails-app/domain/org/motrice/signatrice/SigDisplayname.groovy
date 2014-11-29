@@ -4,7 +4,10 @@ package org.motrice.signatrice
  * A name by which the application introduces itself to the user
  */
 class SigDisplayname {
-  // The display name
+
+  /**
+   * The display name
+   */
   String name
 
   static mapping = {

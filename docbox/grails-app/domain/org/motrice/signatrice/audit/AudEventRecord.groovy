@@ -6,37 +6,56 @@ package org.motrice.signatrice.audit
  * All properties except event type and description are optional.
  */
 class AudEventRecord {
-  // Predefined event type, one of the three-character strings below.
+
+  /**
+   * Predefined event type, one of the three-character strings below.
+   */
   String eventType
 
-  // Auto timestamping. Must be nullable to be automatic.
+  /**
+   * Auto timestamping. Must be nullable to be automatic.
+   */
   Date dateCreated
 
-  // Does the event represent a failure?
-  // The value must be false to signify failure.
-  // All other values, including null, are taken as non-failure.
+  /**
+   * Does the event represent a failure?
+   * The value must be false to signify failure.
+   * All other values, including null, are taken as non-failure.
+   */
   Boolean failure
 
-  // A string identifying the object being operated upon by the event.
-  // This property should help distinguish event instances.
+  /**
+   * A string identifying the object being operated upon by the event.
+   * This property should help distinguish event instances.
+   */
   String label
 
-  // Short free text describing the nature of the event.
-  // This property refers to the type of event, not instances.
+  /**
+   * Short free text describing the nature of the event.
+   * This property refers to the type of event, not instances.
+   */
   String description
 
-  // The user causing this event.
-  // A readable rendition of the user name or identity.
-  // 'user' is an SQL reserved word.
+  /**
+   * The user causing this event.
+   * A readable rendition of the user name or identity.
+   * 'user' is an SQL reserved word.
+   */
   String userRef
 
-  // Remote IP address
+  /**
+   * Remote IP address
+   */
   String remoteAddr
 
-  // Details about the event, except stack trace. Free text, no size limit.
+  /**
+   * Details about the event, except stack trace. Free text, no size limit.
+   */
   String details
 
-  // Stack trace, if relevant.
+  /**
+   * Stack trace, if relevant.
+   */
   String stackTrace
 
   static mapping = {
