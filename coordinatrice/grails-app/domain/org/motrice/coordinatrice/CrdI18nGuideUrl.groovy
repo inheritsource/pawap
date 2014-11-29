@@ -32,20 +32,26 @@ package org.motrice.coordinatrice
  */
 class CrdI18nGuideUrl implements Comparable {
 
-  // Process definition key (id minus version, spaces and odd characters)
+  /**
+   * Process definition key (id minus version, spaces and odd characters)
+   */
   String procdefKey
 
-  // Process version number.
-  // Makes it possible to have more than one pattern for a process definition.
-  // The version number indicates the first version for which this definition
-  // should be used.
-  // For instance, if procdefVer is 4 it means that the definition is valid for
-  // process definitions version 4 and higher.
-  // The first process version is 1 but the default value here is 0.
-  // Just a convention for knowing if it has been set, no change in logic.
+  /**
+   * Process version number.
+   * Makes it possible to have more than one pattern for a process definition.
+   * The version number indicates the first version for which this definition
+   * should be used.
+   * For instance, if procdefVer is 4 it means that the definition is valid for
+   * process definitions version 4 and higher.
+   * The first process version is 1 but the default value here is 0.
+   * Just a convention for knowing if it has been set, no change in logic.
+   */
   Integer procdefVer
 
-  // The URL pattern
+  /**
+   * The URL pattern
+   */
   String pattern
 
   static mapping = {
@@ -53,8 +59,11 @@ class CrdI18nGuideUrl implements Comparable {
     // This seems to have no effect in Grails 2.2.4
     procdefVer defaultValue: 0
   }
-  // A lot of indexes are justified because this is a read-mostly structure.
-  // Simplify read at the expense of inserts and updates.
+
+  /**
+   * A lot of indexes are justified because this is a read-mostly structure.
+   * Simplify read at the expense of inserts and updates.
+   */
   static constraints = {
     procdefKey maxSize: 255
     procdefVer min: 0, unique: ['procdefKey']

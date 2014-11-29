@@ -35,23 +35,36 @@ package org.motrice.migratrice
  * The same structure is used for both cases.
  */
 class MigPackage implements Comparable {
-  // Name of the site where the package was generated
+
+  /**
+   * Name of the site where the package was generated
+   */
   String siteName
 
-  // Name of the package.
-  // The name need not be unique in itself, only with site name and timestamp.
+  /**
+   * Name of the package.
+   * The name need not be unique in itself, only with site name and timestamp.
+   */
   String packageName
 
-  // Format of the package
+  /**
+   * Format of the package
+   */
   String packageFormat
 
-  // Site timestamp, the point in time when the package was generated
+  /**
+   * Site timestamp, the point in time when the package was generated
+   */
   Date siteTstamp
 
-  // Was the package generated here?
+  /**
+   * Was the package generated here?
+   */
   Boolean originLocal
 
-  // Auto timestamping, the point in time when the package was created here.
+  /**
+   * Auto timestamping, the point in time when the package was created here.
+   */
   Date dateCreated
 
   SortedSet formdefs

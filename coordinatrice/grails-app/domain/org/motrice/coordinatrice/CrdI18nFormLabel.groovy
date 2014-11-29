@@ -30,23 +30,31 @@ import org.motrice.coordinatrice.pxd.PxdFormdef
  */
 class CrdI18nFormLabel implements Comparable {
 
-  // Form definition id, really a foreign key to PxdFormdef.
-  // Motrice conventions is not to declare foreign keys over module boundaries.
+  /**
+   * Form definition id, really a foreign key to PxdFormdef.
+   * Motrice conventions is not to declare foreign keys over module boundaries.
+   */
   Long formdefId
 
-  // Form definition version number.
-  // Makes it possible to have more than one label for a given form.
-  // The version number indicates the first version for which this label
-  // should be used.
-  // For instance, if formdefVer is 4 it means that the definition is valid for
-  // form definitions version 4 and higher.
-  // The first process version is 1 but the default value here is 0.
+  /**
+   * Form definition version number.
+   * Makes it possible to have more than one label for a given form.
+   * The version number indicates the first version for which this label
+   * should be used.
+   * For instance, if formdefVer is 4 it means that the definition is valid for
+   * form definitions version 4 and higher.
+   * The first process version is 1 but the default value here is 0.
+   */
   Integer formdefVer
 
-  // Locale string
+  /**
+   * Locale string
+   */
   String locale
 
-  // The form definition label
+  /**
+   * The form definition label
+   */
   String label
 
   static mapping = {
@@ -55,8 +63,11 @@ class CrdI18nFormLabel implements Comparable {
     formdefVer defaultValue: 0
   }
   static transients = ['formdef']
-  // A lot of indexes are justified because this is a read-mostly structure.
-  // Simplify read at the expense of inserts and updates.
+
+  /**
+   * A lot of indexes are justified because this is a read-mostly structure.
+   * Simplify read at the expense of inserts and updates.
+   */
   static constraints = {
     formdefVer min: 0, unique: ['formdefId', 'locale']
     locale maxSize: 24, unique: ['formdefId', 'formdefVer']

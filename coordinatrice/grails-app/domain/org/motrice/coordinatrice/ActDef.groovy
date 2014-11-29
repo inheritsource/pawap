@@ -31,20 +31,30 @@ import org.motrice.coordinatrice.MtfActivityFormDefinition
  */
 class ActDef implements Comparable {
 
-  // Usually far from a uuid, a string that identifies this activity
-  // definition in the process definition.
+  /**
+   * Usually far from a uuid, a string that identifies this activity
+   * definition in the process definition.
+   */
   String uuid
 
-  // The name of this activity as used in human communication
+  /**
+   * The name of this activity as used in human communication
+   */
   String name
 
-  // The type of this task. I.e. we assume the activity is a task.
+  /**
+   * The type of this task. I.e. we assume the activity is a task.
+   */
   TaskType type
 
-  // Documentation?
+  /**
+   * Documentation?
+   */
   String documentation
 
-  // Not a database object, never to be persisted
+  /**
+   * Not a database object, never to be persisted
+   */
   static mapWith = 'none'
   static belongsTo = [process: Procdef]
   static transients = ['activityFormdef', 'fullId', 'userTask']

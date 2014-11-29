@@ -28,13 +28,19 @@ package org.motrice.coordinatrice
  * Coordinatrice does not assume any meaning in category names.
  */
 class CrdProcCategory {
-  // Category name
+  /**
+   * Category name
+   */
   String name
 
-  // Free text description of the category
+  /**
+   * Free text description of the category
+   */
   String description
 
-  // Automatic timestamping
+  /**
+   * Automatic timestamping
+   */
   Date dateCreated
   Date lastUpdated
 

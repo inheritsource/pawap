@@ -29,42 +29,67 @@ package org.motrice.migratrice
  * of the path (a String).
  */
 class MigFormdefVer implements Comparable {
-  // Ref: the database id the form definition had in the originating system.
-  // A new database id is generated for the snapshot, but the ref is vital
-  // for resolving relationships within a package.
+
+  /**
+   * Ref: the database id the form definition had in the originating system.
+   * A new database id is generated for the snapshot, but the ref is vital
+   * for resolving relationships within a package.
+   */
   Long ref
 
-  // Identify the owning Formdef
+  /**
+   * Identify the owning Formdef
+   */
   Long formref
 
-  // Original creation timestamp. Updated omitted, always same as created.
+  /**
+   * Original creation timestamp. Updated omitted, always same as created.
+   */
   Date created
 
-  // App name (an app many have any number of forms)
+  /**
+   * App name (an app many have any number of forms)
+   */
   String app
 
-  // Form name
+  /**
+   * Form name
+   */
   String form
 
-  // Path identifying this form definition version
+  /**
+   * Path identifying this form definition version
+   */
   String path
 
-  // Form version number
+  /**
+   * Form version number
+   */
   Integer verno
 
-  // Draft number, null if the version is published
+  /**
+   * Draft number, null if the version is published
+   */
   Integer draft
 
-  // Is this version published? An explicit flag in addition to the version number.
+  /**
+   * Is this version published? An explicit flag in addition to the version number.
+   */
   Boolean published
 
-  // Form title
+  /**
+   * Form title
+   */
   String title
 
-  // Form description
+  /**
+   * Form description
+   */
   String description
 
-  // Form language
+  /**
+   * Form language
+   */
   String language
 
   static belongsTo = [formdef: MigFormdef, pack: MigPackage]

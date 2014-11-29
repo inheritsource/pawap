@@ -30,22 +30,32 @@ import org.activiti.engine.impl.persistence.entity.SuspensionState
  */
 class CrdProcdefState {
 
-  // Message resource
+  /**
+   * Message resource
+   */
   String res
 
-  // Default message
+  /**
+   * Default message
+   */
   String defaultMessage
 
   // The following fields are for the sake of other modules.
   // In Coordinatrice they may be computed.
 
-  // State to assign to the process in the Activiti process engine
+  /**
+   * State to assign to the process in the Activiti process engine
+   */
   Long activitiState
 
-  // Can the process be modified, connections and/or process definition?
+  /**
+   * Can the process be modified, connections and/or process definition?
+   */
   Boolean editable
 
-  // May the process be started (new instance generated)?
+  /**
+   * May the process be started (new instance generated)?
+   */
   Integer startable
 
   static mapping = {
