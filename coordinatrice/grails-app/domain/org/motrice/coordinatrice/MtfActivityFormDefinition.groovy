@@ -33,10 +33,14 @@ class MtfActivityFormDefinition {
 
   String formConnectionKey
 
-  // If the connection involves an activity, store the activity name here
+  /**
+   * If the connection involves an activity, store the activity name here
+   */
   String formConnectionLabel
 
-  // If the connection is a form (PxdFormdefVer), store its id here
+  /**
+   * If the connection is a form (PxdFormdefVer), store its id here
+   */
   Long formdefId
 
   static mapping = {

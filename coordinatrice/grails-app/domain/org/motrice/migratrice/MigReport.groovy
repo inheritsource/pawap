@@ -29,12 +29,17 @@ package org.motrice.migratrice
  * Use MigPackage.createReport in most cases.
  */
 class MigReport implements Comparable {
-  // The point in time when the package was created.
-  // Used as the basis for sorting.
+
+  /**
+   * The point in time when the package was created.
+   * Used as the basis for sorting.
+   */
   Date tstamp
 
-  // The report body
-  // In PostgreSQL there is practically no upper size limit
+  /**
+   * The report body.
+   * In PostgreSQL there is practically no upper size limit
+   */
   String body
 
   static belongsTo = [pkg: MigPackage]

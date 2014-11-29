@@ -28,10 +28,14 @@ package org.motrice.coordinatrice
  */
 class MtfFormType {
 
-  // Descriptive label
+  /**
+   * Descriptive label
+   */
   String label
 
-  // Spring bean managing this form type. Not used by Coordinatrice.
+  /**
+   * Spring bean managing this form type. Not used by Coordinatrice.
+   */
   String formHandlerBean
 
   static mapping = {

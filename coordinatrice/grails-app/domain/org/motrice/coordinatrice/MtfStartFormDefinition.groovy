@@ -33,14 +33,18 @@ class MtfStartFormDefinition implements Comparable {
 
   String formConnectionKey
 
-  // If the connection is a form (PxdFormdefVer), store its id here
+  /**
+   * If the connection is a form (PxdFormdefVer), store its id here
+   */
   Long formdefId
 
   String procdefId
 
   String userDataXpath
 
-  // Transient property, the procdef identified by procdefId
+  /**
+   * Transient property, the procdef identified by procdefId
+   */
   Procdef tmpProcdef
 
   static mapping = {

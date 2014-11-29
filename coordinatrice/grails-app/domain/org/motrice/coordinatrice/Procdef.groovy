@@ -35,53 +35,75 @@ import org.activiti.engine.repository.Deployment
 class Procdef implements Comparable {
   def grailsApplication
 
-  // This is not literally a uuid, but a string that uniquely identifies this
-  // process definition
-  // The name "id" is avoided because it has a special default meaning in Grails
+  /**
+   * This is not literally a uuid, but a string that uniquely identifies this
+   * process definition
+   * The name "id" is avoided because it has a special default meaning in Grails
+   */
   String uuid
 
-  // Identifier common to all versions of this process definition
-  // Almost as the name, but special characters removed
+  /**
+   * Identifier common to all versions of this process definition
+   * Almost as the name, but special characters removed
+   */
   String key
 
-  // Version of this process definition
-  // In Activiti the first version is 1
-  // The name "version" is avoided because it has a special default meaning in
-  // Grails
+  /**
+   * Version of this process definition
+   * In Activiti the first version is 1
+   * The name "version" is avoided because it has a special default meaning in
+   * Grails
+   */
   Integer vno
 
-  // State of this process definition
-  // Valid values are Active and Suspended
+  /**
+   * State of this process definition
+   * Valid values are Active and Suspended
+   */
   CrdProcdefState state
 
-  // The name of this process definition as used in human communication.
-  // Weird, but the name may be empty, so we also introduce the transient property
-  // nameOrKey to cover those cases.
+  /**
+   * The name of this process definition as used in human communication.
+   * Weird, but the name may be empty, so we also introduce the transient property
+   * nameOrKey to cover those cases.
+   */
   String name
 
-  // The "category" attribute in Activiti process definitions
+  /**
+   * The "category" attribute in Activiti process definitions
+   */
   CrdProcCategory category
 
-  // Text describing this process definition
+  /**
+   * Text describing this process definition
+   */
   String description
 
-  // Resource name: name of XML process definition (in table act_ge_bytearray).
-  // Use RepositoryService.getResourceAsStream(deploymentId, resourceName)
-  // to access
+  /**
+   * Resource name: name of XML process definition (in table act_ge_bytearray).
+   * Use RepositoryService.getResourceAsStream(deploymentId, resourceName)
+   * to access
+   */
   String resourceName
 
-  // Diagram resource name: name of process definition image.
-  // Usage same as resourceName, but may be null.
+  /**
+   * Diagram resource name: name of process definition image.
+   * Usage same as resourceName, but may be null.
+   */
   String diagramResourceName
 
-  // Deployment, a concept taken directly from Activiti
-  // A unit containing this process definition and possibly others
+  /**
+   * Deployment, a concept taken directly from Activiti
+   * A unit containing this process definition and possibly others
+   */
   Deployment deployment
 
   SortedSet activities
   SortedSet startForms
 
-  // Not a database object, never to be persisted
+  /**
+  * Not a database object, never to be persisted
+  */
   static mapWith = 'none'
   static belongsTo = [persisted: CrdProcdef]
   static hasMany = [activities: ActDef]

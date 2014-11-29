@@ -30,27 +30,42 @@ package org.motrice.migratrice
  * Most of the fields refer to data from the originating Motrice site.
  */
 class MigFormdef implements Comparable {
-  // Ref: the database id the form definition had in the originating system.
-  // A new database id is generated for the package, but the ref is vital
-  // for resolving relationships within a package.
+
+  /**
+   * Ref: the database id the form definition had in the originating system.
+   * A new database id is generated for the package, but the ref is vital
+   * for resolving relationships within a package.
+   */
   Long ref
 
-  // Original creation timestamp
+  /**
+   * Original creation timestamp
+   */
   Date created
 
-  // Original last updated timestamp
+  /**
+   * Original last updated timestamp
+   */
   Date updated
 
-  // App name (an app may have any number of forms)
+  /**
+   * App name (an app may have any number of forms)
+   */
   String app
 
-  // Form name
+  /**
+   * Form name
+   */
   String form
 
-  // Uuid keeping together all parts of the form definition
+  /**
+   * Uuid keeping together all parts of the form definition
+   */
   String uuid
 
-  // The current draft at the time the package was generated
+  /**
+   * The current draft at the time the package was generated
+   */
   String currentDraft
 
   SortedSet versions

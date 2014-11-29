@@ -29,10 +29,14 @@ package org.motrice.coordinatrice
  */
 class TaskType {
 
-  // Message resource
+  /**
+   * Message resource
+   */
   String res
 
-  // Default message
+  /**
+   * Default message
+   */
   String defaultMessage
 
   static mapping = {
