@@ -2,18 +2,28 @@ package org.motrice.tdocbox
 
 /**
  * The outcome of running a drill.
+ * All drills in a suite add to the same case.
  */
 class TdbCase implements Comparable {
-  // Creation timestamp
+
+  /**
+   * Creation timestamp
+   */
   Date timeStamp
 
-  // Originating suite
+  /**
+   * Originating suite
+   */
   TdbSuite suite
 
-  // Exception message if the case crashed.
+  /**
+   * Exception message if the case crashed.
+   */
   String exception
 
-  // Display url, if any
+  /**
+   * Display url, if any
+   */
   String displayUrl
 
   SortedSet items

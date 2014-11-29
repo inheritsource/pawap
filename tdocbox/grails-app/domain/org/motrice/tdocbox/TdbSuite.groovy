@@ -4,14 +4,21 @@ package org.motrice.tdocbox
  * A sequence of Drills.
  */
 class TdbSuite implements Comparable {
-  // The name of the suite.
+
+  /**
+   * The name of the suite.
+   */
   String name
 
-  // A free text description of the suite.
+  /**
+   * A free text description of the suite.
+   */
   String description
 
-  // If the suite ends with a display method, generate a link
-  // to the chained suite.
+  /**
+   * If the suite ends with a display method, generate a link
+   * to the chained suite.
+   */
   TdbSuite chainedSuite
 
   SortedSet drills

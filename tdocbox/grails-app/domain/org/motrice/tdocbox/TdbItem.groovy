@@ -7,20 +7,31 @@ import java.security.MessageDigest
  * Mainly name-value.
  */
 class TdbItem implements Comparable {
-  // Item name
+
+  /**
+   * Item name
+   */
   String name
 
-  // Item type, binary or text.
-  // Binary if true, otherwise text (including null).
+  /**
+   * Item type, binary or text.
+   * Binary if true, otherwise text (including null).
+   */
   Boolean binaryFlag
 
-  // Text value
+  /**
+   * Text value
+   */
   String text
 
-  // Binary value
+  /**
+   * Binary value
+   */
   byte[] bytes
 
-  // SHA-256 checksum, currently only used for binary contents
+  /**
+   * SHA-256 checksum, currently only used for binary contents
+   */
   String checksum
 
   static mapping = {

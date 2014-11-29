@@ -7,10 +7,15 @@ package org.motrice.tdocbox
  * The categories are referred to as "rest method" and "display method".
  */
 class TdbMethod {
-  // Method URL without prefix and separating slash, but with optional placeholders
+
+  /**
+   * Method URL without prefix and separating slash, but with optional placeholders
+   */
   String urlPattern
 
-  // Description of the method
+  /**
+   * Description of the method
+   */
   String description
 
   static mapping = {
