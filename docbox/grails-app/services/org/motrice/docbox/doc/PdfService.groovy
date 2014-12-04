@@ -104,10 +104,8 @@ class PdfService {
 
   /**
    * Create a DocBook equivalent of the form
-   * SIDE EFFECT: A new PxdItem containing DocBook XML is attached
+   * SIDE EFFECT: A new BoxContents containing DocBook XML is attached
    * to form data
-   * Also copies any external pxdItems into this form data
-   * (Main example is form logo)
    * RETURN a map containing DocBook and RDF contents, with the following keys:
    * docbook: BoxContents with DocBook XML
    * rdf: BoxContents with RDF (metadata) XML fragment
@@ -150,8 +148,8 @@ class PdfService {
   }
 
   /**
-   * Convert a DocBook XML PxdItem, generating a PDF PxdItem
-   * Add the new Pdf PxdItem to the data
+   * Convert a DocBook XML PxdItem, generating PDF BoxContents.
+   * Add the new Pdf BoxContents to the data.
    * Return the new contents or throw a ServiceException on failure
    * Throwing a RuntimeException will roll back the transaction
    */
@@ -166,12 +164,13 @@ class PdfService {
     storeBoxContents(docContents.docbook, processor.tempDir)
     storeBoxContents(docContents.rdf, processor.tempDir)
 
-    // Copy all pxdItems to the temp directory defined by the processor
-    // Attachments
+    // Copy the contents of all pxdItems to files in the temp directory
+    // defined by the processor.
+    // 1. Attachments:
     docData.auxItems.each {pxdItem ->
       storePxdItem(pxdItem, processor.tempDir, 'attachment')
     }
-    // Fixed items
+    // 2. Fixed items:
     docData.fixedItems.each {pxdItem ->
       storePxdItem(pxdItem, processor.tempDir, 'fixed item')
     }
@@ -266,7 +265,8 @@ class PdfService {
   }
 
   /**
-   * Store pxdItem content in the temp directory
+   * Store pxdItem content in a temp directory in the local file system.
+   * The text or stream of the pxdItem is copied into a file.
    */
   private storePxdItem(PxdItem pxdItem, File tempDir, String comment) {
     // Do not store anything with a slash in the path
