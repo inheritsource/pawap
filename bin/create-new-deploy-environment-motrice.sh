@@ -133,9 +133,24 @@ echo CATALINA_OPTS=\"\$CATALINA_OPTS -Dfile.encoding=UTF-8 \${JVM_OPTS} \${L4J_O
 echo export CATALINA_OPTS >>  ${CONTAINER_ROOT}/${ESERVICE}/bin/setenv.sh
 if [ "${MOTRICE_CONF}"  ] 
 then
-    echo "Using non default MOTRICE_CONF file:" 
-    echo "export MOTRICE_CONF=${MOTRICE_CONF}" 
-    echo "export MOTRICE_CONF=${MOTRICE_CONF}" >>  ${CONTAINER_ROOT}/${ESERVICE}/bin/setenv.sh
+    # check if proper file name 
+    SUFFIX=`basename ${MOTRICE_CONF} | cut -d . -f 2 `
+    if [ "${SUFFIX}" = "properties"  ]
+    then
+        echo "Using non default MOTRICE_CONF file:" 
+        echo "export MOTRICE_CONF=${MOTRICE_CONF}" 
+        echo "export MOTRICE_CONF=${MOTRICE_CONF}" >>  ${CONTAINER_ROOT}/${ESERVICE}/bin/setenv.sh
+    else 
+        echo "${MOTRICE_CONF} must have extension properties" 
+        exit 1 
+    fi 
+fi    
+
+if [ "${MOTRICE_HOME}"  ] 
+then
+    echo "Using non default MOTRICE_HOME :" 
+    echo "export MOTRICE_HOME=${MOTRICE_HOME}" 
+    echo "export MOTRICE_HOME=${MOTRICE_HOME}" >>  ${CONTAINER_ROOT}/${ESERVICE}/bin/setenv.sh
 fi    
 
 
@@ -150,12 +165,16 @@ else
     let PORT2=8009+${OFFSET}
     let PORT3=8005+${OFFSET}
     let PORT4=8443+${OFFSET}
+    # let PORT5=1099+${OFFSET}
     echo "8080 is changed to ${ESERVICE_PORT}"
     echo "8009 is changed to ${PORT2}"
     echo "8005 is changed to ${PORT3}"
     echo "8443 is changed to ${PORT4}"
+    # echo "1099 is changed to ${PORT5}"
     mv  ${CONTAINER_ROOT}/${ESERVICE}/conf/server.xml  ${CONTAINER_ROOT}/${ESERVICE}/conf/server.xml.orig
     sed -e "s/8080/${ESERVICE_PORT}/g" -e "s/8009/${PORT2}/g" -e "s/8005/${PORT3}/g" -e "s/8443/${PORT4}/g"  ${CONTAINER_ROOT}/${ESERVICE}/conf/server.xml.orig >  ${CONTAINER_ROOT}/${ESERVICE}/conf/server.xml
+    # mv  ${CONTAINER_ROOT}/${ESERVICE}/webapps/cms/WEB-INF/web.xml  ${CONTAINER_ROOT}/${ESERVICE}/webapps/cms/WEB-INF/web.xml.orig
+    # sed -e "s/1099/${PORT5}/g" ${CONTAINER_ROOT}/${ESERVICE}/webapps/cms/WEB-INF/web.xml.orig > ${CONTAINER_ROOT}/${ESERVICE}/webapps/cms/WEB-INF/web.xml 
 fi 
 
 
