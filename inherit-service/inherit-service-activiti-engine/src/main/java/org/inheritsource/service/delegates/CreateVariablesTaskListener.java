@@ -80,7 +80,7 @@ public class CreateVariablesTaskListener implements TaskListener {
 			OrbeonService service = new OrbeonService();
 
 			HashMap<String, String> variableMap = service.getVariableMap(
-					dataUri, 2);
+					dataUri, 3);
 			log.info("data: " + variableMap);
 
 			for (Map.Entry<String, String> entry : variableMap.entrySet()) {

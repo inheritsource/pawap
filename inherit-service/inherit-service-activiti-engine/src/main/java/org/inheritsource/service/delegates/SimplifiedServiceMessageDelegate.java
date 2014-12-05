@@ -46,13 +46,13 @@ public class SimplifiedServiceMessageDelegate implements JavaDelegate,
 			.getLogger(SimplifiedServiceMessageDelegate.class);
 
 	public static String PROC_VAR_RECIPIENT_USER_ID = "recipientUserId";
+	public static String PROC_VAR_RECIPIENT_USER_EMAIL = "recipientEmail";
 	public static String PROC_VAR_SERVICE_DOC_URI = "serviceDocUri";
 
 	public static String ACT_VAR_MESSAGE_TEXT = "emailMessageText";
 	public static String ACT_VAR_SUBJECT = "emailSubject";
 
 	public void execute(DelegateExecution execution) throws Exception {
-		TaskFormService service = (TaskFormService) context.getBean("engine");
                 try {
 		log.info("SimplifiedServiceMessageDelegate called from "
 				+ execution.getCurrentActivityName() + " in process "
@@ -70,6 +70,9 @@ public class SimplifiedServiceMessageDelegate implements JavaDelegate,
 					+ PROC_VAR_RECIPIENT_USER_ID
 					+ "is expected to have a value");
 		}
+                String recipientEmail = (String) execution.getEngineServices()
+                                .getRuntimeService()
+                                .getVariable(execution.getId(), PROC_VAR_RECIPIENT_USER_EMAIL);
 
 		Properties props = ConfigUtil.getConfigProperties();
 
@@ -121,6 +124,31 @@ public class SimplifiedServiceMessageDelegate implements JavaDelegate,
 		log.info("siteUri:{}", siteUri);
 		log.info("inbox:{}", inbox);
 
+                log.info("recipientEmail to: {}",  recipientEmail ) ; 
+                if (recipientEmail != null ) {  
+			try {
+                                // TODO clean this up 
+                                // temporary fix to make the Inkomstanmalan demo work
+                                messageSubject="Signering" ; 
+                                messageText="Du har ett dokument att signera. Logga in och följ länken " ;
+                                if ((siteUri != null) && (inbox != null)) {
+                                     messageText = messageText + " " + siteUri + "/" + inbox;
+                                }
+                                to = recipientEmail ; 
+				SendMail.send(to, from, messageSubject, messageText,
+						SMTPSERVER, smtpPort, authMecanisms, username, password);
+			} catch (Exception e) {
+				log.error(e.toString());
+
+			}
+		return;
+                }
+
+		if (context == null ) {
+			log.error("context is null, failed to get service ");
+			return;
+                }
+		TaskFormService service = (TaskFormService) context.getBean("engine");
 		if (service == null) {
 			log.error("failed to get service, unable to determine emailadress ");
 			return;

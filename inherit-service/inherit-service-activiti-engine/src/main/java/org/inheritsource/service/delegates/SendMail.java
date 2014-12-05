@@ -36,7 +36,11 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.Authenticator ; 
-
+/**
+ * Sendmail 
+ * help class to send emails
+ * 
+ */
 public class SendMail {
 
 	public static final Logger log = LoggerFactory.getLogger(SendMail.class);
@@ -44,10 +48,15 @@ public class SendMail {
 	private static final Pattern rfc2822 = Pattern
 			.compile("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$");
 
+/**
+ * @param to  the receiver 
+ * @param from the sender 
+ * 
+ */
 	protected static void send(String to, String from, String messageSubject,
 			String messageText, String SMTPSERVER, int smtpPort,
 			String authMecanisms, final String username, final String password) {
-		log.info("to: " + to);
+		log.info("to: " + to); 
 		// check email address
 		// might like to replace this with EmailValidator from apache.commons
 		if (!rfc2822.matcher(to).matches()) {

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="inkomstanmalan_barnomsorg" name="Inkomstanmälan barnomsorg" isExecutable="true">
+    <startEvent id="startevent1" name="Start" activiti:initiator="initiator">
+      <extensionElements>
+        <activiti:formProperty id="startevent1_section1_bolagstyp" type="string" required="true"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_section_14_control_53" type="string" default="email1@se.se"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_section_14_control_17" type="string" default="195204151517"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_section_52_control_62" type="string" default="195204151517"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_section_52_control_56" type="string" default="email2@se.se"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_section_14_control_67" type="string" default="false"></activiti:formProperty>
+      </extensionElements>
+    </startEvent>
+    <sequenceFlow id="flow24" sourceRef="startevent1" targetRef="usertaskSignStartform">
+      <extensionElements>
+        <activiti:executionListener event="take" class="org.inheritsource.service.delegates.CreateVariablesFlowListener"></activiti:executionListener>
+      </extensionElements>
+    </sequenceFlow>
+    <userTask id="usertaskSignStartform" name="Signera ansökan (Vårdnadshavare)" activiti:assignee="${motriceStartFormAssignee}"></userTask>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow25" sourceRef="usertaskSignStartform" targetRef="exclusivegateway1"></sequenceFlow>
+    <scriptTask id="scripttask1" name="Skapa användare och skicka mail " scriptFormat="groovy" activiti:autoStoreVariables="false">
+      <script>import org.inheritsource.service.identity.IdentityServiceMalmoImpl  ;
+import org.inheritsource.service.common.domain.UserInfo;
+import org.inheritsource.taskform.engine.persistence.TaskFormDb;
+
+println("Hello world!"); 
+println("motriceStartFormAssignee =" + motriceStartFormAssignee) ; 
+println("email 1 : startevent1_section_14_control_53 = " + startevent1_section_14_control_53 ) ; 
+println("personnummer1:     startevent1_section_14_control_17" +  startevent1_section_14_control_17 ) ; 
+println("email2 :startevent1_section_52_control_62 =" + startevent1_section_52_control_62 ) ;
+println("personnummer2: startevent1_section_52_control_56 = "+  startevent1_section_52_control_56 ) ; 
+
+def recipientSerial1=startevent1_section_14_control_17;
+def recipientEmail1=startevent1_section_14_control_53;
+def recipientSerial2=startevent1_section_52_control_56;
+def recipientEmail2=startevent1_section_52_control_62;
+def recipientEmail ; 
+
+IdentityServiceMalmoImpl idService = new IdentityServiceMalmoImpl()  ;
+idService.setTaskFormDb( new TaskFormDb() ) ; 
+
+UserInfo ui = null ; 
+if (idService != null) {
+    ui = idService.getUserBySerial(recipientSerial1, "") ;
+} 
+if ( ui != null ) {
+     println("ui.getUuid()  = " + ui.getUuid()  ) ; 
+     // motriceStartFormAssignee has already signed the document
+     // check if this is the same 
+     if ( ui.getUuid().compareTo(motriceStartFormAssignee)==0) {
+        // same 
+        println("same") ; 
+        println("motriceStartFormAssignee = "+ motriceStartFormAssignee ) ; 
+        ui = idService.getUserBySerial(recipientSerial2, "") ;
+        recipientEmail = recipientEmail2 ; 
+     } else 
+     {
+        println("not same") ; 
+       recipientEmail = recipientEmail1 ;
+     }
+        
+
+     if ( ui != null ) {
+         def recipientUserId = ui.getUuid()  ; 
+         println("recipientUserId = " + recipientUserId )
+         execution.setVariable("recipientUserId", recipientUserId ) ;
+         execution.setVariable("recipientEmail" , recipientEmail  ) ; 
+     }
+} else 
+{ 
+     execution.setVariable("recipientUserId", "admin" ) ;
+}</script>
+    </scriptTask>
+    <sequenceFlow id="flow26" sourceRef="exclusivegateway1" targetRef="scripttask1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${startevent1_section_14_control_67=="false"}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="usertask1" name="Signera Ansökan (Samhörig)" activiti:candidateUsers="${recipientUserId}"></userTask>
+    <sequenceFlow id="flow27" sourceRef="scripttask1" targetRef="servicetask1"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow28" sourceRef="usertask1" targetRef="exclusivegateway2"></sequenceFlow>
+    <sequenceFlow id="flow29" sourceRef="exclusivegateway1" targetRef="exclusivegateway2"></sequenceFlow>
+    <userTask id="usertask2" name="Beslut" activiti:candidateUsers="admin" activiti:candidateGroups="Handlaggare"></userTask>
+    <sequenceFlow id="flow30" sourceRef="exclusivegateway2" targetRef="usertask2"></sequenceFlow>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <sequenceFlow id="flow31" sourceRef="usertask2" targetRef="endevent1"></sequenceFlow>
+    <serviceTask id="servicetask1" name="Service Task" activiti:class="org.inheritsource.service.delegates.SimplifiedServiceMessageDelegate"></serviceTask>
+    <sequenceFlow id="flow32" sourceRef="servicetask1" targetRef="usertask1"></sequenceFlow>
+    <textAnnotation id="textannotation1">
+      <text>Inkomstanmälan barnomsorg	</text>
+    </textAnnotation>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_inkomstanmalanbarnomsorg">
+    <bpmndi:BPMNPlane bpmnElement="inkomstanmalanbarnomsorg" id="BPMNPlane_inkomstanmalanbarnomsorg">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="100.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertaskSignStartform" id="BPMNShape_usertaskSignStartform">
+        <omgdc:Bounds height="55.0" width="105.0" x="180.0" y="140.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="330.0" y="148.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="scripttask1" id="BPMNShape_scripttask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="381.0" y="51.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask1" id="BPMNShape_usertask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="670.0" y="51.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="800.0" y="58.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask2" id="BPMNShape_usertask2">
+        <omgdc:Bounds height="55.0" width="105.0" x="920.0" y="51.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="1110.0" y="61.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask1" id="BPMNShape_servicetask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="530.0" y="51.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation1" id="BPMNShape_textannotation1">
+        <omgdc:Bounds height="50.0" width="100.0" x="110.0" y="90.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow24" id="BPMNEdge_flow24">
+        <omgdi:waypoint x="135.0" y="167.0"></omgdi:waypoint>
+        <omgdi:waypoint x="180.0" y="167.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow25" id="BPMNEdge_flow25">
+        <omgdi:waypoint x="285.0" y="167.0"></omgdi:waypoint>
+        <omgdi:waypoint x="330.0" y="168.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow26" id="BPMNEdge_flow26">
+        <omgdi:waypoint x="350.0" y="148.0"></omgdi:waypoint>
+        <omgdi:waypoint x="350.0" y="79.0"></omgdi:waypoint>
+        <omgdi:waypoint x="381.0" y="78.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow27" id="BPMNEdge_flow27">
+        <omgdi:waypoint x="486.0" y="78.0"></omgdi:waypoint>
+        <omgdi:waypoint x="530.0" y="78.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow28" id="BPMNEdge_flow28">
+        <omgdi:waypoint x="775.0" y="78.0"></omgdi:waypoint>
+        <omgdi:waypoint x="800.0" y="78.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow29" id="BPMNEdge_flow29">
+        <omgdi:waypoint x="370.0" y="168.0"></omgdi:waypoint>
+        <omgdi:waypoint x="819.0" y="168.0"></omgdi:waypoint>
+        <omgdi:waypoint x="820.0" y="98.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow30" id="BPMNEdge_flow30">
+        <omgdi:waypoint x="840.0" y="78.0"></omgdi:waypoint>
+        <omgdi:waypoint x="920.0" y="78.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow31" id="BPMNEdge_flow31">
+        <omgdi:waypoint x="1025.0" y="78.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1110.0" y="78.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow32" id="BPMNEdge_flow32">
+        <omgdi:waypoint x="635.0" y="78.0"></omgdi:waypoint>
+        <omgdi:waypoint x="670.0" y="78.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

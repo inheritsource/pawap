@@ -81,17 +81,23 @@ public class CreateVariablesFlowListener implements ExecutionListener {
 				OrbeonService service = new OrbeonService();
 
 				HashMap<String, String> variableMap = service.getVariableMap(
-						dataUri, 2);
+						dataUri, 3); 
 				log.info(          "data: " + variableMap);
 
 				for (Map.Entry<String, String> entry : variableMap.entrySet()) {
 					log.info(          "Key : " + entry.getKey() + " Value : "
 							+ entry.getValue());
-					String newVariableName = activityId + "_" + entry.getKey();
+					String newVariableNameUnfiltered = activityId + "_" + entry.getKey();
 					// temporary solution to get the type of the
 					// variable from the orbeon form.
 					// Use the name of the field.
 					// Only long implemented so far
+
+                                        // regexp to remove some unwanted characters
+                                        String regex = "[^a-zA-Z0-9_]"; //
+                                        String newVariableName = newVariableNameUnfiltered.replaceAll(
+                                                "-", "_").replaceAll(regex, "");
+
 
 					String typeDescription = "_long";
 					int indexFirst = newVariableName.length()

@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +63,7 @@ import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
 
 /**
  * Hello world!
@@ -199,6 +201,21 @@ public class OrbeonService {
 		return response;
 	}
 
+
+	public String getFormData2(String uri ) {
+		
+		// get form data except for pawap-activities element
+                // failed to get orbeon document with many sections with getFormData
+                // so this was created. 
+                // TODO : check why  
+		String response = parseXPathExpr(uri,
+				"//*");
+		System.out.println("response: " + response);
+
+		return response;
+	}
+
+	
 	@SuppressWarnings("unused")
 	private String callGetAndCatchRE(String uri) {
 		String result = null;
@@ -237,7 +254,7 @@ public class OrbeonService {
 
 		HashMap<String, String> variableMap = new HashMap<String, String>();
 
-		String inputForm = getFormData(uri);
+		String inputForm = getFormData2(uri);
 
 		// convert String into InputStream
 		InputStream is = new ByteArrayInputStream(inputForm.getBytes());
@@ -273,7 +290,9 @@ public class OrbeonService {
 								fullVariableName = str;
 							}
 						}
-						variableMap.put(fullVariableName, elementValue);
+						String filtfullVariableName = fullVariableName.replaceFirst(
+								"form_", "");
+						variableMap.put(filtfullVariableName, elementValue);
 					}
 					if (xmlLevel > xmlTargetLevel) {
 						log.warn("This xml form seems to have more levels than expected.");
@@ -298,6 +317,9 @@ public class OrbeonService {
 
 	}
 
+	
+
+	
 
 	public static void main(String[] args) {
 		System.out.println("Hello World!");
@@ -328,16 +350,39 @@ public class OrbeonService {
 		// "scriptprocess/scriptprocess--v002_01",
 		// "d32f9984-dd67-4e52-9c09-99c004c8650b",
 		// "//section-1/control-3"));
-		int xmlTargetLevel = 2;
-		String formPath = "scriptprocess/scriptprocess--v002_01" ; 
-		String dataUuid ="d32f9984-dd67-4e52-9c09-99c004c8650b" ; 
-		String dataUri = service.persistenceApiBaseUrl + formPath + "/data/" + dataUuid
-				+ "/data.xml";
+		
+		int xmlTargetLevel = 3;
+		//String formPath = "scriptprocess/scriptprocess--v002_01" ; 
+		// String dataUuid ="d32f9984-dd67-4e52-9c09-99c004c8650b" ; 
+		// String dataUri = service.persistenceApiBaseUrl + formPath + "/data/" + dataUuid
+		//		+ "/data.xml";
+//		String dataUri = "http://localhost:8080/exist/rest/db/orbeon-pe/fr/foerskola/inkomstanmalanbarnomsorg--v001/data/c2709591-d799-4728-8a22-2b7c5374da31/data.xml";
+		String dataUri = "http://localhost:8080/exist/rest/db/orbeon-pe/fr/foerskola/inkomstanmalanbarnomsorg--v001/data/e5bea1fc-4c95-43c8-8446-c5714b767818/data.xml" ;
 		System.out
 				.println("data: "
 						+ service.getVariableMap(dataUri
 								,
 								xmlTargetLevel));
+		//String test = service.parseXPathExpr(dataUri , "/form/section-1/control-13") ;
+		//String test = service.parseXPathExpr(dataUri , "/form/section-52/control-62") ;
+		String test = service.parseXPathExpr(dataUri , "//*/control-53") ;
+
+		System.out
+		.println("test  = " + test  ) ; 
+		
+	
+		
+		
+		// int xmlTargetLevel = 2;
+		//String formPath = "scriptprocess/scriptprocess--v002_01" ; 
+		//String dataUuid ="d32f9984-dd67-4e52-9c09-99c004c8650b" ; 
+		// dataUri = service.persistenceApiBaseUrl + formPath + "/data/" + dataUuid
+		//		+ "/data.xml";
+		//System.out
+		//		.println("data: "
+		//				+ service.getVariableMap(dataUri
+		//						,
+		//						xmlTargetLevel));
 
 		// http://localhost:8080/orbeon/fr/test/fdelgivning-ta-del-beslut--v004/edit/8c7d8218-a4b2-4713-9a7d-4abfa0484c74?orbeon-embeddable=true&pawap-mode=load-deps
 		// System.out.println("data: "
