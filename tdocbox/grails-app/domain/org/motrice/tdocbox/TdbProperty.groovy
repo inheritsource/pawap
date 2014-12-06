@@ -25,7 +25,7 @@ class TdbProperty {
   }
 
   static createProperty(String name, String value) {
-    if (!TdbProperty.findAllByName(name)) {
+    if (!TdbProperty.findByName(name)) {
       new TdbProperty(name: name, value: value).save(failOnError: true)
     }
   }
@@ -46,8 +46,18 @@ class TdbProperty {
     def app = new TdbProperty().domainClass.grailsApplication
     def props = app.config.tdocbox.toProperties()
     createFromConfig(DOCBOX_REST_PREFIX, props)
+    def dbProps = app.config.dataSource.toProperties()
+    def dbUrlProperty = TdbProperty.findByName(DATASOURCE_URL)
+    def dbUrlStr = dbProps.getProperty('url')
+    if (dbUrlProperty) {
+      dbUrlProperty.value = dbUrlStr
+    } else {
+      dbUrlProperty = new TdbProperty(name: DATASOURCE_URL, value: dbUrlStr)
+    }
+    dbUrlProperty.save(failOnError: true)
   }
 
   static final DOCBOX_REST_PREFIX = 'docbox.rest.prefix'
+  static final DATASOURCE_URL = 'tdocbox.dataSource.url'
 
 }

@@ -32,10 +32,11 @@ import com.itextpdf.text.pdf.PdfString
 
 /**
  * Read/write a Pdf dictionary containing form data.
- * Construct from elements by using Groovy speciality
- * [checksum: '...', docNo: '...' etc] as PdfSignatureDict
- * or
- * PdfSignatureDict variable = [map as above]
+ * The current implementation contains two main structures: a form instance
+ * and a cross-reference.
+ * Both are XML.
+ * There is also a format id and a creation timestamp.
+ * TODO: The cross reference assumes the form has a single language.
  */
 class PdfFormdataDict {
   // Dictionary keys
