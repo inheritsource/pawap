@@ -89,7 +89,8 @@ class RestDocController {
   }
 
   /**
-   * Get original form data given an Orbeon form data uuid.
+   * Get original form data given a docboxRef.
+   * NOTE that the parameter is a docboxRef in this case, different from the PUT method.
    */
   def docboxOrbeonData(String uuid) {
     if (log.debugEnabled) log.debug "FORMDATA: ${Util.clean(params)}, ${request.forwardURI}"
@@ -101,23 +102,20 @@ class RestDocController {
     def docStep = docService.findStepByRef(docboxref)
     if (docStep) {
 	pdfContents = docService.findPdfContents(docStep)
-	if (!pdfContents) msg = "PDF contents not found: ${docboxref}"
+	if (!pdfContents) msg = "DOCBOX.120|PDF contents not found: ${docboxref}"
     } else {
-      msg = "Document step not found: ${docboxref}"
+      msg = "DOCBOX.110|Document not found: ${docboxref}"
     }
 
     if (msg) {
       render(status: status, contentType: 'text/plain', text: msg)
     } else {
-      def xmlInput = signdocService.findFormdata(pdfContents)
-      if (xmlInput) {
-	render(status: 200, contentType: 'text/json') {
-	  formData = xmlInput.formData
-	  formXref = xmlInput.formXref
-	  timestamp = xmlInput.timestamp
-	}
+      def formdataMap = signdocService.formdataMap(pdfContents)
+      if (formdataMap) {
+	response.status = 200
+	render formdataMap as JSON
       } else {
-	render(status: 409, contentType: 'text/plain', text: "Form data not found in ${docboxref}")
+	render(status: 409, contentType: 'text/plain', text: "DOCBOX.119|Form data not found in ${docboxref}")
       }
     }
   }

@@ -85,6 +85,26 @@ class SigndocService {
   // In the project this file lives in docbox/web-app/xsd/
   static final XMLDSIG_SCHEMA = '/xsd/xmldsig-core-schema.xsd'
 
+  /**
+   * Format key in form data map.
+   */
+  static final String FORMAT_KEY = 'META_FORMAT'
+
+  /**
+   * Title key in form data map.
+   */
+  static final String TITLE_KEY = 'META_TITLE'
+
+  /**
+   * Timestamp key in form data map.
+   */
+  static final String TSTAMP_KEY = 'META_TSTAMP'
+
+  /**
+   * Uuid key in form data map.
+   */
+  static final String UUID_KEY = 'META_UUID'
+
   private static final log = LogFactory.getLog(this)
   static final String PDF_FORMAT_PAT = 'http://motrice.org/spec/docbox/%s/pdf'
 
@@ -381,6 +401,47 @@ class SigndocService {
     //if (log.debugEnabled) log.debug "findAllSignatures >> ${sigList.collect {it.size()}} chars"
     if (log.debugEnabled) log.debug "findFormdata >> ${formData}"
     return formData
+  }
+
+  /**
+   * Convert a form instance to a map.
+   * Key: Control name (String).
+   * Value: Input value (String).
+   * The map contains a few metadata entries (String -> String),
+   * "META_TITLE" -> The form title.
+   * "META_FORMAT" -> Format specification.
+   * "META_UUID" -> The form data uuid.
+   * "META_TSTAMP" -> Creation timestamp.
+   * The java.text.SimpleDateFormat format string of the creation timestamp
+   * is "yyyy-MM-dd'T'HH:mm:ss'X'" when rendered as JSON.
+   */
+  Map formdataMap(BoxContents pdfContents) {
+    if (log.debugEnabled) log.debug "formdataMap << ${pdfContents}"
+    def output = null
+    PdfFormdataDict input = findFormdata(pdfContents)
+    if (input) {
+      String tstamp = input?.timestamp?.format('yyyy-MM-dd HH:mm:ss')
+      output = [:]
+      output[FORMAT_KEY] = input.format
+      output[TSTAMP_KEY] = tstamp
+      def form = new XmlSlurper().parseText(input.formData)
+      form.'*'.each {section ->
+	def controls = []
+	section.'*'.each {control ->
+	  String controlName = control.name()
+	  controls.add controlName
+	  output[controlName] = control.text()
+	}
+	output["SECTION|${section.name()}"] = controls
+      }
+
+      def xref = new XmlSlurper().parseText(input.formXref)
+      output[TITLE_KEY] = xref.@title.text()
+      output[UUID_KEY] = xref.@uuid.text()
+    }
+
+    if (log.debugEnabled) log.debug "formdataMap >> ${output}"
+    return output
   }
 
   /**
