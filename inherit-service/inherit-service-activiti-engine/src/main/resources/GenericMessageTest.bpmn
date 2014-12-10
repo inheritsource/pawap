@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="generic_message_test" name="Generic Message Test" isExecutable="true">
+    <startEvent id="startevent1" name="Start" activiti:initiator="initiator">
+      <extensionElements>
+        <activiti:formProperty id="recipientEmail" type="string" default="noreply@motrice.se" required="true"></activiti:formProperty>
+        <activiti:formProperty id="from" type="string" default="noreply@motrice.se"></activiti:formProperty>
+        <activiti:formProperty id="messageText" type="string" default="messageText"></activiti:formProperty>
+        <activiti:formProperty id="messageSubject" type="string" default="messageSubject"></activiti:formProperty>
+      </extensionElements>
+    </startEvent>
+    <scriptTask id="scripttask1" name="Blandade uppgifter  " scriptFormat="groovy" activiti:autoStoreVariables="false">
+      <script>println("Hello world!"); 
+println("recipientEmail "+ recipientEmail); 
+println("from "+ from); 
+println("messageText " + messageText); 
+println("messageSubject " + messageSubject); 
+    </script>
+    </scriptTask>
+    <sequenceFlow id="flow27" sourceRef="scripttask1" targetRef="servicetask1"></sequenceFlow>
+    <serviceTask id="servicetask1" name="Service Task" activiti:class="org.inheritsource.service.delegates.GenericServiceMessageDelegate">
+      <extensionElements>
+        <activiti:field name="recipientEmail">
+          <activiti:expression>${recipientEmail}</activiti:expression>
+        </activiti:field>
+        <activiti:field name="from">
+          <activiti:expression>${"from@motrice.se"}</activiti:expression>
+        </activiti:field>
+        <activiti:field name="messageText">
+          <activiti:expression>${messageText}</activiti:expression>
+        </activiti:field>
+        <activiti:field name="messageSubject">
+          <activiti:expression>${messageSubject}</activiti:expression>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow28" sourceRef="startevent1" targetRef="scripttask1"></sequenceFlow>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <sequenceFlow id="flow29" sourceRef="servicetask1" targetRef="endevent1"></sequenceFlow>
+    <textAnnotation id="textannotation1">
+      <text>Test Generic Message	</text>
+    </textAnnotation>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_generic_message_test">
+    <bpmndi:BPMNPlane bpmnElement="generic_message_test" id="BPMNPlane_generic_message_test">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="100.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="scripttask1" id="BPMNShape_scripttask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="389.0" y="140.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask1" id="BPMNShape_servicetask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="570.0" y="140.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="720.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation1" id="BPMNShape_textannotation1">
+        <omgdc:Bounds height="50.0" width="100.0" x="110.0" y="90.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow27" id="BPMNEdge_flow27">
+        <omgdi:waypoint x="494.0" y="167.0"></omgdi:waypoint>
+        <omgdi:waypoint x="570.0" y="167.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow28" id="BPMNEdge_flow28">
+        <omgdi:waypoint x="135.0" y="167.0"></omgdi:waypoint>
+        <omgdi:waypoint x="389.0" y="167.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow29" id="BPMNEdge_flow29">
+        <omgdi:waypoint x="675.0" y="167.0"></omgdi:waypoint>
+        <omgdi:waypoint x="720.0" y="167.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
