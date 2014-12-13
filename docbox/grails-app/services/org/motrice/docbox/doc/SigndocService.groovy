@@ -91,6 +91,11 @@ class SigndocService {
   static final String FORMAT_KEY = 'META_FORMAT'
 
   /**
+   * Formdef key in form data map.
+   */
+  static final String FORMDEF_KEY = 'META_FORMDEF'
+
+  /**
    * Title key in form data map.
    */
   static final String TITLE_KEY = 'META_TITLE'
@@ -307,7 +312,7 @@ class SigndocService {
     // Add a template where the signature itself is stored as "additional information"
     def templ = canvas.createTemplate(20.0f, 20.0f)
     templ.rectangle(templ.boundingBox)
-    def info = new PdfFormdataDict(docData.dataItem.text, formXref)
+    def info = new PdfFormdataDict(docData.dataItem.formDef, docData.dataItem.text, formXref)
     def additional = new PdfDictionary()
     def docboxKey = grailsApplication.config.docbox.dictionary.key
     additional.put(new PdfName(docboxKey), info.toDictionary(pdfFormatName()))
@@ -418,13 +423,14 @@ class SigndocService {
   Map formdataMap(BoxContents pdfContents) {
     if (log.debugEnabled) log.debug "formdataMap << ${pdfContents}"
     def output = null
-    PdfFormdataDict input = findFormdata(pdfContents)
-    if (input) {
-      String tstamp = input?.timestamp?.format('yyyy-MM-dd HH:mm:ss')
+    PdfFormdataDict dict = findFormdata(pdfContents)
+    if (dict) {
+      String tstamp = dict?.timestamp?.format('yyyy-MM-dd HH:mm:ss')
       output = [:]
-      output[FORMAT_KEY] = input.format
+      output[FORMAT_KEY] = dict.format
       output[TSTAMP_KEY] = tstamp
-      def form = new XmlSlurper().parseText(input.formData)
+      if (dict.formDef) output[FORMDEF_KEY] = dict.formDef
+      def form = new XmlSlurper().parseText(dict.formData)
       form.'*'.each {section ->
 	def controls = []
 	section.'*'.each {control ->
@@ -435,7 +441,7 @@ class SigndocService {
 	output["SECTION|${section.name()}"] = controls
       }
 
-      def xref = new XmlSlurper().parseText(input.formXref)
+      def xref = new XmlSlurper().parseText(dict.formXref)
       output[TITLE_KEY] = xref.@title.text()
       output[UUID_KEY] = xref.@uuid.text()
     }

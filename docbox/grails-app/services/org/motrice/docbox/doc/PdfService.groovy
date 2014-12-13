@@ -63,12 +63,12 @@ class PdfService {
     def dataItem = PxdItem.findWhere(uuid: uuid, format: 'xml', instance: true)
     if (dataItem) {
       docData = new DocData(uuid, dataItem)
-      String formDef = docData.dataItem.formDef
+      String formDefPath = docData.dataItem.formDef
       // Find attachments
       docData.auxItems = PxdItem.findAllWhere(uuid: docData.uuid, format: 'binary',
       instance: true)
-      docData.formDef = PxdItem.findWhere(formDef: formDef, instance: false)
-      docData.formMeta = PxdFormdefVer.findWhere(path: formDef)
+      docData.formDef = PxdItem.findWhere(formDef: formDefPath, instance: false)
+      docData.formMeta = PxdFormdefVer.findWhere(path: formDefPath)
       // Find fixed items, part of the form definition
       docData.fixedItems =
 	PxdItem.findAllWhere(uuid: docData.formMeta.formdef.uuid, instance: false)
