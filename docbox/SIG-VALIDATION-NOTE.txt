@@ -1,0 +1,40 @@
+The issue:
+==========
+With JDK higher than 7u21 XML DSIG validation would fail.
+javax.xml.crypto.URIReferenceException:
+com.sun.org.apache.xml.internal.security.utils.resolver.ResourceResolverException:
+Cannot resolve element with ID bidSignedData
+==========
+
+The theory is explained in this closed (Won't Fix) bug report:
+https://bugs.openjdk.java.net/browse/JDK-8017171
+
+Advice how to do this:
+https://community.oracle.com/thread/1528104?start=0&tstart=0
+
+Do I use a URIDereferencer for this?
+Yes, but it is not the only way. An easier way is to use a schema validating parser which will populate your Document with knowledge of the ID attributes (defined in your schema). Or you can use the DOMValidateContext.setIdAttributeNS method to register these elements before validating the XMLSignature, for example:
+
+validateContext.setIdAttributeNS(myElement, namespaceURI, "myID");
+
+public void setIdAttributeNS(org.w3c.dom.Element element,
+                    String namespaceURI,
+                    String localName)
+Registers the element's attribute specified by the namespace URI and local name to be of type ID. The attribute must have a non-empty value.
+This implementation uses an internal HashMap to map the attribute's value to the specified element.
+
+Parameters:
+element - the element
+namespaceURI - the namespace URI of the attribute (specify null if not applicable)
+localName - the local name of the attribute
+Throws:
+IllegalArgumentException - if localName is not an attribute of the specified element or it does not contain a specific value
+NullPointerException - if element or localName is null
+See Also:
+getElementById(java.lang.String)
+
+BankId:
+<bankIdSignedData Id="bidSignedData" xmlns="http://www.bankid.com/signature/v1.0.0/types">
+
+Se även 
+https://community.oracle.com/thread/1528104?start=0&tstart=0

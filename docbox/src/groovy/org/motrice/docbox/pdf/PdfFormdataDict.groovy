@@ -40,25 +40,43 @@ import com.itextpdf.text.pdf.PdfString
  */
 class PdfFormdataDict {
   // Dictionary keys
+  static final FORMDEF_KEY = new PdfName('FormDef')
   static final FORMDATA_KEY = new PdfName('FormData')
   static final FORMXREF_KEY = new PdfName('FormXref')
 
-  // Form data XML
+  /**
+   * Form definition as a path such as "app/form--v001".
+   * A draft number may be present, but typically form data is based on
+   * published forms.
+   */
+  String formDef
+
+  /**
+   * Form data XML
+   */
   String formData
 
-  // Form cross-reference (XML)
+  /**
+   * Form cross-reference (XML)
+   */
   String formXref
 
-  // Format of this dictionary, an uri pointing to a web page
+  /**
+   * Format of this dictionary, an uri pointing to a web page
+   */
   String format
 
-  // Timestamp
+  /**
+   * Timestamp
+   */
   Date timestamp
 
   /**
    * Construct from a Pdf dictionary
    */
   PdfFormdataDict(PdfDictionary dict) {
+    // The form definition is not present in older formats
+    formDef = dict.getAsString(FORMDEF_KEY)?.toString()
     formData = dict.getAsString(FORMDATA_KEY).toString()
     formXref = dict.getAsString(FORMXREF_KEY).toString()
     format = dict.getAsString(PdfDictFactory.FORMAT_KEY).toString()
@@ -69,7 +87,8 @@ class PdfFormdataDict {
   /**
    * Construct from data
    */
-  PdfFormdataDict(String formData, String formXref) {
+  PdfFormdataDict(String formDef, String formData, String formXref) {
+    this.formDef = formDef
     this.formData = formData
     this.formXref = formXref
   }
@@ -84,6 +103,7 @@ class PdfFormdataDict {
     dict.put(PdfDictFactory.DOCBOXTYPE_KEY, new PdfString(this.class.name))
     dict.put(PdfDictFactory.TIMESTAMP_KEY, new PdfDate())
     dict.put(PdfDictFactory.FORMAT_KEY, new PdfString(format))
+    dict.put(FORMDEF_KEY, new PdfString(formDef))
     dict.put(FORMDATA_KEY, new PdfString(formData))
     dict.put(FORMXREF_KEY, new PdfString(formXref))
     return dict
@@ -93,7 +113,7 @@ class PdfFormdataDict {
     def dateStr = timestamp?.format('yyyy-MM-dd HH:mm:ss')
     def xformData = (formData?.length() > 24)? formData[0..23] + '...' : formData
     def xformXref = (formXref?.length() > 24)? formXref[0..23] + '...' : formXref
-    "[FormdataDict ||${xformXref}||${xformData}|| ${dateStr}]"
+    "[FormdataDict ${formDef}||${xformXref}||${xformData}||${dateStr}]"
   }
 
 }

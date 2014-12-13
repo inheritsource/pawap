@@ -3,6 +3,7 @@ package org.motrice.signatrice.audit
 import org.apache.commons.logging.LogFactory
 
 import org.motrice.signatrice.ServiceException
+import org.motrice.signatrice.audit.AudEventRecord
 
 /**
  * Methods for adding an event record to the audit log.
