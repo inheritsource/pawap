@@ -18,7 +18,7 @@
 ################################################################
 
 function checkPackage() {
-RESPONSE=`apt-cache policy ${PACKAGE} | grep "Installed:" | cut -d : -f 2`
+RESPONSE=`apt-cache policy ${PACKAGE} | grep "Install"."*": | cut -d : -f 2`  # Ok for English and Swedish
 # RESPONSE=`whereis ${PACKAGE} | cut -d : -f 2`
 if [ "${RESPONSE}" != "" ]
 then
