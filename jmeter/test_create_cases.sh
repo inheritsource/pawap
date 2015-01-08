@@ -80,7 +80,7 @@ for thread_count in 001 002
 # for thread_count in 001 002 004 010 
 # for thread_count in 001 002 004 010 050 100
 do
-  COMMANDO="${JMETER} -n -t ${TESTPLAN} -Jthreads=$thread_count -Jcasename=$CASENAME -Juser=$USER -Jhost=$HOST  -Jpassword=$PASS -JoutputDir=${OUTPUTDIR} -Jstartform=${STARTFORM} -Jloop=${LOOP}"
+  COMMANDO="${JMETER} -n -t ${TESTPLAN} -Jthreads=$thread_count -Jcasename=$CASENAME -Juser=$USER -Jhost=$HOST  -Jpassword=$PASS -Jport=$PORT -Jprotocol=$PROTOCOL  -JoutputDir=${OUTPUTDIR} -Jstartform=${STARTFORM} -Jloop=${LOOP}"
   echo ${COMMANDO}
   ${COMMANDO}
 
