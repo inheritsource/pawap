@@ -7,7 +7,7 @@
         <activiti:formProperty id="startevent1_control_53" type="string" default="email1@se.se"></activiti:formProperty>
         <activiti:formProperty id="startevent1_control_17" type="string" default="195204151517"></activiti:formProperty>
         <activiti:formProperty id="startevent1_control_62" type="string" default="195204151517"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_52_control_56" type="string" default="email2@se.se"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_control_56" type="string" default="email2@se.se"></activiti:formProperty>
         <activiti:formProperty id="startevent1_control_67" type="string" default="false"></activiti:formProperty>
       </extensionElements>
     </startEvent>
@@ -80,10 +80,10 @@ if ( ui != null ) {
     <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow28" sourceRef="usertask1" targetRef="exclusivegateway2"></sequenceFlow>
     <sequenceFlow id="flow29" sourceRef="exclusivegateway1" targetRef="exclusivegateway2"></sequenceFlow>
-    <userTask id="usertask2" name="Beslut" activiti:candidateUsers="admin" activiti:candidateGroups="Handlaggare"></userTask>
-    <sequenceFlow id="flow30" sourceRef="exclusivegateway2" targetRef="usertask2"></sequenceFlow>
+    <userTask id="beslut" name="Beslut" activiti:candidateUsers="admin" activiti:candidateGroups="Handlaggare"></userTask>
+    <sequenceFlow id="flow30" sourceRef="exclusivegateway2" targetRef="beslut"></sequenceFlow>
     <endEvent id="endevent1" name="End"></endEvent>
-    <sequenceFlow id="flow31" sourceRef="usertask2" targetRef="endevent1"></sequenceFlow>
+    <sequenceFlow id="flow31" sourceRef="beslut" targetRef="endevent1"></sequenceFlow>
     <serviceTask id="servicetask1" name="Service Task" activiti:class="org.inheritsource.service.delegates.SimplifiedServiceMessageDelegate"></serviceTask>
     <sequenceFlow id="flow32" sourceRef="servicetask1" targetRef="usertask1"></sequenceFlow>
     <textAnnotation id="textannotation1">
@@ -110,7 +110,7 @@ if ( ui != null ) {
       <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
         <omgdc:Bounds height="40.0" width="40.0" x="800.0" y="58.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask2" id="BPMNShape_usertask2">
+      <bpmndi:BPMNShape bpmnElement="beslut" id="BPMNShape_usertask2">
         <omgdc:Bounds height="55.0" width="105.0" x="920.0" y="51.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">

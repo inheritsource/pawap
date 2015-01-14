@@ -6,7 +6,7 @@
         <activiti:formProperty id="startevent1_bolagstyp" type="string" required="true"></activiti:formProperty>
       </extensionElements>
     </startEvent>
-    <userTask id="usertaskRegistration" name="Registrering" activiti:candidateUsers="admin" activiti:candidateGroups="Registrator">
+    <userTask id="registrering" name="Registrering" activiti:candidateUsers="admin" activiti:candidateGroups="Registrator">
       <extensionElements>
         <activiti:formProperty id="Registrering_applicationstatus" default="one" required="true"></activiti:formProperty>
         <activiti:taskListener event="create" class="org.inheritsource.service.delegates.TaskMessageListener"></activiti:taskListener>
@@ -14,32 +14,32 @@
       </extensionElements>
     </userTask>
     <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway" default="flow5"></exclusiveGateway>
-    <sequenceFlow id="flow4" sourceRef="usertaskRegistration" targetRef="exclusivegateway2"></sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="registrering" targetRef="exclusivegateway2"></sequenceFlow>
     <parallelGateway id="parallelgateway1" name="Parallel Gateway"></parallelGateway>
     <sequenceFlow id="flow5" sourceRef="exclusivegateway2" targetRef="parallelgateway1"></sequenceFlow>
-    <userTask id="usertask4" name="Polismyndigheten" activiti:candidateUsers="admin" activiti:candidateGroups="Registrator"></userTask>
-    <sequenceFlow id="flow8" sourceRef="parallelgateway1" targetRef="usertask4"></sequenceFlow>
-    <userTask id="usertask5" name="Miljö och hälsoskyddsmyndigheten" activiti:candidateUsers="admin" activiti:candidateGroups="Handlaggare"></userTask>
-    <sequenceFlow id="flow9" sourceRef="parallelgateway1" targetRef="usertask5"></sequenceFlow>
-    <userTask id="usertask6" name="Skatteverket" activiti:candidateUsers="admin" activiti:candidateGroups="Assistent"></userTask>
-    <sequenceFlow id="flow10" sourceRef="parallelgateway1" targetRef="usertask6"></sequenceFlow>
+    <userTask id="polismyndigheten" name="Polismyndigheten" activiti:candidateUsers="admin" activiti:candidateGroups="Registrator"></userTask>
+    <sequenceFlow id="flow8" sourceRef="parallelgateway1" targetRef="polismyndigheten"></sequenceFlow>
+    <userTask id="miljoOchHalsoskyddsmyndigheten" name="Miljö och hälsoskyddsmyndigheten" activiti:candidateUsers="admin" activiti:candidateGroups="Handlaggare"></userTask>
+    <sequenceFlow id="flow9" sourceRef="parallelgateway1" targetRef="miljoOchHalsoskyddsmyndigheten"></sequenceFlow>
+    <userTask id="skatteverket" name="Skatteverket" activiti:candidateUsers="admin" activiti:candidateGroups="Assistent"></userTask>
+    <sequenceFlow id="flow10" sourceRef="parallelgateway1" targetRef="skatteverket"></sequenceFlow>
     <parallelGateway id="parallelgateway2" name="Parallel Gateway"></parallelGateway>
-    <sequenceFlow id="flow12" sourceRef="usertask5" targetRef="parallelgateway2"></sequenceFlow>
-    <sequenceFlow id="flow13" sourceRef="usertask4" targetRef="parallelgateway2"></sequenceFlow>
-    <sequenceFlow id="flow14" sourceRef="usertask6" targetRef="parallelgateway2"></sequenceFlow>
-    <userTask id="usertask7" name="Fatta beslut" activiti:candidateUsers="admin" activiti:candidateGroups="Handlaggare">
+    <sequenceFlow id="flow12" sourceRef="miljoOchHalsoskyddsmyndigheten" targetRef="parallelgateway2"></sequenceFlow>
+    <sequenceFlow id="flow13" sourceRef="polismyndigheten" targetRef="parallelgateway2"></sequenceFlow>
+    <sequenceFlow id="flow14" sourceRef="skatteverket" targetRef="parallelgateway2"></sequenceFlow>
+    <userTask id="fattaBeslut" name="Fatta beslut" activiti:candidateUsers="admin" activiti:candidateGroups="Handlaggare">
       <extensionElements>
         <activiti:executionListener event="end" class="org.inheritsource.service.delegates.SetDecisionAct"></activiti:executionListener>
       </extensionElements>
     </userTask>
-    <sequenceFlow id="flow15" sourceRef="parallelgateway2" targetRef="usertask7"></sequenceFlow>
+    <sequenceFlow id="flow15" sourceRef="parallelgateway2" targetRef="fattaBeslut"></sequenceFlow>
     <callActivity id="callForenkladDelgivning" name="Förenklad delgivning" calledElement="procForenkladDelgivning">
       <extensionElements>
         <activiti:in source="decisionActUri" target="serviceDocUri"></activiti:in>
         <activiti:in source="motriceStartFormAssignee" target="recipientUserId"></activiti:in>
       </extensionElements>
     </callActivity>
-    <sequenceFlow id="flow19" sourceRef="usertask7" targetRef="callForenkladDelgivning"></sequenceFlow>
+    <sequenceFlow id="flow19" sourceRef="fattaBeslut" targetRef="callForenkladDelgivning"></sequenceFlow>
     <endEvent id="endevent2" name="End"></endEvent>
     <sequenceFlow id="flow20" sourceRef="callForenkladDelgivning" targetRef="endevent2"></sequenceFlow>
     <endEvent id="endevent3" name="End"></endEvent>
@@ -48,7 +48,7 @@
         <activiti:executionListener event="take" class="org.inheritsource.service.delegates.CreateVariablesFlowListener"></activiti:executionListener>
       </extensionElements>
     </sequenceFlow>
-    <sequenceFlow id="flow25" sourceRef="usertaskSignStartform" targetRef="usertaskRegistration"></sequenceFlow>
+    <sequenceFlow id="flow25" sourceRef="usertaskSignStartform" targetRef="registrering"></sequenceFlow>
     <userTask id="usertask8" name="User Task" activiti:assignee="${initiator}"></userTask>
     <sequenceFlow id="flow26" sourceRef="exclusivegateway2" targetRef="usertask8">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${Registrering_applicationstatus== 'one'}]]></conditionExpression>
@@ -67,7 +67,7 @@
       <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
         <omgdc:Bounds height="35.0" width="35.0" x="100.0" y="150.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertaskRegistration" id="BPMNShape_usertaskRegistration">
+      <bpmndi:BPMNShape bpmnElement="registrering" id="BPMNShape_registrering">
         <omgdc:Bounds height="55.0" width="105.0" x="415.0" y="141.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
@@ -76,19 +76,19 @@
       <bpmndi:BPMNShape bpmnElement="parallelgateway1" id="BPMNShape_parallelgateway1">
         <omgdc:Bounds height="40.0" width="40.0" x="650.0" y="150.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask4" id="BPMNShape_usertask4">
+      <bpmndi:BPMNShape bpmnElement="polismyndigheten" id="BPMNShape_usertask4">
         <omgdc:Bounds height="55.0" width="105.0" x="740.0" y="50.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask5" id="BPMNShape_usertask5">
+      <bpmndi:BPMNShape bpmnElement="miljoOchHalsoskyddsmyndigheten" id="BPMNShape_usertask5">
         <omgdc:Bounds height="55.0" width="141.0" x="740.0" y="143.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask6" id="BPMNShape_usertask6">
+      <bpmndi:BPMNShape bpmnElement="skatteverket" id="BPMNShape_usertask6">
         <omgdc:Bounds height="55.0" width="105.0" x="740.0" y="250.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="parallelgateway2" id="BPMNShape_parallelgateway2">
         <omgdc:Bounds height="40.0" width="40.0" x="910.0" y="148.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask7" id="BPMNShape_usertask7">
+      <bpmndi:BPMNShape bpmnElement="fattaBeslut" id="BPMNShape_usertask7">
         <omgdc:Bounds height="55.0" width="105.0" x="1010.0" y="140.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="callForenkladDelgivning" id="BPMNShape_callForenkladDelgivning">
