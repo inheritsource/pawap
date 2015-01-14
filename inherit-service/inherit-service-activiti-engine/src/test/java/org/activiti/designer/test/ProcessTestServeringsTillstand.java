@@ -33,10 +33,11 @@ public class ProcessTestServeringsTillstand {
 		RuntimeService runtimeService = activitiRule.getRuntimeService();
 		Map<String, Object> variableMap = new HashMap<String, Object>();
 		variableMap.put("name", "Activiti");
+		variableMap.put("motriceStartFormAssignee", "5b257b18-01e6-4962-b356-0fc926c21175" ) ; 
 		variableMap.put("motrice_form_data_name", "Activiti");
-		variableMap.put("startevent1_section1_bolagstyp", "three");
-		variableMap.put("Registrering_section_1_applicationstatus", "two");  // simplification, should be set in the registration task
-	//	variableMap.put("Registrering_section_1_applicationstatus", "one");  // simplification, should be set in the registration task
+		variableMap.put("startevent1_bolagstyp", "three");
+	//	variableMap.put("Registrering_applicationstatus", "two");  // simplification, should be set in the registration task
+		variableMap.put("Registrering_applicationstatus", "one");  // simplification, should be set in the registration task
 	// "one" => quits process	
 		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("serveringsTillstand", variableMap);
 		assertNotNull(processInstance.getId());

@@ -3,12 +3,12 @@
   <process id="serveringsTillstand" name="Serveringstillstand" isExecutable="true">
     <startEvent id="startevent1" name="Start" activiti:initiator="initiator">
       <extensionElements>
-        <activiti:formProperty id="startevent1_section1_bolagstyp" type="string" required="true"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_bolagstyp" type="string" required="true"></activiti:formProperty>
       </extensionElements>
     </startEvent>
     <userTask id="usertaskRegistration" name="Registrering" activiti:candidateUsers="admin" activiti:candidateGroups="Registrator">
       <extensionElements>
-        <activiti:formProperty id="Registrering_section_1_applicationstatus" default="one" required="true"></activiti:formProperty>
+        <activiti:formProperty id="Registrering_applicationstatus" default="one" required="true"></activiti:formProperty>
         <activiti:taskListener event="create" class="org.inheritsource.service.delegates.TaskMessageListener"></activiti:taskListener>
         <activiti:taskListener event="complete" class="org.inheritsource.service.delegates.CreateVariablesTaskListener"></activiti:taskListener>
       </extensionElements>
@@ -51,7 +51,7 @@
     <sequenceFlow id="flow25" sourceRef="usertaskSignStartform" targetRef="usertaskRegistration"></sequenceFlow>
     <userTask id="usertask8" name="User Task" activiti:assignee="${initiator}"></userTask>
     <sequenceFlow id="flow26" sourceRef="exclusivegateway2" targetRef="usertask8">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${Registrering_section_1_applicationstatus== 'one'}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${Registrering_applicationstatus== 'one'}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow27" sourceRef="usertask8" targetRef="endevent3"></sequenceFlow>
     <userTask id="usertaskSignStartform" name="Signera ansökan" activiti:assignee="${motriceStartFormAssignee}"></userTask>

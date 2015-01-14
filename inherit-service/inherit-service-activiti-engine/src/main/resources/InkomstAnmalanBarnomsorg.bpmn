@@ -3,12 +3,12 @@
   <process id="inkomstanmalan_barnomsorg" name="Inkomstanmälan barnomsorg" isExecutable="true">
     <startEvent id="startevent1" name="Start" activiti:initiator="initiator">
       <extensionElements>
-        <activiti:formProperty id="startevent1_section1_bolagstyp" type="string" required="true"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_section_14_control_53" type="string" default="email1@se.se"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_section_14_control_17" type="string" default="195204151517"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_section_52_control_62" type="string" default="195204151517"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_section_52_control_56" type="string" default="email2@se.se"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_section_14_control_67" type="string" default="false"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_bolagstyp" type="string" required="true"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_control_53" type="string" default="email1@se.se"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_control_17" type="string" default="195204151517"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_control_62" type="string" default="195204151517"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_52_control_56" type="string" default="email2@se.se"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_control_67" type="string" default="false"></activiti:formProperty>
       </extensionElements>
     </startEvent>
     <sequenceFlow id="flow24" sourceRef="startevent1" targetRef="usertaskSignStartform">
@@ -26,15 +26,15 @@ import org.inheritsource.taskform.engine.persistence.TaskFormDb;
 
 println("Hello world!"); 
 println("motriceStartFormAssignee =" + motriceStartFormAssignee) ; 
-println("email 1 : startevent1_section_14_control_53 = " + startevent1_section_14_control_53 ) ; 
-println("personnummer1:     startevent1_section_14_control_17" +  startevent1_section_14_control_17 ) ; 
-println("email2 :startevent1_section_52_control_62 =" + startevent1_section_52_control_62 ) ;
-println("personnummer2: startevent1_section_52_control_56 = "+  startevent1_section_52_control_56 ) ; 
+println("email 1 : startevent1_control_53 = " + startevent1_control_53 ) ; 
+println("personnummer1:     startevent1_control_17" +  startevent1_control_17 ) ; 
+println("email2 :startevent1_control_62 =" + startevent1_control_62 ) ;
+println("personnummer2: startevent1_control_56 = "+  startevent1_control_56 ) ; 
 
-def recipientSerial1=startevent1_section_14_control_17;
-def recipientEmail1=startevent1_section_14_control_53;
-def recipientSerial2=startevent1_section_52_control_56;
-def recipientEmail2=startevent1_section_52_control_62;
+def recipientSerial1=startevent1_control_17;
+def recipientEmail1=startevent1_control_53;
+def recipientSerial2=startevent1_control_56;
+def recipientEmail2=startevent1_control_62;
 def recipientEmail ; 
 
 IdentityServiceMalmoImpl idService = new IdentityServiceMalmoImpl()  ;
@@ -73,7 +73,7 @@ if ( ui != null ) {
 }</script>
     </scriptTask>
     <sequenceFlow id="flow26" sourceRef="exclusivegateway1" targetRef="scripttask1">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${startevent1_section_14_control_67=="false"}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${startevent1_control_67=="false"}]]></conditionExpression>
     </sequenceFlow>
     <userTask id="usertask1" name="Signera Ansökan (Samhörig)" activiti:candidateUsers="${recipientUserId}"></userTask>
     <sequenceFlow id="flow27" sourceRef="scripttask1" targetRef="servicetask1"></sequenceFlow>

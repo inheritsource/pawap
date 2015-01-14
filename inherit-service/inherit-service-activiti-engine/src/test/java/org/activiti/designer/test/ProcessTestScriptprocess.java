@@ -48,12 +48,14 @@ public class ProcessTestScriptprocess {
 
 	private String filename = "/home/tostman/workspace20140410/pawap/inherit-service/inherit-service-activiti-engine/src/main/resources/ScriptProcess.bpmn";
 
+	
+	
 	@Rule
 	public ActivitiRule activitiRule = new ActivitiRule(
 			"activiti.cfg-mem-fullhistory.xml");
 
 	@Test
-	public void startProcess() throws Exception {
+	public void teststartProcess() throws Exception {
 		RepositoryService repositoryService = activitiRule
 				.getRepositoryService();
 		repositoryService
@@ -101,6 +103,7 @@ public class ProcessTestScriptprocess {
 			Map<String, Object> variableMap2 = processInstance
 					.getProcessVariables();
 
+			
 			System.out.println("variableMap2 = " + variableMap2);
 
 			List<Task> availableTaskList = taskService.createTaskQuery()

@@ -81,7 +81,7 @@ public class CreateVariablesFlowListener implements ExecutionListener {
 				OrbeonService service = new OrbeonService();
 
 				HashMap<String, String> variableMap = service.getVariableMap(
-						dataUri, 3); 
+						dataUri, 3 ,2 ); 
 				log.info(          "data: " + variableMap);
 
 				for (Map.Entry<String, String> entry : variableMap.entrySet()) {

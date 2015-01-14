@@ -250,11 +250,18 @@ public class OrbeonService {
 	//                    the xml into a map. The map might then be used to 
 	//                    get process variables in a BPMN 2.0 process
 
-	public HashMap<String, String> getVariableMap(String uri , int xmlTargetLevel) {
+	public HashMap<String, String> getVariableMap(String uri , int xmlTargetLevel,  int xmlMinLevel ) {
 
 		HashMap<String, String> variableMap = new HashMap<String, String>();
 
 		String inputForm = getFormData2(uri);
+
+                if ( inputForm == null ) { 
+			log.info("failed to get document uri =" + uri) ;  
+                } 
+                else 
+                { 
+
 
 		// convert String into InputStream
 		InputStream is = new ByteArrayInputStream(inputForm.getBytes());
@@ -271,11 +278,14 @@ public class OrbeonService {
 
 				if (streamReader.getEventType() == XMLStreamReader.START_ELEMENT) {
 					String elementName = streamReader.getLocalName();
+					System.out.println("xmlLevel= " + xmlLevel + " elementName = " + elementName ) ; 
 					xmlLevel++;
+					
 					if (variableName.size() >= xmlLevel) {
 						variableName.set(xmlLevel - 1, elementName);
 					} else {
 						variableName.add(elementName);
+					
 					}
 
 				}
@@ -283,7 +293,8 @@ public class OrbeonService {
 					if (xmlLevel == xmlTargetLevel) {
 						String elementValue = streamReader.getText();						
 						String fullVariableName = "";
-						for (String str : variableName) {
+						for (int index= xmlMinLevel ; index < variableName.size() ; index++) {	
+							String str= variableName.get(index) ; 
 							if (fullVariableName != "") {
 								fullVariableName = fullVariableName + "_" + str;
 							} else {
@@ -313,6 +324,7 @@ public class OrbeonService {
 					+ " Exception: " + e.toString());
 
 		}
+                }
 		return variableMap;
 
 	}
@@ -328,6 +340,11 @@ public class OrbeonService {
 		System.out.println("data: "
 				+ service.getFormData("scriptprocess/scriptprocess--v002_01",
 						"d32f9984-dd67-4e52-9c09-99c004c8650b"));
+		
+		
+		
+		System.out.println("data: "
+				+ service.getFormData("start/demo-ansokan--v003","8990467f-2ec2-4ef7-8cce-540b85d5cec5"));
 		// System.out.println("data: (section-1)"
 		// + service.getFormDataValue(
 		// "scriptprocess/scriptprocess--v002_01",
@@ -352,17 +369,19 @@ public class OrbeonService {
 		// "//section-1/control-3"));
 		
 		int xmlTargetLevel = 3;
+		int xmlMinLevel = 2;
 		//String formPath = "scriptprocess/scriptprocess--v002_01" ; 
 		// String dataUuid ="d32f9984-dd67-4e52-9c09-99c004c8650b" ; 
 		// String dataUri = service.persistenceApiBaseUrl + formPath + "/data/" + dataUuid
 		//		+ "/data.xml";
 //		String dataUri = "http://localhost:8080/exist/rest/db/orbeon-pe/fr/foerskola/inkomstanmalanbarnomsorg--v001/data/c2709591-d799-4728-8a22-2b7c5374da31/data.xml";
-		String dataUri = "http://localhost:8080/exist/rest/db/orbeon-pe/fr/foerskola/inkomstanmalanbarnomsorg--v001/data/e5bea1fc-4c95-43c8-8446-c5714b767818/data.xml" ;
+//		String dataUri = "http://localhost:8080/exist/rest/db/orbeon-pe/fr/foerskola/inkomstanmalanbarnomsorg--v001/data/e5bea1fc-4c95-43c8-8446-c5714b767818/data.xml" ;
+		//String dataUri = "http://localhost:8080/exist/rest/db/orbeon-pe/fr/start/demo-ansokan--v003/data/d32f9984-dd67-4e52-9c09-99c004c8650b/data.xml" ;
+		String dataUri = "http://localhost:8080/exist/rest/db/orbeon-pe/fr/felanmalan/felanmalan--v001/data/c1f31ea1-9f15-470f-89dc-1f997e94a671/data.xml" ;
 		System.out
-				.println("data: "
-						+ service.getVariableMap(dataUri
-								,
-								xmlTargetLevel));
+				.println("data  : "
+						+ service.getVariableMap(dataUri,  
+								xmlTargetLevel,xmlMinLevel ));
 		//String test = service.parseXPathExpr(dataUri , "/form/section-1/control-13") ;
 		//String test = service.parseXPathExpr(dataUri , "/form/section-52/control-62") ;
 		String test = service.parseXPathExpr(dataUri , "//*/control-53") ;
@@ -399,9 +418,9 @@ public class OrbeonService {
 		// System.out.println("data: " +
 		// service.getFormData("basprocess/registrera",
 		// "259b09b0-0303-4222-a368-13368f0a5ae8"));
-		// System.out.println("data: " +
-		// service.getFormDataValue("malmo/profil", "john",
-		// "//section-1/email"));
+		System.out.println("data: " +
+		  service.getFormDataValue("malmo/profil", "john",
+		 "//section-1/email"));
 		// System.out.println("data: " + service.getFormData("malmo/profil",
 		// "john"));
 	}

@@ -20,8 +20,10 @@ import org.junit.Test;
 
 public class ProcessTestInkomstanmalanbarnomsorg {
 
-	private String filename = "/home/tostman/workspaces/pawap/inherit-service/inherit-service-activiti-engine/src/main/resources/Inkomstanmalanbarnomsorg.bpmn";
+	private String filename = "/home/tostman/workspaces/inheritsource-develop/pawap/inherit-service/inherit-service-activiti-engine/src/main/resources/InkomstAnmalanBarnomsorg.bpmn";
 
+	
+	
 	@Rule
 	public ActivitiRule activitiRule = new ActivitiRule();
 	private TaskService taskService;
@@ -29,8 +31,12 @@ public class ProcessTestInkomstanmalanbarnomsorg {
 
 	@Test
 	public void startProcess() throws Exception {
+		System.out.println("hello cruel world!") ;
+		
+		
 		RepositoryService repositoryService = activitiRule
 				.getRepositoryService();
+		System.out.println("godbye cruel world3 !") ; 
 		repositoryService
 				.createDeployment()
 				.addInputStream("inkomstanmalanbarnomsorg.bpmn20.xml",
@@ -41,23 +47,22 @@ public class ProcessTestInkomstanmalanbarnomsorg {
 		variableMap.put("motriceStartFormAssignee", "5b257b18-01e6-4962-b356-0fc926c21175" ) ; //  "195204151517");
 		//variableMap.put("motriceStartFormAssignee","66cc0e73-8b16-4579-a295-fc37dfa772b9" ) ; // "199502023782");
 	/*
-		variableMap.put("startevent1_section_14_control_53", "test.ostsson@motrice.se");
-		variableMap.put("startevent1_section_14_control_17", "195204151517");
-		variableMap.put("startevent1_section_52_control_56", "199502023782");
-		variableMap.put("startevent1_section_52_control_62", "test.damberg@motrice.se");
+		variableMap.put("startevent1_control_53", "test.ostsson@motrice.se");
+		variableMap.put("startevent1_control_17", "195204151517");
+		variableMap.put("startevent1_control_56", "199502023782");
+		variableMap.put("startevent1_control_62", "test.damberg@motrice.se");
 		*/
-		variableMap.put("startevent1_section_14_control_53", "test.damberg@motrice.se");
-		variableMap.put("startevent1_section_14_control_17", "199502023782");
-		variableMap.put("startevent1_section_52_control_56", "195204151517");
-		variableMap.put("startevent1_section_52_control_62", "test.ostsson@motrice.se");	
-		
+		variableMap.put("startevent1_control_53", "test.damberg@motrice.se");
+		variableMap.put("startevent1_control_17", "199502023782");
+		variableMap.put("startevent1_control_56", "195204151517");
+		variableMap.put("startevent1_control_62", "test.ostsson@motrice.se");	
 		
 		
 		// Ensam vårdnadshavare 
-		variableMap.put("startevent1_section_14_control_67", "false");
-		//variableMap.put("startevent1_section_14_control_67", "true");
+		variableMap.put("startevent1_control_67", "false");
+		//variableMap.put("startevent1_control_67", "true");
 		ProcessInstance processInstance = runtimeService
-				.startProcessInstanceByKey("inkomstanmalanbarnomsorg",
+				.startProcessInstanceByKey("inkomstanmalan_barnomsorg",
 						variableMap);
 		assertNotNull(processInstance.getId());
 		System.out.println("id " + processInstance.getId() + " "
