@@ -346,5 +346,16 @@
         </sv:property>
       </sv:node>
     </sv:node>
+    <sv:node sv:name="startform">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>hst:sitemapitem</sv:value>
+      </sv:property>
+      <sv:property sv:name="hst:componentconfigurationid" sv:type="String">
+        <sv:value>hst:pages/startform</sv:value>
+      </sv:property>
+      <sv:property sv:name="hst:relativecontentpath" sv:type="String">
+        <sv:value>${parent}/form-internal</sv:value>
+      </sv:property>
+    </sv:node>
   </sv:node>
 </sv:node>

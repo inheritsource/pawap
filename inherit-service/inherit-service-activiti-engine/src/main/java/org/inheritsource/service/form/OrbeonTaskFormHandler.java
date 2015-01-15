@@ -35,6 +35,7 @@ import org.inheritsource.taskform.engine.persistence.entity.ActivityFormDefiniti
 
 public class OrbeonTaskFormHandler extends TaskFormHandler {
 	public static final String PAGE = "form";
+	public static final String STARTFORMPAGE = "startform";
 	
 	public static final String orbeonBaseUri = ConfigUtil.getConfigProperties().getProperty("orbeon.base.uri");
 	public static final String orbeonDataBaseUri = ConfigUtil.getConfigProperties().getProperty("orbeon.base.dataUri");
@@ -96,6 +97,7 @@ public class OrbeonTaskFormHandler extends TaskFormHandler {
 		form.setPage(PAGE);
 
 		if (task == null) {
+		form.setPage(STARTFORMPAGE);
 			// start form
 		}
 		

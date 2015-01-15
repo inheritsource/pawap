@@ -403,7 +403,7 @@ public class FormEngine {
 		List<StartForm> forms = taskFormDb.getStartForms();
 		if (forms != null) {
 			for (StartForm form : forms) {
-				form.setPage("form");
+				form.setPage("startform");
 				String label = getActivitiEngineService().getCoordinatriceFacade().getStartFormLabelByStartFormDefinitionKey(form.getDefinitionKey(), locale, form.getDefinitionKey());
 				form.setLabel(label);
 				
