@@ -30,10 +30,15 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContextAware;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.impl.el.Expression;
 import org.inheritsource.service.common.util.ConfigUtil;
+import org.inheritsource.taskform.engine.TaskFormService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /** GenericServiceMessageDelegate
  * Class for sending emails from a Service Task
@@ -50,7 +55,8 @@ import org.inheritsource.service.common.util.ConfigUtil;
  * @param messageSubject
  *
  */
-public class GenericServiceMessageDelegate implements JavaDelegate {
+public class GenericServiceMessageDelegate implements JavaDelegate,
+	ApplicationContextAware {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(GenericServiceMessageDelegate.class);
@@ -64,6 +70,7 @@ public class GenericServiceMessageDelegate implements JavaDelegate {
 
 	// get the address and text from configuration in the process
 	private Expression recipientEmail;
+	private Expression recipientUserId;
 	private Expression from;
 	private Expression messageText;
 	private Expression messageSubject;
@@ -80,9 +87,30 @@ public class GenericServiceMessageDelegate implements JavaDelegate {
 		}
 
 		String recipientEmailString = null;
-		if (recipientEmail != null) {
-			recipientEmailString = recipientEmail.getValue(execution)
+//		if (recipientEmail != null) {
+//			recipientEmailString = recipientEmail.getValue(execution)
+//					.toString();
+//		}
+
+
+		String recipientUserIdString = null;
+		if (recipientUserId != null) {
+			recipientUserIdString = recipientUserId.getValue(execution)
 					.toString();
+		}
+
+		if (context == null ) {
+			log.error("context is null, failed to get service ");
+			return;
+		}	
+
+		TaskFormService service = (TaskFormService) context.getBean("engine");
+
+		if (service == null) {
+			log.error("failed to get service, unable to determine emailadress ");
+			return;
+		} else {
+				recipientEmailString = service.getMyProfile(recipientUserIdString).getEmail();
 		}
 
 		String fromString = null;
@@ -160,6 +188,14 @@ public class GenericServiceMessageDelegate implements JavaDelegate {
 		return;
 
 	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext arg0)
+			throws BeansException {
+		context = arg0;
+	}
+
+	private static ApplicationContext context;
 
 
 
