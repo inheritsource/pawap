@@ -35,19 +35,35 @@ class RestI18nController {
   private final static CONT_DISP = 'Content-Disposition'
 
   /**
-   * Get one or more activity labels.
+   * Get one or more activity labels by activity name.
    * $PREFIX/activitylabel/$procdefkey/$locale/$activityname? [?version=$procdefversion]
-   * where $id must be a process definition id.
    */
   def activityLabelGet(String procdefkey, String locale, String activityname) {
     if (log.debugEnabled) log.debug "ACTIVITY LABEL GET: ${params}"
-    def list = activityLabelService.findLabels(procdefkey, locale, activityname, params.version)
+    def list = activityLabelService.findLabelsByName(procdefkey, locale, activityname, params.version)
 
     if (list?.size() > 0) {
       response.status = 200
       render list as JSON
     } else {
-      if (log.debugEnabled) log.debug "ACTIVITY LABEL GET >> 404: procdef=${procdefkey}, locale=${locale}, activity: ${activityname}"
+      if (log.debugEnabled) log.debug "ACTIVITY LABEL GET/NAME >> 404: procdef=${procdefkey}, locale=${locale}, activity: ${activityname}"
+      render(status: 404)
+    }
+  }
+
+  /**
+   * Get one or more activity labels by activity id.
+   * $PREFIX/activitylabel/$procdefkey/$locale/$activityid? [?version=$procdefversion]
+   */
+  def activityLabelById(String procdefkey, String locale, String activityid) {
+    if (log.debugEnabled) log.debug "ACTIVITY LABEL GET/ID: ${params}"
+    def list = activityLabelService.findLabelsById(procdefkey, locale, activityid, params.version)
+
+    if (list?.size() > 0) {
+      response.status = 200
+      render list as JSON
+    } else {
+      if (log.debugEnabled) log.debug "ACTIVITY LABEL GET >> 404: procdef=${procdefkey}, locale=${locale}, activity: ${activityid}"
       render(status: 404)
     }
   }

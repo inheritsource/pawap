@@ -234,7 +234,23 @@ class ProcessEngineService {
     def db = createDeploymentBuilder(cmd.deploymentName)
     db.category(cmd.crdProcCategory.toString())
     db.addInputStream(cmd.fileName, cmd.inputStream)
-    def deployment = db.deploy()
+    def deployment = null
+    try {
+      deployment = db.deploy()
+    } catch (ActivitiException exc) {
+      def msg = exc.message
+      def sb = new StringBuilder(msg)
+      sb.append(' [')
+      def excp = exc.cause
+      def sep = ''
+      while (excp) {
+	sb.append(sep).append(excp.message)
+	sep = '||'
+	excp = excp.cause
+      }
+      sb.append(']')
+      throw new ServiceException(msg, 'procdef.xml.conflict', [sb.toString()])
+    }
     def editState = CrdProcdefState.get(CrdProcdefState.STATE_EDIT_ID)
     def procdefList = procdefService.findProcessDefinitionsFromDeployment(deployment.id, editState)
     if (!procdefList) throw new ServiceException("Created process definition not found",

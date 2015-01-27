@@ -169,18 +169,12 @@ class ActivityLabelService {
     'order by l.procdefKey asc, l.actdefName asc, l.procdefVer desc'
 
   /**
-   * Find activity labels
+   * Find activity labels by activity name.
    */
-  List findLabels(String procdefkey, String locale, String activityname, String version) {
-    if (log.debugEnabled) log.debug "findLabels << ${procdefkey}, ${locale}, ${activityname}, ${version}"
-    Integer versionInt = 0
-    try {
-      if (version) versionInt = version as Integer
-    } catch (NumberFormatException exc) {
-      // Ignore
-    }
-
-    if (log.debugEnabled) log.debug "findLabels versionInt: ${versionInt}"
+  List findLabelsByName(String procdefkey, String locale, String activityname, String version) {
+    if (log.debugEnabled) log.debug "findLabelsByName << ${procdefkey}, ${locale}, ${activityname}, ${version}"
+    Integer versionInt = versionNumber(version)
+    if (log.debugEnabled) log.debug "findLabelsByName versionInt: ${versionInt}"
     def list = null
     if (activityname) {
       list = CrdI18nActLabel.findAll(SINGLE_ACT_Q,
@@ -189,23 +183,62 @@ class ActivityLabelService {
       list = CrdI18nActLabel.findAll(ALL_ACT_Q, [procdefkey, locale, versionInt])
     }
 
-    if (log.debugEnabled) log.debug "findLabels query: ${list}"
-    // Process the list: remove null labels and duplicates.
-    // Duplicate removal depends on the query result being ordered the right way.
-    // Convert to list of maps.
+    if (log.debugEnabled) log.debug "findLabelsByName query: ${list}"
+    def resultList = fixLabelList(list)
+    if (log.debugEnabled) log.debug "findLabelsByName >> ${resultList?.size()}"
+    return resultList
+  }
+
+  static final SINGLE_ACT_ID_Q = 'from CrdI18nActLabel l where l.procdefKey=? and ' +
+    'l.locale=? and l.actdefId=? and l.procdefVer <= ? ' +
+    'order by l.procdefKey asc, l.actdefName asc, l.procdefVer desc'
+
+  /**
+   * Find activity labels by activity id.
+   */
+  List findLabelsById(String procdefkey, String locale, String activityid, String version) {
+    if (log.debugEnabled) log.debug "findLabelsById << ${procdefkey}, ${locale}, ${activityid}, ${version}"
+    Integer versionInt = versionNumber(version)
+    if (log.debugEnabled) log.debug "findLabelsById versionInt: ${versionInt}"
+    def list = CrdI18nActLabel.findAll(SINGLE_ACT_ID_Q,
+				       [procdefkey, locale, activityid, versionInt])
+
+    if (log.debugEnabled) log.debug "findLabelsById query: ${list}"
+    def resultList = fixLabelList(list)
+    if (log.debugEnabled) log.debug "findLabelsById >> ${resultList?.size()}"
+    return resultList
+  }
+
+  private Integer versionNumber(String version) {
+    Integer versionInt = 0
+    try {
+      if (version) versionInt = version as Integer
+    } catch (NumberFormatException exc) {
+      // Ignore
+    }
+
+    return versionInt
+  }
+
+  /**
+   * Given a list of CrdI18nActLabel instances, remove null labels and duplicates.
+   * Duplicate removal depends on the query result being ordered the right way.
+   * Return a list of maps.
+   */
+  private List fixLabelList(List list) {
     def keySet = new TreeSet()
     def resultList = []
     list.each {label ->
-      String key = "${label.procdefKey}:${label.procdefVer}:${label.actdefName}"
+      String key = "${label.procdefKey}:${label.actdefName}"
       if (!keySet.contains(key) && label.label != null) {
 	keySet << key
 	def entry = [procdefKey: label.procdefKey, procdefVer: label.procdefVer,
-	actdefName: label.actdefName, locale: label.locale, label: label.label]
+	actdefId: label.actdefId, actdefName: label.actdefName,
+	locale: label.locale, label: label.label]
 	resultList << entry
       }
     }
 
-    if (log.debugEnabled) log.debug "findLabels >> ${resultList?.size()}"
     return resultList
   }
 

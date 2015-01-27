@@ -35,6 +35,9 @@ class UrlMappings {
     "/rest/activitylabel/$procdefkey/$locale/$activityname?"(controller: 'RestI18n') {
       action = [GET: 'activityLabelGet']
     }
+    "/rest/activitylabelbyid/$procdefkey/$locale/$activityid"(controller: 'RestI18n') {
+      action = [GET: 'activityLabelById']
+    }
     "/rest/guideurl/$procdefkey/$locale/$activityname?"(controller: 'RestI18n') {
       action = [GET: 'guideUrlGet']
     }
