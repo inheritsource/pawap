@@ -30,30 +30,41 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContextAware;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.impl.el.Expression;
 import org.inheritsource.service.common.util.ConfigUtil;
+import org.inheritsource.taskform.engine.TaskFormService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
-/** GenericServiceMessageDelegate
+/** MyProfileServiceMessageDelegate
  * Class for sending emails from a Service Task
  * <p>
  * The class needs to be configured with some fields with Expression Language.
- * Hence, one may use variables or fixed strings to set the values.  
+ * Hence, one may use variables or fixed strings to set the values.
+ * The class is derived from GenericServiceMessageDelegate and instead of
+ * using the param recipientEmail directly, it fetches the recipientEmail from the
+ * user profile with the recipient UserId as key. This behaviour should be
+ * factored out in a subclass of GenericServiceMessageDelegate
  * 
  * A link to the user inbox is always added to the message text. 
  * 
  * The fields are :
  * @param recipientEmail
+ * @param recipientUserId;
  * @param from
  * @param messageText
  * @param messageSubject
  *
  */
-public class GenericServiceMessageDelegate implements JavaDelegate {
+public class MyProfileServiceMessageDelegate implements JavaDelegate,
+	ApplicationContextAware {
 
 	public static final Logger log = LoggerFactory
-			.getLogger(GenericServiceMessageDelegate.class);
+			.getLogger(MyProfileServiceMessageDelegate.class);
 
 	public static String PROC_VAR_RECIPIENT_USER_ID = "recipientUserId";
 	public static String PROC_VAR_RECIPIENT_USER_EMAIL = "recipientEmail";
@@ -64,6 +75,7 @@ public class GenericServiceMessageDelegate implements JavaDelegate {
 
 	// get the address and text from configuration in the process
 	private Expression recipientEmail;
+	private Expression recipientUserId;
 	private Expression from;
 	private Expression messageText;
 	private Expression messageSubject;
@@ -80,9 +92,30 @@ public class GenericServiceMessageDelegate implements JavaDelegate {
 		}
 
 		String recipientEmailString = null;
-		if (recipientEmail != null) {
-			recipientEmailString = recipientEmail.getValue(execution)
+//		if (recipientEmail != null) {
+//			recipientEmailString = recipientEmail.getValue(execution)
+//					.toString();
+//		}
+
+
+		String recipientUserIdString = null;
+		if (recipientUserId != null) {
+			recipientUserIdString = recipientUserId.getValue(execution)
 					.toString();
+		}
+
+		if (context == null ) {
+			log.error("context is null, failed to get service ");
+			return;
+		}	
+
+		TaskFormService service = (TaskFormService) context.getBean("engine");
+
+		if (service == null) {
+			log.error("failed to get service, unable to determine emailadress ");
+			return;
+		} else {
+				recipientEmailString = service.getMyProfile(recipientUserIdString).getEmail();
 		}
 
 		String fromString = null;
@@ -160,6 +193,14 @@ public class GenericServiceMessageDelegate implements JavaDelegate {
 		return;
 
 	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext arg0)
+			throws BeansException {
+		context = arg0;
+	}
+
+	private static ApplicationContext context;
 
 
 
