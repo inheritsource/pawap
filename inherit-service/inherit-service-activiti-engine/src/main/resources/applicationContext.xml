@@ -154,7 +154,7 @@
     
   <bean id="simplifiedServiceMessageDelegate" class="org.inheritsource.service.delegates.SimplifiedServiceMessageDelegate"/>
 
-  <bean id="genericServiceMessageDelegate" class="org.inheritsource.service.delegates.GenericServiceMessageDelegate"/>
+  <bean id="myProfileServiceMessageDelegate" class="org.inheritsource.service.delegates.MyProfileServiceMessageDelegate"/>
 
   <bean id="pollSignatureScheduler" class="org.inheritsource.service.docbox.PollSignatureScheduler">
     <property name="activitiEngineService" ref="activitiEngineService" />
