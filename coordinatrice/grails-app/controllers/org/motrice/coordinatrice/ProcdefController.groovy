@@ -51,6 +51,7 @@ class ProcdefController {
    * This is different from the upload in procdef/show where we assume the uploaded
    * process is a new version and try to reconnect activity forms.
    * In this action we do not try to reconnect.
+   * Input continues with xmlUploadFromScratch, see below.
    */
   def create() {
     if (log.debugEnabled) log.debug "CREATE FROM SCRATCH ${params}"
