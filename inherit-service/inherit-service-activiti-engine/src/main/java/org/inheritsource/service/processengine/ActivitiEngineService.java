@@ -268,8 +268,11 @@ public class ActivitiEngineService {
 
 			item.setActivityCreated(task.getCreateTime());
 			item.setActivityDefinitionUuid(task.getTaskDefinitionKey());
-			item.setActivityLabel(coordinatriceFacade.getLabel(
-					task.getProcessDefinitionId(), task.getName(), locale));
+			//item.setActivityLabel(coordinatriceFacade.getLabel(
+			//		task.getProcessDefinitionId(), task.getName(), locale));
+			item.setActivityLabel(coordinatriceFacade.getLabelById(
+					task.getProcessDefinitionId(), task.getTaskDefinitionKey(), locale));
+			
 			item.setExpectedEndDate(task.getDueDate());
 			item.setProcessDefinitionUuid(task.getProcessDefinitionId());
 			item.setProcessInstanceUuid(task.getProcessInstanceId());
@@ -381,8 +384,10 @@ public class ActivitiEngineService {
 
 			item.setActivityCreated(task.getStartTime());
 			item.setActivityDefinitionUuid(task.getTaskDefinitionKey());
-			item.setActivityLabel(coordinatriceFacade.getLabel(
-					task.getProcessDefinitionId(), task.getName(), locale));
+			//item.setActivityLabel(coordinatriceFacade.getLabel(
+			//		task.getProcessDefinitionId(), task.getName(), locale));
+			item.setActivityLabel(coordinatriceFacade.getLabelById(
+					task.getProcessDefinitionId(), task.getTaskDefinitionKey(), locale));
 			item.setExpectedEndDate(task.getDueDate());
 			item.setProcessDefinitionUuid(task.getProcessDefinitionId());
 			item.setProcessInstanceUuid(task.getProcessInstanceId());
@@ -688,8 +693,10 @@ public class ActivitiEngineService {
 
 	private String getTaskName(Task task, Locale locale) {
 		String result = task.getName();
-		String crdName = coordinatriceFacade.getLabel(
-				task.getProcessDefinitionId(), task.getName(), locale);
+		//String crdName = coordinatriceFacade.getLabel(
+		//		task.getProcessDefinitionId(), task.getName(), locale);
+		String crdName = coordinatriceFacade.getLabelById(
+				task.getProcessDefinitionId(), task.getTaskDefinitionKey(), locale);
 		if (crdName != null) {
 			result = crdName;
 		}
@@ -698,11 +705,15 @@ public class ActivitiEngineService {
 
 	private String getHistoricTaskName(HistoricTaskInstance task, Locale locale) {
 		String result = task.getName();
-		String crdName = coordinatriceFacade.getLabel(
-				task.getProcessDefinitionId(), task.getName(), locale);
+		//String crdName = coordinatriceFacade.getLabel(
+		//		task.getProcessDefinitionId(), task.getName(), locale);
+		String crdName = coordinatriceFacade.getLabelById(
+				task.getProcessDefinitionId(), task.getTaskDefinitionKey(), locale);
 		if (crdName != null) {
 			result = crdName;
 		}
+
+
 		return result;
 	}
 
@@ -712,9 +723,11 @@ public class ActivitiEngineService {
 		String crdName = coordinatriceFacade.getLabel(
 				activity.getProcessDefinitionId(), activity.getActivityName(),
 				locale);
+		
 		if (crdName != null) {
 			result = crdName;
 		}
+	
 		return result;
 	}
 

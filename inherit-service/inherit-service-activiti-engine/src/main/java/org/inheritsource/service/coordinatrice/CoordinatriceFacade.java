@@ -77,12 +77,45 @@ public class CoordinatriceFacade {
 					.get(ActivityLabel.class);
 		}
 		catch (Exception e) {
-			log.info("Exception: {}" , e);
+			log.info("label:  "+procdefkey +","+locale+"," +activityname +","  +procdefversion + " not found "  );
+			log.debug("Exception: {}" , e);
 		}
 		return label;
 	}
 	
+	/**
+	 * Created to avoid the url encoding problem in getLabel
+	 * @param procdefkey
+	 * @param locale
+	 * @param activityid
+	 * @param procdefversion
+	 * @return
+	 */
+	public ActivityLabel getLabelById(String procdefkey, String locale, String activityid, int procdefversion) {
+		ActivityLabel label = null;
+		try {
+			ClientConfig config = new DefaultClientConfig();
+			Client client = Client.create(config);
+			WebResource service = client.resource("http://localhost:8080/coordinatrice/rest/");
+			label = 
+					service
+					.path("activitylabelbyid")
+					.path(procdefkey)
+					.path(locale)
+					.path(activityid)
+					.queryParam("version", String.valueOf(procdefversion))
+					.accept(MediaType.APPLICATION_JSON)
+					.get(ActivityLabel.class);
+		}
+		catch (Exception e) {
+			log.info("label:  "+procdefkey +","+locale+"," +activityid +","  +procdefversion + " not found "  );
+			log.debug("Exception: {}" , e);
+			
+		}
+		return label;
+	}
 	
+
 	public String getLabel(String processDefinitionId, String activityname, Locale locale) {
 		log.info("XXXXX " + processDefinitionId + " : " + activityname + " : " + (locale != null ? locale.getLanguage() : "null"));
 		String result = activityname;
@@ -98,6 +131,30 @@ public class CoordinatriceFacade {
 		
 		return result;
 	}
+	
+/**
+ * Created to avoid the url encoding problem in getLabel
+ * @param processDefinitionId
+ * @param activityid
+ * @param locale
+ * @return
+ */
+	public String getLabelById(String processDefinitionId, String activityid, Locale locale) {
+		//log.info("XXXXX " + processDefinitionId + " : " + activityid + " : " + (locale != null ? locale.getLanguage() : "null"));
+		String result = activityid;
+		
+		ProcessDefinition procDef = engine.getRepositoryService().getProcessDefinition(processDefinitionId);
+		
+		if (procDef != null && locale != null) {
+			ActivityLabel label = getLabelById(procDef.getKey(), locale.getLanguage(), activityid, procDef.getVersion());
+			if (label != null) {
+				result = label.getLabel();
+			}
+		}
+		
+		return result;
+	}
+	
 
 	public StartFormLabel getStartFormLabel(String appName, String formName, String locale, int formdefversion) {
 		StartFormLabel label = null;
@@ -117,7 +174,8 @@ public class CoordinatriceFacade {
 					.get(StartFormLabel.class);
 		}
 		catch (Exception e) {
-			log.info("Exception: {}", e);
+			log.debug("Exception: {}", e);
+			log.info("startformlabel:  "+ appName+","+locale+"," + formName+","  +formdefversion  + " not found "  );
 		}
 		return label;
 	}
