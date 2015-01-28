@@ -139,9 +139,9 @@ public class CoordinatriceFacade {
  * @param locale
  * @return
  */
-	public String getLabelById(String processDefinitionId, String activityid, Locale locale) {
+	public String getLabelById(String processDefinitionId, String activityname,String activityid, Locale locale) {
 		//log.info("XXXXX " + processDefinitionId + " : " + activityid + " : " + (locale != null ? locale.getLanguage() : "null"));
-		String result = activityid;
+		String result = activityname;
 		
 		ProcessDefinition procDef = engine.getRepositoryService().getProcessDefinition(processDefinitionId);
 		

@@ -271,7 +271,7 @@ public class ActivitiEngineService {
 			//item.setActivityLabel(coordinatriceFacade.getLabel(
 			//		task.getProcessDefinitionId(), task.getName(), locale));
 			item.setActivityLabel(coordinatriceFacade.getLabelById(
-					task.getProcessDefinitionId(), task.getTaskDefinitionKey(), locale));
+					task.getProcessDefinitionId(), task.getName(), task.getTaskDefinitionKey(), locale));
 			
 			item.setExpectedEndDate(task.getDueDate());
 			item.setProcessDefinitionUuid(task.getProcessDefinitionId());
@@ -387,7 +387,7 @@ public class ActivitiEngineService {
 			//item.setActivityLabel(coordinatriceFacade.getLabel(
 			//		task.getProcessDefinitionId(), task.getName(), locale));
 			item.setActivityLabel(coordinatriceFacade.getLabelById(
-					task.getProcessDefinitionId(), task.getTaskDefinitionKey(), locale));
+					task.getProcessDefinitionId(), task.getName(), task.getTaskDefinitionKey(), locale));
 			item.setExpectedEndDate(task.getDueDate());
 			item.setProcessDefinitionUuid(task.getProcessDefinitionId());
 			item.setProcessInstanceUuid(task.getProcessInstanceId());
@@ -696,7 +696,7 @@ public class ActivitiEngineService {
 		//String crdName = coordinatriceFacade.getLabel(
 		//		task.getProcessDefinitionId(), task.getName(), locale);
 		String crdName = coordinatriceFacade.getLabelById(
-				task.getProcessDefinitionId(), task.getTaskDefinitionKey(), locale);
+				task.getProcessDefinitionId(), task.getName(), task.getTaskDefinitionKey(), locale);
 		if (crdName != null) {
 			result = crdName;
 		}
@@ -708,7 +708,7 @@ public class ActivitiEngineService {
 		//String crdName = coordinatriceFacade.getLabel(
 		//		task.getProcessDefinitionId(), task.getName(), locale);
 		String crdName = coordinatriceFacade.getLabelById(
-				task.getProcessDefinitionId(), task.getTaskDefinitionKey(), locale);
+				task.getProcessDefinitionId(), task.getName(), task.getTaskDefinitionKey(), locale);
 		if (crdName != null) {
 			result = crdName;
 		}
