@@ -23,6 +23,9 @@
  
  */
 
+/** 
+ * For search of processes. The actual search is done in TaskFormService.
+ */
 package org.inheritsource.portal.components.mycases.search;
 
 import java.text.SimpleDateFormat;
@@ -44,7 +47,10 @@ public abstract class BaseSearchCasesComponent extends MyCasesBaseComponent {
 	public static final Logger log = LoggerFactory
 			.getLogger(BaseSearchCasesComponent.class);
 
-	protected boolean checkIfIsEnabled() { return  false ;  } ; 
+	protected boolean checkIfIsEnabled() {
+		return false;
+	};
+
 	public void doBeforeRender(final HstRequest request,
 			final HstResponse response) throws HstComponentException {
 		HippoBean doc = getContentBean(request);
@@ -112,7 +118,10 @@ public abstract class BaseSearchCasesComponent extends MyCasesBaseComponent {
 
 		Date startDate = null;
 		try {
-			startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDateStr);
+			if ((startDateStr != null) && (startDateStr.length() != 0)) {
+				startDate = new SimpleDateFormat("yyyy-MM-dd")
+						.parse(startDateStr);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -161,7 +170,7 @@ public abstract class BaseSearchCasesComponent extends MyCasesBaseComponent {
 		request.setAttribute("document", doc);
 
 		PagedProcessInstanceSearchResult searchResult;
-		if ( checkIfIsEnabled() && (searchIsEnabled == null)) {
+		if (checkIfIsEnabled() && (searchIsEnabled == null)) {
 			searchResult = null;
 		} else {
 			searchResult = executeSearch(searchStr, involvedUserId, fromIndex,
