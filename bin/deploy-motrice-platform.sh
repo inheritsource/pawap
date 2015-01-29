@@ -245,14 +245,6 @@ popd
 
 # 14. Restart containers
 
-if ${WITH_OPENDJ}
-then
-  pushd ${CONTAINER_ROOT}
-  $CONTAINER_ROOT/opendj/bin/stop-ds
-  $CONTAINER_ROOT/opendj/bin/start-ds
-  popd
-fi
-
 restartContainer ${ESERVICE}
 
 exit ${ERRORSTATUS}

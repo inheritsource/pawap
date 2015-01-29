@@ -8,7 +8,7 @@ MVN_SKIP_TEST=false
 BUILD_DIR=${HOME}/workspaces/inheritsource-develop/pawap
 
 # ROOT of directory holding the j2ee containers
-CONTAINER_ROOT=${HOME}/motrice-0.6
+CONTAINER_ROOT=${HOME}/motrice-0.7
 
 # ROOT of Hippo jcr content repository
 CONTENT_ROOT=${CONTAINER_ROOT}/jcr-inherit-portal
@@ -31,6 +31,3 @@ ESERVICEPATCH=${ESERVICE_HOST}
 
 ESERVICE_PORT=8080                   # internal port i.e. tomcat port
 
-WITH_OPENDJ=false
-
-OPENDJ_SETUP_PROPERTIES=/usr/local/etc/motrice/opendj_setup.properties

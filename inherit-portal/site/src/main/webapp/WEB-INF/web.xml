@@ -50,28 +50,6 @@
   </context-param>
 
 
-<!-- NB The following OpenAM j2ee agent filter and mapping must come before
-       other filters, if not white screen when trying to reach openam
-       protected pages
-     NB DO NOT REMOVE the OPENAM_FILTER BEGIN/END tags and keep them on
-     separate lines. The tags are used by deployment script
- 
-OPENAM_FILTER_BEGIN
-  <filter>
-    <filter-name>Agent</filter-name>
-    <filter-class>com.sun.identity.agents.filter.AmAgentFilter</filter-class>
-  </filter>
-
-  <filter-mapping>
-    <filter-name>Agent</filter-name>
-    <url-pattern>/*</url-pattern>
-    <dispatcher>REQUEST</dispatcher>
-    <dispatcher>INCLUDE</dispatcher>
-    <dispatcher>FORWARD</dispatcher>
-    <dispatcher>ERROR</dispatcher>
-  </filter-mapping>
-OPENAM_FILTER_END -->
-
   <!--
     HST-2 Content Beans Annotation Configuration. You can configure it
     with either xml or classes location filter. For example, if the

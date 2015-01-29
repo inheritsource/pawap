@@ -6,8 +6,7 @@
 # Default-Start: 2 3 4 5
 # Default-Stop: 0 1 6
 # Short-Description: Start motrice services
-# Description: Starts the containers for openam,opendj,kservice,eservice
-#  NB!! The containers are started as user 'inherit'
+# Description: Starts the containers for eservice
 ### END INIT INFO
 
 # Source function library.
@@ -144,16 +143,6 @@ function listContainers () {
 	fi
    done
 
-   if ${WITH_OPENDJ}
-   then 
-       # TODO
-       # get opendj port number by looking up ${OPENDJ_SETUP_PROPERTIES} file
-       getPidByPort CURRENT_PID 1389
-       if [ -n "${CURRENT_PID}" ] 
-       then 
-	   echo -e "Service: opendj \t\t port: 1389 \t pid: ${CURRENT_PID}"
-       fi
-   fi
 }
 
 function shutdownContainers() {

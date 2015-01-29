@@ -59,7 +59,6 @@ fi
 ################################################################
 # Check some requirements 
 #    i.e. do not overwrite CONTAINER_ROOT
-#         check that open am policy agent password file exists 
 ################################################################
 
 if [ -d ${CONTAINER_ROOT} ];
@@ -179,27 +178,6 @@ fi
 
 
 popd
-
-######
-
-################################################################
-# Install opendj
-################################################################
-if ${WITH_OPENDJ}
-then
-  pushd ${TMP_DIR}
-
-  if [ ! -f downloads/${OPENDJ_ZIP} ]
-  then
-       curl -o downloads/${OPENDJ_ZIP} ${OPENDJ_URL}
-  fi
-
-  unzip -d $CONTAINER_ROOT downloads/${OPENDJ_ZIP} && cd $CONTAINER_ROOT/opendj
-
-  ./setup --cli --propertiesFilePath $OPENDJ_SETUP_PROPERTIES --acceptLicense --no-prompt
-
-  popd
-fi
 
 ################################################################
 # prepare a directory for hippo jcr
