@@ -170,18 +170,9 @@ function shutdownContainers() {
 	shutdownTomcatContainer $i $CURRENT_PID
     done
 
-    if ${WITH_OPENDJ}
-    then 
-      $CONTAINER_ROOT/opendj/bin/stop-ds
-    fi
 }
 
 function startContainers() {
-    if ${WITH_OPENDJ}
-    then 
-      $CONTAINER_ROOT/opendj/bin/start-ds
-    fi
-
     for i in  ${ESERVICE}  ${KSERVICE}  ${CMSSERVICE}
     do
       startTomcatContainer $i
