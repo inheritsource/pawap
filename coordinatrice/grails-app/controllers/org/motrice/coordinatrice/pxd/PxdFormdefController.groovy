@@ -35,7 +35,7 @@ class PxdFormdefController {
   }
 
   def list(Integer max) {
-    params.max = Math.min(max ?: 10, 100)
+    params.max = Math.min(max ?: 15, 100)
     if (!params.sort) params.sort = 'path'
     String orbeonBaseUri = grailsApplication.config.coordinatrice.orbeon.builder.base.uri
     def formdefList = PxdFormdef.list(params)

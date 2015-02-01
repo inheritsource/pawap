@@ -235,7 +235,7 @@ class TaskFormSpec {
   }
 
   String toString() {
-    "[TaskFormSpec(${state}) owner=${activity} connection: ${connectionKey}/${connectionLabel}]"
+    "[TaskFormSpec(${state}) owner=[${activity}] connection=[${connectionKey}|${connectionLabel}]]"
   }
 
 }

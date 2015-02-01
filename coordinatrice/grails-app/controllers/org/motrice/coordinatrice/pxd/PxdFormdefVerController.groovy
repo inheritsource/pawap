@@ -30,7 +30,7 @@ class PxdFormdefVerController {
     }
 
     def list(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
+        params.max = Math.min(max ?: 15, 100)
         [pxdFormdefVerInstList: PxdFormdefVer.list(params), pxdFormdefVerInstTotal: PxdFormdefVer.count()]
     }
 
