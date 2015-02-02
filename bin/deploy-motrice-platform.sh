@@ -13,8 +13,6 @@
 ################################################################
 
 PROPERTIES_LOCAL_BEFOREPATCH=properties-local.xml.beforepatch 
-SITE_WEB_XML_BEFOREPATCH=web.xml.beforepatch 
-SITE_HST_CONFIG_PROPERTIES_BEFOREPATCH=hst-config.properties.beforepatch
 
 ERRORSTATUS=0
 
@@ -207,15 +205,6 @@ popd
        mv $PROPERTIES_LOCAL_BEFOREPATCH properties-local.xml
     popd
 
-# 8b. Restore original web.xml.beforepatch  to original state. Necessary to make step 2b
-#     (patching web.xml of site.war) work correctly next time script is run
-
-# 8c. Restore original hst-config.properties.beforepatch to original state. Necessary to
-#      make step 2c (patching hst-config.properties of site.war) work correctly next time
-#      script is run
-    pushd ${BUILD_DIR}/inherit-portal/site/src/main/webapp/WEB-INF
-       mv $SITE_HST_CONFIG_PROPERTIES_BEFOREPATCH hst-config.properties
-    popd
 
 # 9. Stop j2ee containers
     pushd ${CONTAINER_ROOT}
