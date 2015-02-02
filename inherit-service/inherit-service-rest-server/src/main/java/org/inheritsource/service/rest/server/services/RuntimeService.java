@@ -191,63 +191,44 @@ public class RuntimeService {
 			return Response.status(Response.Status.BAD_REQUEST)
 					.type("text/plain").entity("Bad format").build();
 		}
-		Map<String, String> variableMap = new HashMap<String, String>();
+		Map<String, Object> variableMap = new HashMap<String, Object>();
 
-		variableMap.put("description", description);
-		variableMap.put("email", email);
-		variableMap.put("device_id", device_id);
-		variableMap.put("account_id", account_id);
-		variableMap.put("first_name", first_name);
-		variableMap.put("last_name", last_name);
-		variableMap.put("phone", phone);
-		variableMap.put("media_url", media_url);
-		variableMap.put("lat", lat);
-		variableMap.put("lon", lon);
-		variableMap.put("address_string", address_string);
-		variableMap.put("address_id", address_id);
-		variableMap.put("jurisdiction_id", jurisdiction_id);
-		variableMap.put("service_code", service_code);
+		variableMap.put("motriceStartFormAssignee", "admin");
+		variableMap.put("startevent1_description", description);
+		variableMap.put("startevent1_email", email);
+		variableMap.put("startevent1_device_id", device_id);
+		variableMap.put("startevent1_account_id", account_id);
+		variableMap.put("startevent1_first_name", first_name);
+		variableMap.put("startevent1_last_name", last_name);
+		variableMap.put("startevent1_phone", phone);
+		variableMap.put("startevent1_media_url", media_url);
+		variableMap.put("startevent1_lat", lat);
+		variableMap.put("startevent1_lon", lon);
+		variableMap.put("startevent1_address_string", address_string);
+		variableMap.put("startevent1_address_id", address_id);
+		variableMap.put("startevent1_jurisdiction_id", jurisdiction_id);
+		variableMap.put("startevent1_service_code", service_code);
 		System.out.println(variableMap);
 
-		// create a new form
-		Long formTypeId = 1L;
-		String formConnectionKey = "felanmalan/felanmalan--v010";
 		String userId = "admin";
-		FormInstance initialFormInstance = new FormInstance(); // TODO what
-																// should this
-																// be
 
-		initialFormInstance.setPage("startform");
-		initialFormInstance.setDefinitionKey(formConnectionKey);
-		initialFormInstance.setTypeId(formTypeId);
+		String processDefinitionId = "felanmalan:11:5408";// TODO in
+															// coordinatrice ?
 
 		// initialFormInstance.
-		Locale locale = new Locale("en"); // TODO
-		if (engine == null) {
-			System.out.println("engine = null");
-		} else if (engine.getActivitiEngineService() == null) {
-			System.out.println("engine.getActivitiEngineService() == null");
-		} else {
-			if (engine.getActivitiEngineService().getFormEngine() == null) {
-				System.out
-						.println("engine.getActivitiEngineService().getFormEngine() == null");
-			} else {
-				try {
-					FormInstance startform = engine
-							.getActivitiEngineService()
-							.getFormEngine()
-							.getStartFormInstance(formTypeId,
-									formConnectionKey, userId,
-									initialFormInstance, locale);
+		String processInstanceId;
 
-					System.out.println(startform.toString());
-				}
+		try {
+			processInstanceId = engine.getActivitiEngineService().startProcess(
+					processDefinitionId, variableMap, userId);
+			System.out.println("processInstanceId = " + processInstanceId);
 
-				catch (Exception ex) {
-					System.out.println("Exception : " + ex);
-				}
-			}
 		}
+
+		catch (Exception ex) {
+			System.out.println("Exception : " + ex);
+		}
+
 		String service_request_id = "4711"; // TODO from ??
 		String service_notice = "Tack för felanmälan."; // TODO from
 														// configuration
