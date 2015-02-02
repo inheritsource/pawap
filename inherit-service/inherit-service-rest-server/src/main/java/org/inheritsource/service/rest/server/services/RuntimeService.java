@@ -21,84 +21,255 @@
  * mail: Motrice AB, Långsjövägen 8, SE-131 33 NACKA, SWEDEN 
  * phone: +46 8 641 64 14 
  
- */ 
- 
+ */
+
 package org.inheritsource.service.rest.server.services;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.inheritsource.service.common.domain.ActivityInstanceItem;
-import org.inheritsource.service.common.util.ParameterEncoder;
+import org.inheritsource.service.common.domain.FormInstance;
+import org.inheritsource.service.common.domain.Open311v2ServiceResponse;
+import org.inheritsource.service.common.domain.Open311v2ServiceResponseItem;
+// import org.inheritsource.service.common.util.ParameterEncoder;
 import org.inheritsource.taskform.engine.TaskFormService;
 
 @Component
 @Path("/runtime")
 public class RuntimeService {
-	
-	public static final Logger log = LoggerFactory.getLogger(RuntimeService.class.getName());
-		
+
+	public static final Logger log = LoggerFactory
+			.getLogger(RuntimeService.class.getName());
+
 	@Autowired
-	TaskFormService engine;	
-	
+	TaskFormService engine;
+
 	/**
-	 * Get a start form ActivityInstanceItem. Initialize a new one if it 
-	 * does not exist or continue with a previous partially filled in form. 
+	 * Get a start form ActivityInstanceItem. Initialize a new one if it does
+	 * not exist or continue with a previous partially filled in form.
 	 * 
 	 * @param formPath
 	 * @param userId
 	 * @return
 	 */
 	@POST
-    @Path("/activities/startActivityInstance")
-    @Produces({"application/xml","application/json"})
+	@Path("/activities/startActivityInstance")
+	@Produces({ "application/xml", "application/json" })
 	@Consumes("application/x-www-form-urlencoded")
-	public ActivityInstanceItem getStartActivityInstanceItemByFormPath(@FormParam("formPath") String formPath, @FormParam("userId") String userId) {
+	public ActivityInstanceItem getStartActivityInstanceItemByFormPath(
+			@FormParam("formPath") String formPath,
+			@FormParam("userId") String userId) {
 		ActivityInstanceItem result = null;
-		
-		log.info("REST call with parameter formPath=[{}] by userId=[{}]",formPath, userId );
-		
+
+		log.info("REST call with parameter formPath=[{}] by userId=[{}]",
+				formPath, userId);
+
 		try {
-			result = engine.getStartActivityInstanceItem(formPath, null, userId);
+			result = engine
+					.getStartActivityInstanceItem(formPath, null, userId);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			log.error(e.toString());
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Get user with a known inherit platform user uuid
+	 * 
 	 * @param userUuid
 	 * @return
 	 */
 	@POST
-    @Path("/activities/byforminstance/{userUuid}")
-    @Consumes({"application/xml","application/json"})
-    @Produces({"application/xml","application/json"})
-	public ActivityInstanceItem getActivityInstanceItemByActivityInstanceUuid(Long processActivityFormInstanceId) {
+	@Path("/activities/byforminstance/{userUuid}")
+	@Consumes({ "application/xml", "application/json" })
+	@Produces({ "application/xml", "application/json" })
+	public ActivityInstanceItem getActivityInstanceItemByActivityInstanceUuid(
+			Long processActivityFormInstanceId) {
 		return null;
 	}
-	
+
 	/**
 	 * Get user with a known inherit platform user uuid
+	 * 
 	 * @param userUuid
 	 * @return
 	 */
 	@POST
-    @Path("/activities/{activityInstanceId}")
-    @Consumes({"application/xml","application/json"})
-    @Produces({"application/xml","application/json"})
-	public ActivityInstanceItem getActivityInstanceItemByActivityInstanceId(String activityInstanceId) {
+	@Path("/activities/{activityInstanceId}")
+	@Consumes({ "application/xml", "application/json" })
+	@Produces({ "application/xml", "application/json" })
+	public ActivityInstanceItem getActivityInstanceItemByActivityInstanceId(
+			String activityInstanceId) {
 		return null;
 	}
-	
+
+	/**
+	 * Retrieves representation of an instance of helloWorld.HelloWorld
+	 * 
+	 * @return an instance of java.lang.String
+	 */
+	@GET
+	@Path("/open311/helloworld")
+	@Produces("text/html")
+	public String getHtml() {
+		return "<html><body><h1>Hello, World!!</body></h1></html>";
+	}
+
+	@Path("open311/v2/requests.{format}")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces({ "application/json", "application/xml" })
+	@POST
+	public Response requests(@PathParam("format") String format,
+			@FormParam("api_key") String api_key,
+			@FormParam("jurisdiction_id") String jurisdiction_id,
+			@FormParam("service_code") String service_code,
+			@FormParam("lat") String lat, @FormParam("long") String lon,
+			@FormParam("address_string") String address_string,
+			@FormParam("address_id") String address_id,
+			@FormParam("email") String email,
+			@FormParam("device_id") String device_id,
+			@FormParam("account_id") String account_id,
+			@FormParam("first_name") String first_name,
+			@FormParam("last_name") String last_name,
+			@FormParam("phone") String phone,
+			@FormParam("description") String description,
+			@FormParam("media_url") String media_url) {
+		// With JAX-RS 2.0 this may be done with @BeanParam and annotation in
+		// the Java bean instead
+		// but other packages are still on JAX-RS 1.X
+
+		if (((lat == null) || (lon == null)) && (address_string == null)
+				&& (address_id == null)) {
+			// no proper address
+			return Response.status(Response.Status.BAD_REQUEST)
+					.type("text/plain").entity("Bad address").build();
+
+		}
+
+		if (service_code == null) {
+			return Response.status(Response.Status.BAD_REQUEST)
+					.type("text/plain").entity("Missing service_code").build();
+		}
+
+		if (jurisdiction_id == null) {
+			// TODO This is only required if the endpoint serves multiple
+			// jurisdictions
+			return Response.status(Response.Status.BAD_REQUEST)
+					.type("text/plain").entity("Missing jurisdiction_id")
+					.build();
+		}
+
+		if ((!(format.equals("json"))) && (!(format.equals("xml")))) {
+			return Response.status(Response.Status.BAD_REQUEST)
+					.type("text/plain").entity("Bad format").build();
+		}
+
+		System.out.println("api_key = " + api_key); //
+		String correct_api_key = "xyz"; // TODO make key configurable
+		System.out.println("format = " + format);
+		if (api_key.equals(correct_api_key)) {
+			System.out.println("correct api_key ");
+		} else {
+			return Response.status(Response.Status.BAD_REQUEST)
+					.type("text/plain").entity("Bad format").build();
+		}
+		Map<String, String> variableMap = new HashMap<String, String>();
+
+		variableMap.put("description", description);
+		variableMap.put("email", email);
+		variableMap.put("device_id", device_id);
+		variableMap.put("account_id", account_id);
+		variableMap.put("first_name", first_name);
+		variableMap.put("last_name", last_name);
+		variableMap.put("phone", phone);
+		variableMap.put("media_url", media_url);
+		variableMap.put("lat", lat);
+		variableMap.put("lon", lon);
+		variableMap.put("address_string", address_string);
+		variableMap.put("address_id", address_id);
+		variableMap.put("jurisdiction_id", jurisdiction_id);
+		variableMap.put("service_code", service_code);
+		System.out.println(variableMap);
+
+		// create a new form
+		Long formTypeId = 1L;
+		String formConnectionKey = "felanmalan/felanmalan--v010";
+		String userId = "admin";
+		FormInstance initialFormInstance = new FormInstance(); // TODO what
+																// should this
+																// be
+
+		initialFormInstance.setPage("startform");
+		initialFormInstance.setDefinitionKey(formConnectionKey);
+		initialFormInstance.setTypeId(formTypeId);
+
+		// initialFormInstance.
+		Locale locale = new Locale("en"); // TODO
+		if (engine == null) {
+			System.out.println("engine = null");
+		} else if (engine.getActivitiEngineService() == null) {
+			System.out.println("engine.getActivitiEngineService() == null");
+		} else {
+			if (engine.getActivitiEngineService().getFormEngine() == null) {
+				System.out
+						.println("engine.getActivitiEngineService().getFormEngine() == null");
+			} else {
+				try {
+					FormInstance startform = engine
+							.getActivitiEngineService()
+							.getFormEngine()
+							.getStartFormInstance(formTypeId,
+									formConnectionKey, userId,
+									initialFormInstance, locale);
+
+					System.out.println(startform.toString());
+				}
+
+				catch (Exception ex) {
+					System.out.println("Exception : " + ex);
+				}
+			}
+		}
+		String service_request_id = "4711"; // TODO from ??
+		String service_notice = "Tack för felanmälan."; // TODO from
+														// configuration
+
+		Open311v2ServiceResponseItem open311v2ServiceResponseItem = new Open311v2ServiceResponseItem();
+		open311v2ServiceResponseItem.setService_notice(service_notice);
+		open311v2ServiceResponseItem.setAccount_id(account_id);
+		open311v2ServiceResponseItem.setService_request_id(service_request_id);
+
+		Open311v2ServiceResponse open311v2ServiceResponse = new Open311v2ServiceResponse();
+		open311v2ServiceResponse
+				.addOpen311v2ServiceResponseItem(open311v2ServiceResponseItem);
+		if (format.equals("json")) {
+			return Response.ok(open311v2ServiceResponse,
+					MediaType.APPLICATION_JSON).build();
+		} else if (format.equals("xml")) {
+			return Response.ok(open311v2ServiceResponse,
+					MediaType.APPLICATION_XML).build();
+		} else {
+			return null; // This should no happen
+		}
+
+	}
+
 }

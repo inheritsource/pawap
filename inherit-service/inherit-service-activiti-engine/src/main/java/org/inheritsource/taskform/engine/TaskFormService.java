@@ -69,6 +69,29 @@ import org.inheritsource.taskform.engine.persistence.entity.ProcessActivityFormI
 import org.inheritsource.taskform.engine.persistence.entity.StartFormDefinition;
 import org.inheritsource.taskform.engine.persistence.entity.UserEntity;
 
+/**
+ * Handles some of the interaction between Orbeon, Activiti, OpenLDAP and Hippo.  
+ * 
+ * 
+ * Orbeon : 
+ * Uses OrbeonService to get MyProfile to get the email of the user.
+ * 
+ * 
+ * Activiti:
+ * Uses activitiEngineService to get Inbox, activities,  , ProcessInstanceDetails, 
+ * ActivityWorkflowInfo, StartLogItem, search results (PagedProcessInstanceSearchResult)
+ * to add comments, and 
+ * Submit forms  
+ * 
+ * 
+ * Hippo: 
+ * TaskFormService is used in
+ * MyCasesBaseComponent, Inbox, SiteAjaxApplication, ServletUserNameUtil
+ * 
+ * OpenLDAP: Uses OpenLDAP to get roles of users. 
+ * 
+ *
+ */
 public class TaskFormService {
 
 	public static final Logger log = LoggerFactory.getLogger(TaskFormService.class
@@ -335,7 +358,7 @@ public class TaskFormService {
 	public ActivityInstanceItem getActivityInstanceItem(String actinstId, String formInstanceId, Locale locale, String userId) {
 		
 		ActivityInstanceItem result = activitiEngineService.getActivityInstanceItem(actinstId, formInstanceId, locale, userId);
-		
+
 		return result;
 	}
 	
@@ -484,7 +507,7 @@ public class TaskFormService {
 						taskFormDb.saveProcessActivityFormInstance(activity);
 						
 						formInstance = activitiEngineService.getFormEngine().getStartLogItem(activitiEngineService.getEngine().getHistoryService().createHistoricProcessInstanceQuery().processInstanceId(processInstanceUuid).includeProcessVariables().singleResult(), userId);
-
+                                        
 					}
 				}
 			}

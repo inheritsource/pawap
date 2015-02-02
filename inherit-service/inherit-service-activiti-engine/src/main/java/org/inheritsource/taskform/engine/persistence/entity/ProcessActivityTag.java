@@ -43,37 +43,37 @@ public class ProcessActivityTag {
 	@Id
 	@GeneratedValue
 	@Column(name="process_activity_tag_id")
-	Long processActivityTagId;
+	private Long processActivityTagId;
 
 	@ManyToOne
     @JoinColumn(name="tag_type_id", nullable=false)
-	TagType type;
+	private TagType type;
 
 	@Column(name="procinst_id")
-	String procinstId;
+	private String procinstId;
 	
 	@Column(name="actinst_id")
-	String actinstId;
+	private String actinstId;
 
 	@Column(nullable=false)
-	String value;
+	private String value;
 	
-	/**
-	 * Timestamp of last write
-	 */
+
 	@Column(nullable=false)
-	Date timestamp = null;
+	private Date timestamp = null;
 	
-	/**
-	 * The last writer
-	 */
+
 	@Column(nullable=false)
-	String userId;
+	private String userId;
 	
 	public ProcessActivityTag() {
 		
 	}
 
+	/** {@link ProcessActivityTag#}
+	 * TODO
+	 * 
+	 */
 	public Long getProcessActivityTagId() {
 		return processActivityTagId;
 	}
@@ -82,6 +82,10 @@ public class ProcessActivityTag {
 		this.processActivityTagId = processActivityTagId;
 	}
 
+	/** {@link ProcessActivityTag#type}
+	 * TODO
+	 * 
+	 */
 	public TagType getType() {
 		return type;
 	}
@@ -90,6 +94,10 @@ public class ProcessActivityTag {
 		this.type = type;
 	}
 
+	/** {@link ProcessActivityTag#procinstId}
+	 * TODO
+	 * 
+	 */
 	public String getProcinstId() {
 		return procinstId;
 	}
@@ -98,6 +106,10 @@ public class ProcessActivityTag {
 		this.procinstId = procinstId;
 	}
 
+	/** {@link ProcessActivityTag#actinstId}
+	 * TODO
+	 * 
+	 */
 	public String getActinstId() {
 		return actinstId;
 	}
@@ -106,6 +118,10 @@ public class ProcessActivityTag {
 		this.actinstId = actinstId;
 	}
 
+	/** {@link ProcessActivityTag#value}
+	 * TODO
+	 * 
+	 */	
 	public String getValue() {
 		return value;
 	}
@@ -113,7 +129,10 @@ public class ProcessActivityTag {
 	public void setValue(String value) {
 		this.value = value;
 	}
-
+	
+	/** {@link ProcessActivityTag#timestamp}
+	 * Timestamp of last write
+	 */
 	public Date getTimestamp() {
 		return timestamp;
 	}
@@ -122,9 +141,14 @@ public class ProcessActivityTag {
 		this.timestamp = timestamp;
 	}
 
+	/** {@link ProcessActivityTag#userId}
+	 * TODO
+	 * The last writer
+	 */
 	public String getUserId() {
 		return userId;
 	}
+	
 
 	public void setUserId(String userId) {
 		this.userId = userId;

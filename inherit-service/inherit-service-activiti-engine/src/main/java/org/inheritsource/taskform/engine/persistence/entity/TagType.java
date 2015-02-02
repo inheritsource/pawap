@@ -56,14 +56,14 @@ public class TagType {
 
 	@Id
 	@Column(name="tag_type_id")
-	Long tagTypeId;
+	private Long tagTypeId;
 	
 	@Column(unique=true, nullable=false)
-	String name;
+	private String name;
 
 	// TODO should be multi lingual?
 	@Column(nullable=false)
-	String label;
+	private String label;
 	
 	public TagType() {
 		

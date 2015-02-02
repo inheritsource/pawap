@@ -40,46 +40,46 @@ public class UserEntity {
 
 	@Id
 	@GeneratedValue
-	Long userId;
+	private Long userId;
 
 	/**
 	 * platform generated uuid which identifies the user in the system 
 	 */
 	@Column(unique=true, nullable=false)
-	String uuid;
+	private String uuid;
 	
 	@Column(unique=false, nullable=false)
-	int category = CATEGORY_UNKNOWN;
+	private int category = CATEGORY_UNKNOWN;
 	
 	/**
 	 * commonName
 	 */
 	@Column(unique=false, nullable=false)
-	String cn;
+	private String cn;
 	
 	/**
 	 * Distinguished Name
 	 */
 	@Column(unique=false, nullable=true)
-	String dn;
+	private String dn;
 
 	/**
 	 * E-leg Serial
 	 */
 	@Column(unique=false, nullable=true)
-	String serial;
+	private String serial;
 
 	/**
 	 * First or given name
 	 */
 	@Column(unique=false, nullable=true)
-	String gn;
+	private String gn;
 	
 	/**
 	 * surname or family name  
 	 */
 	@Column(unique=false, nullable=true)
-	String sn;
+	private String sn;
 	
 	public UserEntity() {
 		
