@@ -11,21 +11,11 @@
     <param-value>classpath:applicationContext.xml</param-value>
   </context-param>
   
-  <context-param>
-    <param-name>org.restlet.component</param-name>
-    <param-value>motriceRestletComponent</param-value>
-  </context-param>
   
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
 	
-  <!-- Restlet -->  
-  <servlet>  
-    <servlet-name>RestletServlet</servlet-name>  
-    <servlet-class>org.restlet.ext.spring.SpringServerServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>  
   
   <!-- Jersey -->
   <servlet>
@@ -40,11 +30,6 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   
-  <!-- Default, requests to RESTlet-->  
-  <servlet-mapping>  
-    <servlet-name>RestletServlet</servlet-name>  
-    <url-pattern>/*</url-pattern>  
-  </servlet-mapping>  
   
   <!-- Requests to Jersey REST  -->
   <servlet-mapping>

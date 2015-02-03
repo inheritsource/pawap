@@ -192,8 +192,19 @@ public class RuntimeService {
 					.type("text/plain").entity("Bad format").build();
 		}
 		Map<String, Object> variableMap = new HashMap<String, Object>();
-
+		// generate a type 4 UUID
+		String motriceStartFormInstanceId = java.util.UUID.randomUUID().toString();
+		
 		variableMap.put("motriceStartFormAssignee", "admin");
+		variableMap.put("motriceStartFormInstanceId", motriceStartFormInstanceId ) ; 
+		variableMap.put("motriceStartFormLat", lat);
+		variableMap.put("motriceStartFormLon", lon);
+		// motriceStartFormDefinitionKey
+		// motriceStartFormDataUri TODO link back to external system
+		// might be possible to get through  the api_key, jurisdiction_id and  attribute[external_id]
+		// motriceStartFormTypeId
+		
+		
 		variableMap.put("startevent1_description", description);
 		variableMap.put("startevent1_email", email);
 		variableMap.put("startevent1_device_id", device_id);
@@ -202,8 +213,7 @@ public class RuntimeService {
 		variableMap.put("startevent1_last_name", last_name);
 		variableMap.put("startevent1_phone", phone);
 		variableMap.put("startevent1_media_url", media_url);
-		variableMap.put("startevent1_lat", lat);
-		variableMap.put("startevent1_lon", lon);
+
 		variableMap.put("startevent1_address_string", address_string);
 		variableMap.put("startevent1_address_id", address_id);
 		variableMap.put("startevent1_jurisdiction_id", jurisdiction_id);
@@ -229,14 +239,15 @@ public class RuntimeService {
 			System.out.println("Exception : " + ex);
 		}
 
-		String service_request_id = "4711"; // TODO from ??
+		
+
 		String service_notice = "Tack för felanmälan."; // TODO from
 														// configuration
 
 		Open311v2ServiceResponseItem open311v2ServiceResponseItem = new Open311v2ServiceResponseItem();
 		open311v2ServiceResponseItem.setService_notice(service_notice);
 		open311v2ServiceResponseItem.setAccount_id(account_id);
-		open311v2ServiceResponseItem.setService_request_id(service_request_id);
+		open311v2ServiceResponseItem.setService_request_id(motriceStartFormInstanceId);
 
 		Open311v2ServiceResponse open311v2ServiceResponse = new Open311v2ServiceResponse();
 		open311v2ServiceResponse

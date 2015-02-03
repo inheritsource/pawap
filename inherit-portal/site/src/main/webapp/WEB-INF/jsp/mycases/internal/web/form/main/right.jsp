@@ -89,5 +89,17 @@
 	    </menu>
 	  </div>
 	</section>
+	<section class="box" contextmenu="map" id="map">
+	  <h1 class="box-title"><fmt:message key="map.lbl" /></h1>
+	  <div class="box-instructions">
+	  </div>
+	  <div class="box-content body-copy">
+	  	<c:if test="${not empty startLogItem}">
+		    <h1>${startLogItem.longitude}</h1>
+		    <h1>${startLogItem.latitude}</h1>
+		</c:if>
+	  </div>
+	</section>
+
 
 </aside>

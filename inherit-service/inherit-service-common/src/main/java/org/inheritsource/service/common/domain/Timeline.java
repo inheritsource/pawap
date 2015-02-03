@@ -94,6 +94,18 @@ public class Timeline {
 	public void setSorted(boolean sorted) {
 		this.sorted = sorted;
 	}
+	
+	public StartLogItem getStartLogItem() {
+		StartLogItem result = null;
+		
+		for(TimelineItem item : items) {
+			if (item instanceof StartLogItem) {
+				result = (StartLogItem)item;
+			}
+		}
+		
+		return result;
+	}
 
 	public TreeMap<Date, List<TimelineItem>> getTimelineByDay() {
 		TreeMap<Date, List<TimelineItem>> timelineByDay = new TreeMap<Date, List<TimelineItem>>(new Comparator<Date>() {
