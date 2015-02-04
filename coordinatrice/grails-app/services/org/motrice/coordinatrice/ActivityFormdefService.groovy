@@ -33,7 +33,6 @@ class ActivityFormdefService {
   // Transaction support mainly for MtfActivityFormDefinition
   static transactional = true
 
-  def procdefService
   private static final log = LogFactory.getLog(this)
 
   /**

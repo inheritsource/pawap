@@ -2,6 +2,14 @@
 -- Create tables with their constraints (PK, UNIQUE,...) and other indexes
 --
 
+CREATE TABLE crd_form_map
+(
+  id bigint NOT NULL,
+  version bigint NOT NULL,
+  json_map text NOT NULL,
+  CONSTRAINT crd_form_map_pkey PRIMARY KEY (id)
+);
+
 CREATE TABLE crd_proc_category
 (
   id bigint NOT NULL,

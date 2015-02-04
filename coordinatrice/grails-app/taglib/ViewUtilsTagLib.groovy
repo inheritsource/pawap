@@ -59,6 +59,16 @@ class ViewUtilsTagLib {
     out << message(code: type?.res, default: type?.defaultMessage)
   }
 
+  /**
+   * Tag for displaying variable name in a variable map.
+   * Generally useful.
+   * Displays '--' if the value is null.
+   */
+  def nullval = {attrs, body ->
+    def value = attrs.value
+    out << (value ?: '--')
+  }
+
   /***** From Migratrice *****/
 
   /**

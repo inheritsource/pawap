@@ -561,11 +561,11 @@ class UploadBpmnCommand {
   def file
 
   String getFileName() {
-    file.originalFilename
+    file?.originalFilename
   }
 
   InputStream getInputStream() {
-    file.inputStream
+    file?.inputStream
   }
 
   String toString() {
