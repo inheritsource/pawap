@@ -64,6 +64,8 @@ public class FormEngine {
 	public static final String START_FORM_DATA_URI      = "motriceStartFormDataUri";
 	public static final String START_FORM_DOCBOXREF		= "motriceStartFormPreservationDocboxRef";
 	public static final String START_FORM_ACT_URI       = "motriceStartFormPreservationActUri";
+	public static final String START_FORM_LON           = "motriceStartFormLon";
+	public static final String START_FORM_LAT           = "motriceStartFormLat";
 	
 	// motrice task local instance variables by convention
 	public static final String FORM_TYPEID              = "motriceFormTypeId";
@@ -367,7 +369,9 @@ public class FormEngine {
 			startFormInstance.setActUri((String)processVars.get(FormEngine.START_FORM_ACT_URI));
 			startFormInstance.setSubmittedBy(identityService.getUserByUuid((String)processVars.get(START_FORM_ASSIGNEE)));
 			startFormInstance.setProcessInstanceUuid(historicProcessInstance.getId());
-			startFormInstance.setProcessDefinitionUuid(historicProcessInstance.getProcessDefinitionId());
+			startFormInstance.setProcessDefinitionUuid(historicProcessInstance.getProcessDefinitionId());			
+			startFormInstance.setLongitude((String)processVars.get(FormEngine.START_FORM_LON));
+			startFormInstance.setLatitude((String)processVars.get(FormEngine.START_FORM_LAT));
 			
 			if (historicProcessInstance != null) {
 				startFormInstance.setSubmitted(historicProcessInstance.getStartTime());

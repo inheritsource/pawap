@@ -94,33 +94,26 @@ public class StartFormDefinition {
 	@Id
 	@GeneratedValue
 	@Column(name="start_form_definition_id")
-	Long startFormDefinitionId;
+	private Long startFormDefinitionId;
 	
-	/**
-	 * Process definition uuid to start when this start form is submitted
-	 */
 	@Column(name="procdef_id")
-	String processDefinitionUuid;
+	private String processDefinitionUuid;
+	
 		
-	/**
-	 * form type identifies a Motrice form handler i.e. Orbeon, sign, noform etc
-	 */
-	@Column(name="form_type_id")
-	Long formTypeId;
 
-	/**
-	 * identifies a specific form in a Motrice form handler engine. The form handler engine 
-	 * is responsibly to know how to interpret the formDefinitionKey
-	 */
+	@Column(name="form_type_id")
+	private Long formTypeId;
+
+
 	@Column(name="form_connection_key")
-	String formConnectionKey;
+	private String formConnectionKey;
 	
 	@Column(nullable = false, name="auth_type_req")
 	@Enumerated(EnumType.STRING)
-	AuthTypes authTypeReq;
+	private AuthTypes authTypeReq;
 	
 	@Column(name="user_data_xpath")
-	String userDataXPath;
+	private String userDataXPath;
 
 	public StartFormDefinition() {
 		
@@ -133,15 +126,22 @@ public class StartFormDefinition {
 	public void setStartFormDefinitionId(Long startFormDefinitionId) {
 		this.startFormDefinitionId = startFormDefinitionId;
 	}
-
+	
+	/** {@link StartFormDefinition#processDefinitionUuid}
+	 * Process definition uuid to start when this start form is submitted
+	 */
 	public String getProcessDefinitionUuid() {
 		return processDefinitionUuid;
 	}
 
+	
 	public void setProcessDefinitionUuid(String processDefinitionUuid) {
 		this.processDefinitionUuid = processDefinitionUuid;
 	}
-
+	
+	/** {@link StartFormDefinition#formTypeId}
+	 * form type identifies a Motrice form handler, Orbeon, sign, noform etc.
+	 */
 	public Long getFormTypeId() {
 		return formTypeId;
 	}
@@ -149,10 +149,15 @@ public class StartFormDefinition {
 	public void setFormTypeId(Long formTypeId) {
 		this.formTypeId = formTypeId;
 	}
-
+	
+	/** {@link StartFormDefinition#formConnectionKey}
+	 * identifies a specific form in a Motrice form handler engine. The form handler engine 
+	 * is responsibly to know how to interpret the formDefinitionKey
+	 */
 	public String getFormConnectionKey() {
 		return formConnectionKey;
 	}
+
 
 	public void setFormConnectionKey(String formConnectionKey) {
 		this.formConnectionKey = formConnectionKey;

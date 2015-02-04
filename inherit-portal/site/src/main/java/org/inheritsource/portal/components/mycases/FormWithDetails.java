@@ -65,7 +65,7 @@ public class FormWithDetails extends Form  {
 		appendChannelLabels(request, piDetails);
 		
 		request.setAttribute("processInstanceDetails", piDetails);
-		
+				
 		if (piDetails != null && piDetails.getProcessInstanceUuid() != null) {
 			List<Tag> tags = engine.getTagsByProcessInstance(piDetails.getProcessInstanceUuid());
 			request.setAttribute("tags", tags);
@@ -74,6 +74,8 @@ public class FormWithDetails extends Form  {
 		if (piDetails != null && piDetails.getTimeline() != null) {
 			request.setAttribute("timelineByDay", piDetails.getTimeline().getTimelineByDay());
 			log.debug("timeline= {}" , piDetails.getTimeline().getTimelineByDay());
+			
+			request.setAttribute("startLogItem", piDetails.getTimeline().getStartLogItem());
 		}
     }
 	

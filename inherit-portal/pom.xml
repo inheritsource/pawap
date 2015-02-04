@@ -289,6 +289,13 @@
                       <context>/site</context>
                     </properties>
                   </deployable>
+                   <deployable>
+                    <location>${project.basedir}/../inherit-service/inherit-service-rest-server/target/restrice.war</location>
+                    <type>war</type>
+                    <properties>
+                      <context>/restrice</context>
+                    </properties>
+                  </deployable>
                 </deployables>
                 <configfiles>
                   <configfile>

@@ -53,35 +53,34 @@ public class ActivityFormDefinition {
 	@Column(name="activity_form_definition_id")
 	Long activityFormDefinitionId;
 		
-	/**
-	 * Process definition id (Activiti TaskDefinitionKey) 
-	 */
+
 	@Column(name="procdef_id")
-	String procdefId;
+	private String procdefId;
 	
 	/**
 	 * Activity definition id (Activiti TaskDefinitionKey) 
 	 */
 	@Column(name="actdef_id")
-	String actdefId;
+	private String actdefId;
 	
 	/**
 	 * form type identifies a Motrice form handler i.e. Orbeon, sign, noform etc
 	 */
 	@Column(name="form_type_id")
-	Long formTypeId;
+	private Long formTypeId;
 
-	/**
-	 * identifies a specific form in a Motrice form handler engine. The form handler engine 
-	 * is responsibly to know how to interpret the formDefinitionKey
-	 */
+
 	@Column(name="form_connection_key")
-	String formConnectionKey;
+	private String formConnectionKey;
 	
 	public ActivityFormDefinition() {
 		
 	}
 
+	/** {@link ActivityFormDefinition#activityFormDefinitionId}
+	 * TODO
+	 * 
+	 */
 	public Long getActivityFormDefinitionId() {
 		return activityFormDefinitionId;
 	}
@@ -89,7 +88,11 @@ public class ActivityFormDefinition {
 	public void setActivityFormDefinitionId(Long activityFormDefinitionId) {
 		this.activityFormDefinitionId = activityFormDefinitionId;
 	}
-
+	
+	/** {@link ActivityFormDefinition#procdefId}
+	 * Process definition id (Activiti TaskDefinitionKey) 
+	 * For example  procHemkompostering:1:8
+	 */
 	public String getProcdefId() {
 		return procdefId;
 	}
@@ -97,7 +100,12 @@ public class ActivityFormDefinition {
 	public void setProcdefId(String procdefId) {
 		this.procdefId = procdefId;
 	}
-
+	
+	/** {@link ActivityFormDefinition#actdefId}
+	 * Defined in the bpmn diagram. For example
+	 * <userTask id="expediering" > </userTask> 
+	 * 
+	 */
 	public String getActdefId() {
 		return actdefId;
 	}
@@ -105,7 +113,11 @@ public class ActivityFormDefinition {
 	public void setActdefId(String actdefId) {
 		this.actdefId = actdefId;
 	}
-
+	
+/** {@link ActivityFormDefinition#formTypeId}
+ * 
+ * 
+ */
 	public Long getFormTypeId() {
 		return formTypeId;
 	}
@@ -114,6 +126,11 @@ public class ActivityFormDefinition {
 		this.formTypeId = formTypeId;
 	}
 
+	/** {@link ActivityFormDefinition#formConnectionKey}
+	 * identifies a specific form in a Motrice form handler engine. The form handler engine 
+	 * is responsibly to know how to interpret the formDefinitionKey
+	 * Example: serveringstillstand/remissvar--v006
+	 */
 	public String getFormConnectionKey() {
 		return formConnectionKey;
 	}

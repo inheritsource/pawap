@@ -34,6 +34,41 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 public class StartLogItem extends ActivityInstanceLogItem {
 	private static final long serialVersionUID = 8056671513248069156L;
 	
+	private String longitude;
+	private String latitude;
+	
+	/**
+	 * Geolocation longitude using the WGS84 projection (http://en.wikipedia.org/wiki/World_Geodetic_System)
+	 * @return
+	 */
+	public String getLongitude() {
+		return longitude;
+	}
+
+	/**
+	 * Geolocation longitude using the WGS84 projection (http://en.wikipedia.org/wiki/World_Geodetic_System)
+	 * @param longitude
+	 */
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	/**
+	 * Geolocation latitude using the WGS84 projection (http://en.wikipedia.org/wiki/World_Geodetic_System)
+	 * @return
+	 */
+	public String getLatitude() {
+		return latitude;
+	}
+
+	/**
+	 * Geolocation latitude using the WGS84 projection (http://en.wikipedia.org/wiki/World_Geodetic_System)
+	 * @param latitude
+	 */
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
 	/**
 	 * return the start form submission date as timestamp i.e. process instance start date
 	 */
@@ -44,7 +79,8 @@ public class StartLogItem extends ActivityInstanceLogItem {
 
 	@Override
 	public String toString() {
-		return "StartLogItem [endDate=" + endDate + ", performedByUser="
+		return "StartLogItem [longitude=" + longitude + ", latitude="
+				+ latitude + "endDate=" + endDate + ", performedByUser="
 				+ performedByUser + ", processDefinitionUuid="
 				+ processDefinitionUuid + ", processInstanceUuid="
 				+ processInstanceUuid + ", activityDefinitionUuid="

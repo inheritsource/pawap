@@ -44,71 +44,52 @@ public class ProcessActivityFormInstance {
 	
 	@Id
 	@GeneratedValue
-	Long processActivityFormInstanceId;
+	private Long processActivityFormInstanceId;
 	
-	/**
-	 * If null, this is a not submitted start form
-	 */
-	String processInstanceUuid;
+
+	private String processInstanceUuid;
 	
-	/**
-	 * If not null, this is a start form instance
-	 */
+
 	@ManyToOne
     @JoinColumn(name="start_form_definition_id", nullable=true)
-	StartFormDefinition startFormDefinition;
+	private StartFormDefinition startFormDefinition;
 	
-	/**
-	 * if null, this is a start form
-	 */
-	String activityInstanceUuid;
-	
-	/**
-	 * Data id that holds filled in form data
-	 */
-	@Column(unique=true, nullable=false)
-	String formDocId;
-	
-	/**
-	 * form type identifies a Motrice form handler i.e. Orbeon, sign, noform etc
-	 */
-	@Column(name="form_type_id")
-	Long formTypeId;
 
-	/**
-	 * identifies a specific form in a Motrice form handler engine. The form handler engine 
-	 * is responsibly to know how to interpret the formDefinitionKey
-	 */
+	private String activityInstanceUuid;
+	
+
+	@Column(unique=true, nullable=false)
+	private String formDocId;
+	
+	@Column(name="form_type_id")
+	private Long formTypeId;
+
 	@Column(name="form_connection_key")
-	String formConnectionKey;
+	private String formConnectionKey;
 	
-	/**
-	 * 
-	 */
 	@Column(name="form_data_uri")
-	String formDataUri;
+	private String formDataUri;
 	
-	/**
-	 * If null, this form is still not submitted, otherwise submission time stamp.
-	 */
-	Date submitted = null;
+
+	private Date submitted = null;
 	
-	/**
-	 * The last writer to this instance
-	 */
+
 	@Column(nullable=false)
-	String userId;
+	private String userId;
 	// TODO rename userId to userUuid
 	
 	@OneToMany
 	@JoinColumn(name="processActivityFormInstanceId")
-	Set<ProcessActivityTag> processActivityTags; 
+	private Set<ProcessActivityTag> processActivityTags; 
 	
 	public ProcessActivityFormInstance() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
+	/** {@link ProcessActivityFormInstance#processActivityFormInstanceId}
+	 * TODO
+	 * Example : 1832
+	 */
 	public Long getProcessActivityFormInstanceId() {
 		return processActivityFormInstanceId;
 	}
@@ -117,6 +98,10 @@ public class ProcessActivityFormInstance {
 		this.processActivityFormInstanceId = processActivityFormInstanceId;
 	}
 
+	/** {@link ProcessActivityFormInstance#processInstanceUuid}
+	 * If null, this is a not submitted start form
+	 * Example: 101
+	 */
 	public String getProcessInstanceUuid() {
 		return processInstanceUuid;
 	}
@@ -124,15 +109,25 @@ public class ProcessActivityFormInstance {
 	public void setProcessInstanceUuid(String processInstanceUuid) {
 		this.processInstanceUuid = processInstanceUuid;
 	}
-
+	/** {@link ProcessActivityFormInstance#activityInstanceUuid}
+	 * TODO
+	 * Example : Empty ? 
+	 */
 	public String getActivityInstanceUuid() {
 		return activityInstanceUuid;
 	}
 
+	/** {@link ProcessActivityFormInstance#activityInstanceUuid}
+	 * if null, this is a start form
+	 */
 	public void setActivityInstanceUuid(String activityInstanceUuid) {
 		this.activityInstanceUuid = activityInstanceUuid;
 	}
-
+	
+	/** {@link ProcessActivityFormInstance#formDocId}
+	 * Data id that holds filled in form data
+	 * Example: dc95dfa8-4e9e-4ac4-87bc-7a318f5abe5d
+	 */
 	public String getFormDocId() {
 		return formDocId;
 	}
@@ -140,7 +135,10 @@ public class ProcessActivityFormInstance {
 	public void setFormDocId(String formDocId) {
 		this.formDocId = formDocId;
 	}
-
+	/** {@link ProcessActivityFormInstance#formDataUri}
+	 * Example: http://orbeon:orb@eminburk.malmo.se:8080/exist/rest/db/orbeon-pe/fr/start/demo-ansokan--v003/data/a4926f37-e2d9-4bc1-ad48-a0b7798098bb/data.xml
+	 * 
+	 */
 	public String getFormDataUri() {
 		return formDataUri;
 	}
@@ -149,6 +147,10 @@ public class ProcessActivityFormInstance {
 		this.formDataUri = formDataUri;
 	}
 
+	/** {@link ProcessActivityFormInstance#formTypeId}
+	 * form type identifies a Motrice form handler, Orbeon, sign, noform etc.
+	 * Example: 1 
+	 */
 	public Long getFormTypeId() {
 		return formTypeId;
 	}
@@ -157,6 +159,11 @@ public class ProcessActivityFormInstance {
 		this.formTypeId = formTypeId;
 	}
 
+	/** {@link ProcessActivityFormInstance#formConnectionKey}
+	 * identifies a specific form in a Motrice form handler engine. The form handler engine 
+	 * is responsibly to know how to interpret the formDefinitionKey
+	 * Example:  start/demo-ansokan--v003 
+	 */
 	public String getFormConnectionKey() {
 		return formConnectionKey;
 	}
@@ -164,7 +171,11 @@ public class ProcessActivityFormInstance {
 	public void setFormConnectionKey(String formConnectionKey) {
 		this.formConnectionKey = formConnectionKey;
 	}
-
+	
+	/** {@link ProcessActivityFormInstance#submitted}
+	 * If null, this form is still not submitted, otherwise submission time stamp.
+	 * Example: 2015-01-07 16:51:09.363 
+	 */
 	public Date getSubmitted() {
 		return submitted;
 	}
@@ -173,6 +184,9 @@ public class ProcessActivityFormInstance {
 		this.submitted = submitted;
 	}
 
+	/** {@link ProcessActivityFormInstance#userId}
+	 * The last writer to this instance
+	 */
 	public String getUserId() {
 		return userId;
 	}
@@ -180,7 +194,9 @@ public class ProcessActivityFormInstance {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	
+	/** {@link ProcessActivityFormInstance#startFormDefinition}
+	 * If not null, this is a start form instance
+	 */
 	public StartFormDefinition getStartFormDefinition() {
 		return startFormDefinition;
 	}
@@ -215,6 +231,10 @@ public class ProcessActivityFormInstance {
 		return (activityInstanceUuid == null);
 	}
 	
+	/** {@link ProcessActivityFormInstance#processActivityTags}
+	 * TODO
+	 * 
+	 */
 	public Set<ProcessActivityTag> getProcessActivityTags() {
 		return processActivityTags;
 	}

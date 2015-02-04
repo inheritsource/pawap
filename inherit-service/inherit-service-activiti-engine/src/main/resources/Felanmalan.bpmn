@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="felanmalan" name="felanmalan" isExecutable="true">
+    <startEvent id="startevent1" name="Start">
+      <extensionElements>
+        <activiti:formProperty id="startevent1_first_name" type="string" default="John"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_last_name" type="string" default="Doe"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_phone" type="string" default="12345678"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_email" type="string" default="email2@se.se"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_address_string" type="string" default="Gnuvägen 1"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_address_id" type="string" default="Gnuvägen 1"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_jurisdiction_id" type="string" default="Nacka"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_description" type="string" default="description"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_device_id" type="string" default="device_id"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_account_id" type="string" default="account_id"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_media_url" type="string" default="http://motrice.se"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_service_code" type="string" default="service_code"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_lat" type="string" default="0.0"></activiti:formProperty>
+        <activiti:formProperty id="startevent1_lon" type="string" default="0.0"></activiti:formProperty>
+      </extensionElements>
+    </startEvent>
+    <userTask id="handlaggare1" name="Handläggare" activiti:candidateUsers="admin" activiti:candidateGroups="Handlaggare">
+      <extensionElements>
+        <activiti:taskListener event="complete" class="org.inheritsource.service.delegates.CreateVariablesTaskListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="handlaggare1">
+      <extensionElements>
+        <activiti:executionListener event="take" class="org.inheritsource.service.delegates.CreateVariablesFlowListener"></activiti:executionListener>
+      </extensionElements>
+    </sequenceFlow>
+    <scriptTask id="scripttask1" name="Map to group and prepare email" scriptFormat="groovy" activiti:autoStoreVariables="false">
+      <script>
+
+try {
+println("Hello world!"); 
+println("motriceStartFormAssignee =" + motriceStartFormAssignee) ; 
+println("startevent1_first_name :startevent1_first_name =" + startevent1_first_name ) ;
+println("startevent1_last_name :startevent1_last_name =" + startevent1_last_name ) ;
+println("startevent1_phone :startevent1_phone =" + startevent1_phone ) ;
+println("startevent1_email :startevent1_email =" + startevent1_email ) ;
+println("startevent1_address_string :startevent1_address_string =" + startevent1_address_string ) ;
+println("startevent1_description :startevent1_description =" + startevent1_description ) ;
+println("startevent1_description :startevent1_description =" + startevent1_description ) ;
+println("startevent1_device_id :startevent1_device_id =" + startevent1_device_id ) ;
+println("startevent1_account_id :startevent1_account_id =" + startevent1_account_id ) ;
+println("startevent1_service_code :startevent1_service_code =" + startevent1_service_code ) ;
+println("startevent1_media_url :startevent1_media_url =" + startevent1_media_url ) ;
+println("startevent1_lat :startevent1_lat =" + startevent1_lat ) ;
+println("startevent1_lon :startevent1_lon =" + startevent1_lon ) ;
+println("Handlggare_group :Handlggare_group =" + Handlggare_group ) ;
+println("Handlggare_comment :Handlggare_comment =" + Handlggare_comment ) ;
+} catch  (Exception e) {
+                        e.printStackTrace();
+                        e.printStackTrace();
+            println("Exception missing variable");
+}
+String group ; 
+if ( Handlggare_group.equals("two") )
+  // { group = "elektriker" ; } 
+  { group = "Handlaggare" ; } 
+else if ( Handlggare_group.equals("three") )
+  { group = "renhallning" ; }
+else if ( Handlggare_group.equals("four") )
+  { group = "vvs" ; }
+else 
+  { group = "admin" ; }
+execution.setVariable("group" , group  ) ; 
+println("group :group =" + group ) ;
+def recipientEmail= startevent1_email  ;
+from = "noreply@motrice.se" ; 
+messageText = "Ditt Ärende på "+startevent1_address_string+"(service_code=" + startevent1_service_code + "  är utfört."+ Handlggare_comment ; 
+messageSubject = "Ärende utfört" ; 
+execution.setVariable("from" , from  ) ; 
+execution.setVariable("recipientEmail" , recipientEmail  ) ; 
+execution.setVariable("messageText" , messageText  ) ; 
+execution.setVariable("messageSubject" , messageSubject  ) ; 
+println("done ...") ; 
+</script>
+    </scriptTask>
+    <sequenceFlow id="flow2" sourceRef="handlaggare1" targetRef="scripttask1"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway" default="flow4"></exclusiveGateway>
+    <sequenceFlow id="flow3" sourceRef="scripttask1" targetRef="exclusivegateway1"></sequenceFlow>
+    <userTask id="usertask2" name="Utförare" activiti:candidateUsers="admin" activiti:candidateGroups="${group}"></userTask>
+    <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="usertask2"></sequenceFlow>
+    <scriptTask id="scripttask2" name="Prepare email for rejection" scriptFormat="groovy" activiti:autoStoreVariables="false">
+      <script>String messageText2 = "Ditt Ärende på"+startevent1_address_string+"(service_code=" + startevent1_service_code + "  kommer inte att åtgärdas."+Handlggare_comment ; 
+               messageSubject = "Ärende " ; 
+               execution.setVariable("messageSubject" , messageSubject  ) ; 
+               println("messageText2 :messageText2 =" + messageText2 ) ;
+println("script2") ; 
+               execution.setVariable("messageText" , messageText2  ) ; 
+     </script>
+    </scriptTask>
+    <sequenceFlow id="flow5" sourceRef="exclusivegateway1" targetRef="scripttask2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${Handlggare_group== 'one'}]]></conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow6" sourceRef="usertask2" targetRef="exclusivegateway2"></sequenceFlow>
+    <sequenceFlow id="flow7" sourceRef="scripttask2" targetRef="exclusivegateway2"></sequenceFlow>
+    <serviceTask id="servicetask1" name="Email " activiti:class="org.inheritsource.service.delegates.GenericServiceMessageDelegate">
+      <extensionElements>
+        <activiti:field name="recipientEmail">
+          <activiti:expression>${recipientEmail}</activiti:expression>
+        </activiti:field>
+        <activiti:field name="from">
+          <activiti:expression>${from}</activiti:expression>
+        </activiti:field>
+        <activiti:field name="messageText">
+          <activiti:expression>${messageText}</activiti:expression>
+        </activiti:field>
+        <activiti:field name="messageSubject">
+          <activiti:expression>${messageSubject}</activiti:expression>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow8" sourceRef="exclusivegateway2" targetRef="servicetask1"></sequenceFlow>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <sequenceFlow id="flow9" sourceRef="servicetask1" targetRef="endevent1"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_felanmalan">
+    <bpmndi:BPMNPlane bpmnElement="felanmalan" id="BPMNPlane_felanmalan">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="70.0" y="120.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="handlaggare1" id="BPMNShape_handlaggare1">
+        <omgdc:Bounds height="55.0" width="105.0" x="150.0" y="110.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="scripttask1" id="BPMNShape_scripttask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="310.0" y="110.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="460.0" y="117.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask2" id="BPMNShape_usertask2">
+        <omgdc:Bounds height="55.0" width="105.0" x="550.0" y="110.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="scripttask2" id="BPMNShape_scripttask2">
+        <omgdc:Bounds height="55.0" width="105.0" x="550.0" y="220.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="720.0" y="119.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask1" id="BPMNShape_servicetask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="790.0" y="112.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="940.0" y="122.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="105.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="150.0" y="137.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="255.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="310.0" y="137.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="415.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="460.0" y="137.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="500.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="550.0" y="137.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="480.0" y="157.0"></omgdi:waypoint>
+        <omgdi:waypoint x="481.0" y="248.0"></omgdi:waypoint>
+        <omgdi:waypoint x="550.0" y="247.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="655.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="720.0" y="139.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="655.0" y="247.0"></omgdi:waypoint>
+        <omgdi:waypoint x="740.0" y="247.0"></omgdi:waypoint>
+        <omgdi:waypoint x="740.0" y="159.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="760.0" y="139.0"></omgdi:waypoint>
+        <omgdi:waypoint x="790.0" y="139.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="895.0" y="139.0"></omgdi:waypoint>
+        <omgdi:waypoint x="940.0" y="139.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
