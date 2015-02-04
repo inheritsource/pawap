@@ -59,6 +59,7 @@ class PxdFormdefVer implements Comparable {
     dateCreated nullable: true
     lastUpdated nullable: true
   }
+  static transients = ['formXml']
 
   static allPublishedForms() {
     PxdFormdefVer.findAllByDraft(PUBLISHED, [sort: 'path'])
@@ -67,6 +68,24 @@ class PxdFormdefVer implements Comparable {
   static PxdFormdefVer latestPublished(PxdFormdef parent) {
     def list = PxdFormdefVer.findAllByFormdefAndDraft(parent, PUBLISHED, [sort: 'fvno', order: 'desc'])
     return list? list[0] : null
+  }
+
+  /**
+   * Find the published version previous to this one, if possible.
+   */
+  PxdFormdefVer previousPublished() {
+    //def list = PxdFormdefVer.findAllByFormdefAndDraft(parent, PUBLISHED, [sort: 'fvno', order: 'desc'])
+    PxdFormdefVer.find('from PxdFormdefVer where formdef=? and fvno < ? and draft=? order by fvno desc',
+		       [formdef, fvno, PUBLISHED])
+  }
+
+  /**
+   * Get form definition contents of this form definition version.
+   * RETURN an xml/xhtml string, or null if not found.
+   */
+  String getFormXml() {
+    def item = PxdItem.findByFormDefAndInstance(path, false)
+    return item?.text
   }
 
   String toString() {

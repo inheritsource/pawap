@@ -94,9 +94,13 @@
 	</g:if>
 	
       </ol>
-      <g:form>
+      <g:form controller="crdFormMap">
 	<fieldset class="buttons">
 	  <g:hiddenField name="id" value="${pxdFormdefVerInst?.id}" />
+	  <g:actionSubmit class="add" action="createlist" value="${message(code:'crdFormMap.edit.map.label')}"/>
+	  <g:if test="${crdFormMap}">
+	    <g:actionSubmit class="show" action="show" value="${message(code:'crdFormMap.show.map.label')}"/>
+	  </g:if>
 	</fieldset>
       </g:form>
     </div>

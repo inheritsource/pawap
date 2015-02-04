@@ -23,6 +23,8 @@
  */
 package org.motrice.coordinatrice.pxd
 
+import org.motrice.coordinatrice.CrdFormMap
+
 class PxdFormdefVerController {
 
     def index() {
@@ -42,7 +44,8 @@ class PxdFormdefVerController {
             return
         }
 
-        [pxdFormdefVerInst: pxdFormdefVerInst]
+	def formMap = CrdFormMap.get(id)
+        [pxdFormdefVerInst: pxdFormdefVerInst, crdFormMap: formMap]
     }
 
 }

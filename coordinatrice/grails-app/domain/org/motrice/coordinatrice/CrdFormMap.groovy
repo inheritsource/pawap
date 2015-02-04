@@ -39,4 +39,9 @@ class CrdFormMap {
     return formdefVer
   }
 
+  String toString() {
+    def displayMap = (jsonMap?.size() > 60)? jsonMap.substring(1, 58) + '..' : jsonMap
+    "[FormMap(${id}) ${displayMap}]"
+  }
+
 }
