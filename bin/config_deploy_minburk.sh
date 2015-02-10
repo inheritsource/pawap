@@ -13,9 +13,9 @@ CONTAINER_ROOT=${HOME}/motrice-0.7
 # ROOT of Hippo jcr content repository
 CONTENT_ROOT=${CONTAINER_ROOT}/jcr-inherit-portal
 
-TOMCAT_DIR=apache-tomcat-7.0.57
+TOMCAT_DIR=apache-tomcat-7.0.59
 TOMCAT_TGZ=${TOMCAT_DIR}.tar.gz
-TOMCAT_DOWNLOAD_URL=http://apache.mirrors.spacedump.net/tomcat/tomcat-7/v7.0.57/bin/${TOMCAT_TGZ}
+TOMCAT_DOWNLOAD_URL=http://apache.mirrors.spacedump.net/tomcat/tomcat-7/v7.0.59/bin/${TOMCAT_TGZ}
 
 #####################################################################
 # Container config 
