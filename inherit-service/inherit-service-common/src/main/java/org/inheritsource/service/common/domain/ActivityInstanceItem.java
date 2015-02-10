@@ -28,7 +28,6 @@ package org.inheritsource.service.common.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 
 /**
@@ -36,7 +35,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
  * @author bjmo
  *
  */
-@XStreamAlias("ActivityInstanceItem")
 public abstract class ActivityInstanceItem extends FormInstance implements Serializable {
 
 	private static final long serialVersionUID = 8069401830437496246L;

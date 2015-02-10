@@ -33,7 +33,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XmlRootElement(name="ActivityWorkflowInfo")
 @XmlAccessorType(XmlAccessType.FIELD)

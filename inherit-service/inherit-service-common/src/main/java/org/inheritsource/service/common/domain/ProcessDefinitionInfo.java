@@ -27,10 +27,8 @@ package org.inheritsource.service.common.domain;
 
 import java.io.Serializable;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 
-@XStreamAlias("ProcessDefinitionInfo")
 public class ProcessDefinitionInfo implements Serializable {
 	
 	private static final long serialVersionUID = -6992366367865872101L;

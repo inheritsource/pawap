@@ -30,9 +30,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-@XStreamAlias("PagedProcessInstanceSearchResult")
 public class PagedProcessInstanceSearchResult implements Serializable {
 
 	private static final long serialVersionUID = 7638210689621188750L;

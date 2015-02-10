@@ -27,10 +27,8 @@ package org.inheritsource.service.common.domain;
 
 import java.io.Serializable;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 
-@XStreamAlias("ActivityDefinitionInfo")
 public class ActivityDefinitionInfo implements Serializable {
 	
 	private static final long serialVersionUID = 4331963577881197712L;

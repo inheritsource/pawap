@@ -27,9 +27,7 @@
 package org.inheritsource.service.common.domain;
 
 import java.io.Serializable;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-@XStreamAlias("DashOpenActivities")
 public class DashOpenActivities implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

@@ -29,10 +29,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 
-@XStreamAlias("ProcessDefinitionDetails")
 public class ProcessDefinitionDetails implements Serializable {
 
 	private static final long serialVersionUID = 6783807984503688411L;

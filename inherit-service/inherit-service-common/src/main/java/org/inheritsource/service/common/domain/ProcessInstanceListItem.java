@@ -29,10 +29,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 
-@XStreamAlias("ProcessInstanceListItem")
 public class ProcessInstanceListItem implements Serializable {
     
 	// TODO byt namn på klassen

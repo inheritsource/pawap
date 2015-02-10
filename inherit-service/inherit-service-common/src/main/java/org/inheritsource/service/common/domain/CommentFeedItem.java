@@ -29,9 +29,7 @@ package org.inheritsource.service.common.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-@XStreamAlias("CommentFeedItem")
 public class CommentFeedItem implements Serializable, TimelineItem {
 	
 	private static final long serialVersionUID = 7249719404625798791L;
