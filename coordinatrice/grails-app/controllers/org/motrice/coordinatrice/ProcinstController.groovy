@@ -77,15 +77,17 @@ class ProcinstController {
     redirect(controller: 'procdef', action: 'list')
   }
 
-  def show(Long id) {
-    def procInst = Procinst.get(id)
+  def show(String id) {
+    if (log.debugEnabled) log.debug "SHOW PROCINST ${params}"
+    def procInst = processEngineService.findProcessInstance(id)
     if (!procInst) {
       flash.message = message(code: 'default.not.found.message', args: [message(code: 'procinst.label'), id])
       redirect(action: "list")
       return
     }
 
-    [procInst: procInst]
+    def execList = processEngineService.findExecutionsByPi(procInst.processInstanceId)
+    [procInst: procInst, execList: execList]
   }
 
   def edit(Long id) {

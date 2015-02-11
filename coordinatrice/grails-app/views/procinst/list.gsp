@@ -16,20 +16,20 @@
       <table>
 	<thead>
 	  <tr>
-	    <g:sortableColumn property="processInstanceId" title="${message(code: 'procinst.processInstanceId.label', default: 'Instance Id')}" />
+	    <g:sortableColumn property="processInstanceId" title="${message(code: 'procinst.processInstanceId.label', default: 'Instance')}" />
 	    <th><g:message code="procinst.procdef.label" default="Procdef" /></th>
-	    <g:sortableColumn property="activityId" title="${message(code: 'procinst.activityId.label', default: 'Activity Id')}" />
+	    <g:sortableColumn property="activityId" title="${message(code: 'procinst.activityId.label', default: 'Activity')}" />
 	    <g:sortableColumn property="businessKey" title="${message(code: 'procinst.businessKey.label', default: 'Business Key')}" />
 	    <g:sortableColumn property="suspended" title="${message(code: 'procinst.suspended.label', default: 'Active')}" />
-	    <g:sortableColumn property="ended" title="${message(code: 'procinst.ended.label', default: 'Progress')}" />
+	    <g:sortableColumn property="ended" title="${message(code: 'procinst.ended.label', default: 'Cont')}" />
 	  </tr>
 	</thead>
 	<tbody>
 	  <g:each in="${procInstList}" status="i" var="procInst">
 	    <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-	      <td>${fieldValue(bean: procInst, field: "processInstanceId")}</td>
-	      <td><g:link action="show" id="${procInst.id}">${fieldValue(bean: procInst, field: "procdef")}</g:link></td>
-	      <td>${procInst?.procdef?.actNameOrId(procInst?.activityId)}</td>
+	      <td><g:link action="show" id="${procInst?.processInstanceId}">${fieldValue(bean: procInst, field: "processInstanceId")}</g:link></td>
+	      <td><g:link controller="procdef" action="show" id="${procInst?.procdef?.uuid}">${fieldValue(bean: procInst, field: "procdef")}</g:link></td>
+	      <td>${procInst?.flowElementName}</td>
 	      <td>${fieldValue(bean: procInst, field: "businessKey")}</td>
 	      <g:set var="imgfile"><g:disabled flag="${procInst.suspended}"/></g:set>
 	      <td><g:img dir="images/silk" file="${imgfile}"/></td>

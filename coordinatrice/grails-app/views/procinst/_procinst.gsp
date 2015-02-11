@@ -3,7 +3,7 @@
   <label for="procdef">
     <g:message code="procinst.procdef.label" default="Procdef" />
   </label>
-  ${procInst?.procdef?.nameOrKey}
+  <g:link controller="procdef" action="listname" id="${procInst?.procdef?.key}">${procInst?.procdef?.nameOrKey}</g:link>
   <label for="procdef">
     <g:message code="procdef.vno.label"/>
   </label>
@@ -13,7 +13,7 @@
   <label for="formdef">
     <g:message code="procinst.formdef.label" default="Formdef" />
   </label>
-  ${procInst?.formdef?.path}
+  <g:link controller="pxdFormdefVer" action="show" id="${procInst?.formdef?.id}">${procInst?.formdef?.path}</g:link>
 </div>
 <div class="fieldcontain">
   <label for="formdef">

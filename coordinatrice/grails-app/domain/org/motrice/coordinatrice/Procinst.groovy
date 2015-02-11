@@ -8,7 +8,7 @@ import org.motrice.coordinatrice.pxd.PxdItem
  * A BPMN process instance as implemented by Activiti.
  * This class is NOT PERSISTED, constructed read-only from the BPMN engine.
  */
-class Procinst {
+class Procinst extends BpmnExecution {
   /**
    * Process definition.
    */
@@ -46,26 +46,6 @@ class Procinst {
   String businessKey
 
   /**
-   * Is the process instance suspended?
-   */
-  Boolean suspended
-
-  /**
-   * Has execution ended?
-   */
-  Boolean ended
-
-  /**
-   * Id of the activity where the execution is currently at.
-   */
-  String activityId
-
-  /**
-   * Process instance id.
-   */
-  String processInstanceId
-
-  /**
    * Not a database object, never to be persisted
    */
   static mapWith = 'none'
@@ -76,16 +56,8 @@ class Procinst {
     formdef nullable: true
   }
 
-  def assignProcessInstance(ProcessInstance pi) {
-    businessKey = pi.businessKey
-    suspended = pi.suspended
-    ended = pi.ended
-    activityId = pi.activityId
-    processInstanceId = pi.processInstanceId
-  }
-
   String toString() {
-    "[Procinst(${processInstanceId}/${activityId}) ${procdef}, ${formdef}, ${forminst}, ${msfd}]"
+    "[Procinst(${processInstanceId}/${activityId}) ${procdef}, ${formdef}, ${forminst}, ${msfd} ${toStringDetails()}]"
   }
 
 }

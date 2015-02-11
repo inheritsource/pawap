@@ -266,10 +266,21 @@ class ProcessEngineService {
    * SIDE EFFECT: Sets properties 
    */
   Procinst startProcessInstance(Procinst procInst) {
+    if (log.debugEnabled) log.debug "startProcessInstance << ${procInst}"
     def activitiInst = activitiRuntimeService.
     startProcessInstanceById(procInst.procdef.uuid, procInst.variables)
-    procInst.assignProcessInstance(activitiInst)
+    procInst.assignFromExecution(activitiInst)
+    if (log.debugEnabled) log.debug "startProcessInstance >> ${procInst}"
     return procInst
+  }
+
+  Procinst findProcessInstance(String id) {
+    if (log.debugEnabled) log.debug "findProcessInstance << ${id}"
+    def pi = activitiRuntimeService.createProcessInstanceQuery().
+    processInstanceId(id).singleResult()
+    def result = pi? createProcinst(pi) : null
+    if (log.debugEnabled) log.debug "findProcessInstance >> ${result}"
+    return result
   }
 
   List listProcessInstances() {
@@ -277,14 +288,28 @@ class ProcessEngineService {
     def list = activitiRuntimeService.createProcessInstanceQuery().
     orderByProcessDefinitionId().asc().list()
     def result = list.collect {pi ->
-      def procDef = procdefService.findProcessDefinition(pi.processDefinitionId)
-      def procInst = new Procinst(procdef: procDef)
-      procInst.assignProcessInstance(pi)
-      return procInst
+      return createProcinst(pi)
     }
 
     if (log.debugEnabled) log.debug "listProcessInstances >> ${result}"
     return result
+  }
+
+  List findExecutionsByPi(String processInstanceId) {
+    if (log.debugEnabled) log.debug "findExecutionsByPi << ${processInstanceId}"
+    def list = activitiRuntimeService.createExecutionQuery().
+    processInstanceId(processInstanceId).list()
+    if (log.debugEnabled) log.debug "findExecutionsByPi >> ${list.size()}"
+    return list
+  }
+
+  private Procinst createProcinst(ProcessInstance pi) {
+    def procDef = procdefService.findProcessDefinition(pi.processDefinitionId)
+    def procInst = new Procinst(procdef: procDef, businessKey: pi.businessKey)
+    procInst.assignFromExecution(pi)
+    def model = activitiRepositoryService.getBpmnModel(pi.processDefinitionId)
+    procInst.flowElement = model.getFlowElement(procInst.activityId)
+    return procInst
   }
 
 }
