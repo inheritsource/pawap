@@ -35,6 +35,7 @@ import org.activiti.engine.ActivitiException
 import org.activiti.engine.repository.Deployment
 import org.activiti.engine.repository.DeploymentBuilder
 import org.activiti.engine.repository.ProcessDefinition
+import org.activiti.engine.runtime.ProcessInstance
 import org.apache.commons.logging.LogFactory
 
 /**
@@ -48,6 +49,7 @@ class ProcessEngineService {
   // Injection magic, see resources.groovy
   def activityFormdefService
   def activitiRepositoryService
+  def activitiRuntimeService
   def procdefService
   private static final log = LogFactory.getLog(this)
 
@@ -257,6 +259,32 @@ class ProcessEngineService {
 						 'procdef.deployed.not.found')
     if (log.debugEnabled) log.debug "procdefVersionFromScratch >> ${procdefList}"
     return procdefList
+  }
+
+  /**
+   * Start a process instance.
+   * SIDE EFFECT: Sets properties 
+   */
+  Procinst startProcessInstance(Procinst procInst) {
+    def activitiInst = activitiRuntimeService.
+    startProcessInstanceById(procInst.procdef.uuid, procInst.variables)
+    procInst.assignProcessInstance(activitiInst)
+    return procInst
+  }
+
+  List listProcessInstances() {
+    if (log.debugEnabled) log.debug "listProcessInstances <<"
+    def list = activitiRuntimeService.createProcessInstanceQuery().
+    orderByProcessDefinitionId().asc().list()
+    def result = list.collect {pi ->
+      def procDef = procdefService.findProcessDefinition(pi.processDefinitionId)
+      def procInst = new Procinst(procdef: procDef)
+      procInst.assignProcessInstance(pi)
+      return procInst
+    }
+
+    if (log.debugEnabled) log.debug "listProcessInstances >> ${result}"
+    return result
   }
 
 }

@@ -101,6 +101,14 @@ class ViewUtilsTagLib {
   /**
    * Provide icon file name depending on boolean.
    */
+  def active = {attrs, body ->
+    boolean flag = attrs.flag
+    out << "${flag?YES_ICON:NO_ICON}"
+  }
+
+  /**
+   * Provide icon file name depending on boolean.
+   */
   def failure = {attrs, body ->
     boolean flag = attrs.flag
     out << "${flag?FAIL_ICON:OK_ICON}"

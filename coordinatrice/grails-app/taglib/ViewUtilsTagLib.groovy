@@ -27,6 +27,8 @@
 class ViewUtilsTagLib {
   static final FMTM = 'yyyy-MM-dd HH:mm'
   static final FMTS = 'yyyy-MM-dd HH:mm:ss'
+  static final YES_ICON = 'accept.png'
+  static final NO_ICON = 'cross.png'
 
   /**
    * Tag for displaying the instance boolean in PxdItem
@@ -103,6 +105,14 @@ class ViewUtilsTagLib {
   def tstampsec = {attrs, body ->
     def date = attrs.date
     out << date.format(FMTS)
+  }
+
+  /**
+   * Provide icon file name depending on boolean.
+   */
+  def disabled = {attrs, body ->
+    boolean flag = attrs.flag
+    out << "${flag?NO_ICON:YES_ICON}"
   }
 
 }

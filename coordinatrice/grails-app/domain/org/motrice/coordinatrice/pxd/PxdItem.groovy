@@ -87,4 +87,8 @@ class PxdItem {
     return this
   }
 
+  String toString() {
+    "[PxdItem(${id}) ${path}, size ${size}]"
+  }
+
 }

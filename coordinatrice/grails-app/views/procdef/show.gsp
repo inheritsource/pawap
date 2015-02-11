@@ -23,6 +23,7 @@
 
 --%>
 <%@ page import="org.motrice.coordinatrice.Procdef" %>
+<%@ page import="org.motrice.coordinatrice.pxd.PxdFormdefVer" %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -97,9 +98,12 @@
 		  <g:img uri="/images/silk/exclamation.png" title="${linktitle}"/> ${startFormView?.formConnectionKey?.encodeAsHTML()}
 		</g:else>
 		<g:if test="${procState?.startFormChangeAllowed}">
-		  <g:link class="edit" action="edit" id="${procdefInst?.uuid}">
-		    <g:img uri="/images/silk/pencil_go.png" title="${message(code: 'default.button.edit.label', default: 'Edit')}"/>
-		  </g:link>
+		  <g:link class="edit" action="edit" id="${procdefInst?.uuid}"><g:img uri="/images/silk/cog_edit.png" title="${message(code: 'default.button.configure.label')}"/></g:link>
+		  <g:if test="${procState?.testStartable}">&nbsp;&nbsp;
+		    <g:set var="formdef" value="${PxdFormdefVer.get(startFormView.formdefId)}"/>
+		    <a class="create" href="${formRunnerBaseUri}/${formdef?.path}/new" target="_"><g:img uri="/images/silk/application_form_edit.png" title="${message(code: 'pxdFormdefVer.fill.out.label')}"/></a>&nbsp;&nbsp;
+		    <g:link class="edit" controller="procinst" action="create" id="${formdef.id}"><g:img uri="/images/silk/lightning.png" title="${message(code: 'procdef.start.process.label')}"/></g:link>
+		  </g:if>
 		</g:if>
 	      </span>
 	    </g:each>
@@ -108,7 +112,7 @@
 	    <g:set var="statetitle"><g:message code="startform.selection.unselected"/></g:set>
 	    <span class="property-value"><g:img uri="/images/silk/exclamation.png" title="${statetitle}"/>
 	      <g:link class="edit" action="edit" id="${procdefInst?.uuid}">
-		<g:img uri="/images/silk/pencil_go.png" title="${message(code: 'default.button.edit.label', default: 'Edit')}"/>
+		<g:img uri="/images/silk/application_form_add.png" title="${message(code: 'procdef.add.start.forms.label')}"/>
 	      </g:link>
 	    </span>
 	  </g:else>
@@ -118,7 +122,7 @@
 	  <g:set var="procId" value="${procdefInst?.uuid}"/>
 	  <li class="fieldcontain">
 	    <table>
-	    <span id="activities-label" class="property-label"><g:message code="procdef.act.cnx.label" default="Activities" /></span>
+	    <span id="activities-label" class="label"><g:message code="procdef.act.cnx.label" default="Activities" /></span>
 	    <g:each in="${procdefInst.activities}" var="a">
 	      <g:set var="formdef" value="${a?.activityFormdef}"/>
 	      <g:set var="actId" value="${a?.uuid}"/>

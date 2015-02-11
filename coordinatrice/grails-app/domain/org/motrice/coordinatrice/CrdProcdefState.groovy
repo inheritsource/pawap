@@ -177,6 +177,13 @@ class CrdProcdefState {
   }
 
   /**
+   *
+   */
+  boolean isTestStartable() {
+    computeStartable() == STARTABLE_TEST
+  }
+
+  /**
    * Compute the possible next states.
    * Usually just a pair: promote, demote.
    * Return a list of state ids.
