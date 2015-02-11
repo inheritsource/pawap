@@ -7,8 +7,10 @@ if(typeof String.prototype.trim !== 'function') {
 }
 
 $(document).ready(function() {
-
 	   $(".motrice-accordion" ).accordion();	    
+  $("#mapWithPoint").html( mapWithOnePoint(18.1258670 , 59.3038489  )  );
+ // $("#mapWithPoint").html( mapWithOnePoint(${startLogItem.longitude} , ${startLogItem.latitude}  )  );
+
 	    
         $(".motrice-assign-to").click(function() {
 	    var assignTo = $(this).children("input[name='motrice-assign-to']").attr("value");
@@ -354,7 +356,6 @@ $(".motrice-task-add-candidate-btn-ok").click(function(event) {
 		}
 	});
 
-
 	/*
 	 * Refresh work flow info in page i.e. activity candidates and assigned 
 	 */
@@ -454,6 +455,31 @@ $(".motrice-task-add-candidate-btn-ok").click(function(event) {
 	   $("#commentfeed").siblings("a.toggle-view-list-show").attr("href", comments.length);
 	   $("#commentfeed").siblings("a.toggle-view-list-show").html(comments.length + " kommentarer <i class='fa fa-chevron-circle-down'></i>"); //TODO multi lingual...
 	}
+/* 
+ Make a map with openstreetmap (openlayers) with a point 
+*/
+function mapWithOnePoint(lon , lat) {    
+    console.log("mapWithOnePoint2") ; 
+    console.log("lon="+lon+" lat="+lat ) ; 
+    map = new OpenLayers.Map("mapWithPoint");
+    map.addLayer(new OpenLayers.Layer.OSM());
+
+    var lonLat = new OpenLayers.LonLat( lon             ,lat             )
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+            map.getProjectionObject() // to Spherical Mercator Projection
+          );
+
+    var zoom=14;
+
+    var markers = new OpenLayers.Layer.Markers( "Markers" );
+    map.addLayer(markers);
+
+    markers.addMarker(new OpenLayers.Marker(lonLat));
+
+    map.setCenter (lonLat, zoom);
+}
+
 
 
  $( ".motrice-add-dirusername" ).autocomplete({

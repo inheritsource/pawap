@@ -69,6 +69,7 @@
     <link href='<hst:link path="/js/tag-it/css/tagit.ui-zendesk.css"/>' rel='stylesheet' type='text/css'>
     <script type='text/javascript' src='<hst:link path="/js/tag-it/js/tag-it.min.js"/>'></script>
 
+    <script type='text/javascript' src='<hst:link path="/js/platform/OpenLayers.js"/>'></script>
     <script type='text/javascript' src='<hst:link path="/js/platform/motrice-internal.js"/>'></script>
      <!-- end of motrice javascript --> 
 
