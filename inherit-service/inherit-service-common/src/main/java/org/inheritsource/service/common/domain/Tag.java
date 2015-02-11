@@ -28,9 +28,7 @@ package org.inheritsource.service.common.domain;
 
 import java.io.Serializable;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-@XStreamAlias("Tag")
 public class Tag implements Serializable {
 	
 	private static final long serialVersionUID = -3351037984381420720L;

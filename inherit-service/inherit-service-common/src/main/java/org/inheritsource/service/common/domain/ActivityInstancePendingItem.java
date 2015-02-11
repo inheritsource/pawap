@@ -28,10 +28,8 @@ package org.inheritsource.service.common.domain;
 import java.util.Date;
 import java.util.Set;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 
-@XStreamAlias("ActivityInstancePendingItem")
 public class ActivityInstancePendingItem extends ActivityInstanceItem {
 
 	private static final long serialVersionUID = 6551923994738613262L;

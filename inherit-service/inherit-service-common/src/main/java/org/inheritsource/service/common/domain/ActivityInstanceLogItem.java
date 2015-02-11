@@ -27,7 +27,6 @@ package org.inheritsource.service.common.domain;
 
 import java.util.Date;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 
 /**
@@ -35,7 +34,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
  * @author bjmo
  *
  */
-@XStreamAlias("ActivityInstanceLogItem")
 public class ActivityInstanceLogItem extends ActivityInstanceItem implements TimelineItem {
 	
 	private static final long serialVersionUID = 4136625617508159625L;

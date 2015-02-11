@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 
 public class InboxTaskItem extends FormInstance implements Serializable, Comparable<InboxTaskItem> {

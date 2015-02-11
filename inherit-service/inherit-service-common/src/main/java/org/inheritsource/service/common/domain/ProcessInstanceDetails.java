@@ -27,10 +27,8 @@ package org.inheritsource.service.common.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 
-@XStreamAlias("ProcessInstanceDetails")
 public class ProcessInstanceDetails extends ProcessInstanceListItem {
 
 	private static final long serialVersionUID = 5176472811760050085L;

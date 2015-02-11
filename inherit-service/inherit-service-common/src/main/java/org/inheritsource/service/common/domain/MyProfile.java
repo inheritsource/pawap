@@ -27,9 +27,7 @@
 package org.inheritsource.service.common.domain;
 import java.io.Serializable;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-@XStreamAlias("MyProfile")
 public class MyProfile implements Serializable {
 
 /**
