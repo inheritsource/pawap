@@ -26,7 +26,6 @@
 package org.inheritsource.service.rest.server.services;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -45,11 +44,15 @@ import javax.ws.rs.core.Response;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.inheritsource.service.common.domain.ActivityInstanceItem;
-import org.inheritsource.service.common.domain.FormInstance;
 import org.inheritsource.service.common.domain.Open311v2ServiceResponse;
+import org.inheritsource.service.common.domain.Open311v2ServiceRequest;
 import org.inheritsource.service.common.domain.Open311v2ServiceResponseItem;
-// import org.inheritsource.service.common.util.ParameterEncoder;
 import org.inheritsource.taskform.engine.TaskFormService;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 @Component
 @Path("/runtime")
@@ -192,74 +195,91 @@ public class RuntimeService {
 					.type("text/plain").entity("Bad format").build();
 		}
 		Map<String, Object> variableMap = new HashMap<String, Object>();
+		Open311v2ServiceRequest open311v2ServiceRequest = new Open311v2ServiceRequest();
 		// generate a type 4 UUID
-		String motriceStartFormInstanceId = java.util.UUID.randomUUID().toString();
-		
+		String motriceStartFormInstanceId = java.util.UUID.randomUUID()
+				.toString();
+
 		variableMap.put("motriceStartFormAssignee", "admin");
-		variableMap.put("motriceStartFormInstanceId", motriceStartFormInstanceId ) ; 
+		variableMap.put("motriceStartFormInstanceId",
+				motriceStartFormInstanceId);
 		variableMap.put("motriceStartFormLat", lat);
 		variableMap.put("motriceStartFormLon", lon);
-		// motriceStartFormDefinitionKey
-		// motriceStartFormDataUri TODO link back to external system
-		// might be possible to get through  the api_key, jurisdiction_id and  attribute[external_id]
+		variableMap.put("motriceStartFormDefinitionKey" ,  "felanmalan/felanmalan--v010" ) ; // TODO  
+		
+		
 		// motriceStartFormTypeId
-		
-		
-		variableMap.put("startevent1_description", description);
-		variableMap.put("startevent1_email", email);
-		variableMap.put("startevent1_device_id", device_id);
-		variableMap.put("startevent1_account_id", account_id);
-		variableMap.put("startevent1_first_name", first_name);
-		variableMap.put("startevent1_last_name", last_name);
-		variableMap.put("startevent1_phone", phone);
-		variableMap.put("startevent1_media_url", media_url);
 
-		variableMap.put("startevent1_address_string", address_string);
-		variableMap.put("startevent1_address_id", address_id);
-		variableMap.put("startevent1_jurisdiction_id", jurisdiction_id);
-		variableMap.put("startevent1_service_code", service_code);
+		open311v2ServiceRequest.setDescription(description);
+
+		open311v2ServiceRequest.setEmail(email);
+		open311v2ServiceRequest.setDevice_id(device_id);
+		open311v2ServiceRequest.setAccount_id(account_id);
+		open311v2ServiceRequest.setFirst_name(first_name);
+		open311v2ServiceRequest.setLast_name(last_name);
+		open311v2ServiceRequest.setPhone(phone);
+		open311v2ServiceRequest.setMedia_url(media_url);
+
+		open311v2ServiceRequest.setAddress_string(address_string);
+		open311v2ServiceRequest.setAddress_id(address_id);
+		open311v2ServiceRequest.setJurisdiction_id(jurisdiction_id);
+		open311v2ServiceRequest.setService_code(service_code);
+		open311v2ServiceRequest.setLat(lat); // duplicate
+		open311v2ServiceRequest.setLon(lon); // duplicate
+
 		System.out.println(variableMap);
-
+		// System.out.println(open311v2ServiceRequest);
 		String userId = "admin";
 
 		String processDefinitionId = "felanmalan:11:5408";// TODO in
-															// coordinatrice ?
+		// coordinatrice ?
 
-		// initialFormInstance.
-		String processInstanceId;
-
+		// fill in the document
+		ClientConfig config = new DefaultClientConfig();
+		Client client = Client.create(config);
 		try {
+			WebResource service = client
+					.resource("http://localhost:8080/exist/postxdb/data/array/felanmalan/felanmalan/v010"); // TODO
+			String response = service.type(MediaType.APPLICATION_JSON)
+					.accept(MediaType.APPLICATION_JSON)
+					.post(String.class, open311v2ServiceRequest);
+			System.out.println("response= " + response);
+			variableMap.put("motriceStartFormInstanceId", response);
+			variableMap.put("motriceStartFormDataUri" ,  "MOTRICESTARTFORMDATAURI" ) ; // TODO  
+			// initialFormInstance.
+			String processInstanceId;
+
 			processInstanceId = engine.getActivitiEngineService().startProcess(
 					processDefinitionId, variableMap, userId);
 			System.out.println("processInstanceId = " + processInstanceId);
 
+			String service_notice = "Tack för felanmälan."; // TODO from
+															// configuration
+
+			Open311v2ServiceResponseItem open311v2ServiceResponseItem = new Open311v2ServiceResponseItem();
+			open311v2ServiceResponseItem.setService_notice(service_notice);
+			open311v2ServiceResponseItem.setAccount_id(account_id);
+			open311v2ServiceResponseItem
+					.setService_request_id(motriceStartFormInstanceId);
+
+			Open311v2ServiceResponse open311v2ServiceResponse = new Open311v2ServiceResponse();
+			open311v2ServiceResponse
+					.addOpen311v2ServiceResponseItem(open311v2ServiceResponseItem);
+
+			if (format.equals("json")) {
+				return Response.ok(open311v2ServiceResponse,
+						MediaType.APPLICATION_JSON).build();
+			} else if (format.equals("xml")) {
+				return Response.ok(open311v2ServiceResponse,
+						MediaType.APPLICATION_XML).build();
+			} else {
+				return null; // This should no happen
+			}
 		}
 
 		catch (Exception ex) {
 			System.out.println("Exception : " + ex);
-		}
-
-		
-
-		String service_notice = "Tack för felanmälan."; // TODO from
-														// configuration
-
-		Open311v2ServiceResponseItem open311v2ServiceResponseItem = new Open311v2ServiceResponseItem();
-		open311v2ServiceResponseItem.setService_notice(service_notice);
-		open311v2ServiceResponseItem.setAccount_id(account_id);
-		open311v2ServiceResponseItem.setService_request_id(motriceStartFormInstanceId);
-
-		Open311v2ServiceResponse open311v2ServiceResponse = new Open311v2ServiceResponse();
-		open311v2ServiceResponse
-				.addOpen311v2ServiceResponseItem(open311v2ServiceResponseItem);
-		if (format.equals("json")) {
-			return Response.ok(open311v2ServiceResponse,
-					MediaType.APPLICATION_JSON).build();
-		} else if (format.equals("xml")) {
-			return Response.ok(open311v2ServiceResponse,
-					MediaType.APPLICATION_XML).build();
-		} else {
-			return null; // This should no happen
+			return null;
 		}
 
 	}
