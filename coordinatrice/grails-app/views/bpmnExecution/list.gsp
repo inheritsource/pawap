@@ -16,7 +16,7 @@
       <table>
 	<thead>
 	  <tr>
-	    <g:sortableColumn property="uuid" title="${message(code: 'bpmnExecution.uuid.label', default: 'Id)}" />
+	    <g:sortableColumn property="uuid" title="${message(code: 'bpmnExecution.uuid.label', default: 'Id')}" />
 	    <g:sortableColumn property="activityId" title="${message(code: 'bpmnExecution.activityId.label', default: 'Activity')}" />
 	    <g:sortableColumn property="suspended" title="${message(code: 'bpmnExecution.suspended.label', default: 'Suspended')}" />
 	    <g:sortableColumn property="ended" title="${message(code: 'bpmnExecution.ended.label', default: 'Ended')}" />

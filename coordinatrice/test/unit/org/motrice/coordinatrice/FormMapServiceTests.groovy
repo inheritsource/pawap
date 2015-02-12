@@ -12,6 +12,6 @@ import org.junit.*
 class FormMapServiceTests {
 
     void testSomething() {
-        fail "Implement me"
+
     }
 }
