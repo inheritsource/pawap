@@ -28,7 +28,7 @@ import org.motrice.coordinatrice.MtfStartFormDefinition
 import org.activiti.engine.repository.Deployment
 
 /**
- * A process definition.
+ * A BPMN process definition as implemented by Activiti.
  * This class is NOT PERSISTED, constructed read-only from the BPMN engine.
  * A subset is persisted as CrdProcdef
  */
@@ -102,8 +102,8 @@ class Procdef implements Comparable {
   SortedSet startForms
 
   /**
-  * Not a database object, never to be persisted
-  */
+   * Not a database object, never to be persisted
+   */
   static mapWith = 'none'
   static belongsTo = [persisted: CrdProcdef]
   static hasMany = [activities: ActDef]
@@ -128,6 +128,14 @@ class Procdef implements Comparable {
     activities.find {activity ->
       activity.uuid == uuid
     }
+  }
+
+  String actNameOrId(String uuid) {
+    def actDef = activities.find {activity ->
+      activity.uuid == uuid
+    }
+
+    return actDef?.name ?: uuid
   }
 
   boolean isDeletable() {

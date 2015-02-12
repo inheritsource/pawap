@@ -88,7 +88,7 @@ class ProcdefController {
     def uuid = params.id
     def procdefInst = procdefService.findProcessDefinition(uuid)
     if (!procdefInst) {
-      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label', default: 'Procdef'), uuid])
+      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label'), uuid])
       redirect(action: "list")
       return
     }
@@ -171,15 +171,16 @@ class ProcdefController {
     def uuid = params.id
     def procdefInst = procdefService.findProcessDefinition(uuid)
     if (!procdefInst) {
-      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label', default: 'Procdef'), uuid])
+      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label'), uuid])
       redirect(action: "list")
       return
     }
 
+    String formRunnerBaseUri = grailsApplication.config.coordinatrice.orbeon.fr.base.uri
     def state = procdefInst.state
     def startForms = procdefInst.startForms
     if (log.debugEnabled) log.debug "SHOW >> ${procdefInst}, ${startForms}"
-    [procdefInst: procdefInst, startForms: startForms, procState: state]
+    [procdefInst: procdefInst, startForms: startForms, procState: state, formRunnerBaseUri: formRunnerBaseUri]
   }
 
   def showconfig() {
@@ -212,7 +213,7 @@ class ProcdefController {
     def uuid = params.id
     def diagramMap = processEngineService.findProcessDiagram(uuid)
     if (!diagramMap.procdef) {
-      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label', default: 'Procdef'), uuid])
+      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label'), uuid])
       redirect(action: "show", id: uuid)
       return
     }
@@ -228,7 +229,7 @@ class ProcdefController {
     def uuid = params.id
     def resourceMap = processEngineService.findProcessResource(uuid)
     if (!resourceMap.procdef) {
-      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label', default: 'Procdef'), uuid])
+      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label'), uuid])
       redirect(action: "show", id: uuid)
       return
     }
@@ -249,7 +250,7 @@ class ProcdefController {
     def uuid = params.id
     def procdefInst = procdefService.findProcessDefinition(uuid)
     if (!procdefInst) {
-      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label', default: 'Procdef'), uuid])
+      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label'), uuid])
       redirect(action: "list")
       return
     }
@@ -312,11 +313,11 @@ class ProcdefController {
     def uuid = params.id
     def procdefInst = procdefService.findProcessDefinition(uuid)
     if (!procdefInst) {
-      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label', default: 'Procdef'), uuid])
+      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label'), uuid])
       redirect(action: "list")
       return
     } else if (!procdefInst.state.startFormChangeAllowed) {
-      flash.message = message(code: 'procdef.state.not.editable', args: [message(code: 'procdef.label', default: 'Procdef'), uuid])
+      flash.message = message(code: 'procdef.state.not.editable', args: [message(code: 'procdef.label'), uuid])
       redirect(action: "show", id: uuid)
       return
     }
@@ -349,7 +350,7 @@ class ProcdefController {
       redirect(action: "edit", id: procdefInst.uuid)
       return
     } else if (!procdefInst.state.startFormChangeAllowed) {
-      flash.message = message(code: 'procdef.state.not.editable', args: [message(code: 'procdef.label', default: 'Procdef'), id])
+      flash.message = message(code: 'procdef.state.not.editable', args: [message(code: 'procdef.label'), id])
       redirect(action: "list")
       return
     }
@@ -390,7 +391,7 @@ class ProcdefController {
     if (log.debugEnabled) log.debug "EDIT STATE: ${params}"
     def procdefInst = procdefService.findProcessDefinition(id)
     if (!procdefInst) {
-      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label', default: 'Procdef'), id])
+      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label'), id])
       redirect(action: 'list')
       return
     }
@@ -404,14 +405,14 @@ class ProcdefController {
     def procdefInst = procdefService.findProcessDefinition(id)
     def updatedState = CrdProcdefState.get(params.state.id)
     if (!(procdefInst && updatedState)) {
-      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label', default: 'Procdef'), id])
+      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label'), id])
       redirect(action: 'list')
       return
     }
 
     procdefService.updateProcdefState(procdefInst, updatedState)
     def procdefKey = procdefInst.key
-    flash.message = message(code: 'default.updated.message', args: [message(code: 'procdef.label', default: 'Procdef'), id])
+    flash.message = message(code: 'default.updated.message', args: [message(code: 'procdef.label'), id])
     redirect(action: 'listname', id: procdefKey)
   }
 
@@ -422,11 +423,11 @@ class ProcdefController {
     if (log.debugEnabled) log.debug "RETIRE ${params}"
     def procdefInst = procdefService.findProcessDefinition(params.id)
     if (!procdefInst) {
-      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label', default: 'Procdef'), id])
+      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procdef.label'), id])
       redirect(action: "list")
       return
     } else if (!procdefInst.state.editable) {
-      flash.message = message(code: 'procdef.state.not.editable', args: [message(code: 'procdef.label', default: 'Procdef'), id])
+      flash.message = message(code: 'procdef.state.not.editable', args: [message(code: 'procdef.label'), id])
       redirect(action: "list")
       return
     }
