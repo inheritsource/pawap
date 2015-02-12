@@ -139,11 +139,12 @@
       <g:form>
 	<fieldset class="buttons">
 	  <g:hiddenField name="uuid" value="${procdefInst?.uuid}" />
-	  <g:link class="edit" action="createcopy" id="${procdefInst?.uuid}"><g:message code="procdef.edit.label" default="Edit" /></g:link>
+	  <g:link class="edit" action="createcopy" id="${procdefInst?.uuid}"><g:message code="procdef.edit.label"/></g:link>
 	  <g:link class="edit" action="createnewversion" id="${procdefInst?.uuid}"><g:message code="procdef.upload.version.label" default="Upload" /></g:link>
 	  <g:if test="${procState?.stateChangeAllowed}">
-	    <g:link class="edit" action="editstate" id="${procdefInst?.uuid}"><g:message code="procdef.edit.state.label" default="Edit" /></g:link>
+	    <g:link class="edit" action="editstate" id="${procdefInst?.uuid}"><g:message code="procdef.edit.state.label"/></g:link>
 	  </g:if>
+	  <g:link class="show" controller="procinst" action="listprocdef" id="${procdefInst?.uuid}"><g:message code="procdef.list.instances.label"/></g:link>
 	</fieldset>
       </g:form>
     </div>

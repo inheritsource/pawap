@@ -6,7 +6,6 @@ import org.motrice.coordinatrice.pxd.PxdFormdefVer
 class ProcinstController {
 
   def formMapService
-  def procdefService
   def processEngineService
 
   static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -19,6 +18,14 @@ class ProcinstController {
     def procInstList = processEngineService.listProcessInstances()
     params.max = Math.min(max ?: 15, 100)
     [procInstList: procInstList, procInstTotal: procInstList.size()]
+  }
+
+  /**
+   * List instances of a given process definition.
+   */
+  def listprocdef(String id) {
+    def procInstList = processEngineService.listProcessInstances(id)
+    render(view: 'list', model: [procInstList: procInstList, procInstTotal: procInstList.size()])
   }
 
   /**
@@ -55,6 +62,12 @@ class ProcinstController {
       return
     }
 
+    if (!procInst?.forminst) {
+      flash.message = message(code: 'procinst.form.data.not.found', args: [params.formDataPath])
+      redirect(controller: 'procdef', action: 'list')
+      return
+    }
+
     // Process variable map.
     def vmap = null
     try {
@@ -74,7 +87,7 @@ class ProcinstController {
     procInst = processEngineService.startProcessInstance(procInst)
 
     flash.message = message(code: 'procinst.created', args: [procInst.processInstanceId])
-    redirect(controller: 'procdef', action: 'list')
+    redirect(controller: 'procinst', action: 'listprocdef', id: procInst?.procdef?.uuid)
   }
 
   def show(String id) {
@@ -86,8 +99,7 @@ class ProcinstController {
       return
     }
 
-    def execList = processEngineService.findExecutionsByPi(procInst.processInstanceId)
-    [procInst: procInst, execList: execList]
+    [procInst: procInst]
   }
 
   def edit(Long id) {

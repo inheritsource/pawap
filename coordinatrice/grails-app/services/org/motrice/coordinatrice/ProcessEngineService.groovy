@@ -35,6 +35,7 @@ import org.activiti.engine.ActivitiException
 import org.activiti.engine.repository.Deployment
 import org.activiti.engine.repository.DeploymentBuilder
 import org.activiti.engine.repository.ProcessDefinition
+import org.activiti.engine.runtime.Execution
 import org.activiti.engine.runtime.ProcessInstance
 import org.apache.commons.logging.LogFactory
 
@@ -50,6 +51,7 @@ class ProcessEngineService {
   def activityFormdefService
   def activitiRepositoryService
   def activitiRuntimeService
+  def activitiTaskService
   def procdefService
   private static final log = LogFactory.getLog(this)
 
@@ -283,10 +285,13 @@ class ProcessEngineService {
     return result
   }
 
-  List listProcessInstances() {
+  List listProcessInstances(String processDefinitionId) {
     if (log.debugEnabled) log.debug "listProcessInstances <<"
-    def list = activitiRuntimeService.createProcessInstanceQuery().
-    orderByProcessDefinitionId().asc().list()
+    def query = activitiRuntimeService.createProcessInstanceQuery()
+    if (processDefinitionId) {
+      query = query.processDefinitionId(processDefinitionId)
+    }
+    def list = query.orderByProcessDefinitionId().asc().list()
     def result = list.collect {pi ->
       return createProcinst(pi)
     }
@@ -295,12 +300,53 @@ class ProcessEngineService {
     return result
   }
 
+  List listProcessInstances() {
+    listProcessInstances(null)
+  }
+
   List findExecutionsByPi(String processInstanceId) {
     if (log.debugEnabled) log.debug "findExecutionsByPi << ${processInstanceId}"
     def list = activitiRuntimeService.createExecutionQuery().
     processInstanceId(processInstanceId).list()
-    if (log.debugEnabled) log.debug "findExecutionsByPi >> ${list.size()}"
-    return list
+    def result = list.collect {ex ->
+      return createExecution(ex)
+    }
+    if (log.debugEnabled) log.debug "findExecutionsByPi >> ${result.size()}"
+    return result
+  }
+
+  /**
+   * Find an execution by its id.
+   */
+  BpmnExecution findExecution(String id) {
+    if (log.debugEnabled) log.debug "findExecution << ${id}"
+    def exec = activitiRuntimeService.createExecutionQuery().
+    executionId(id).singleResult()
+    def result = exec? createExecution(exec) : null
+    if (log.debugEnabled) log.debug "findExecution >> ${result}"
+    return result
+  }
+
+  List findTasksByPi(String processInstanceId) {
+    if (log.debugEnabled) log.debug "findTasksByPi << ${processInstanceId}"
+    def list = activitiTaskService.createTaskQuery().
+    processInstanceId(processInstanceId).orderByTaskName().asc().list()
+    def result = list.collect {task ->
+      return createTask(task)
+    }
+    if (log.debugEnabled) log.debug "findTasksByPi >> ${result.size()}"
+    return result
+  }
+
+  /**
+   * Find a task by its id.
+   */
+  BpmnTask findTask(String id) {
+    if (log.debugEnabled) log.debug "findTask << ${id}"
+    def task = activitiTaskService.createTaskQuery().taskId(id).singleResult()
+    def result = task? createTask(task) : null
+    if (log.debugEnabled) log.debug "findTask >> ${result}"
+    return result
   }
 
   private Procinst createProcinst(ProcessInstance pi) {
@@ -310,6 +356,20 @@ class ProcessEngineService {
     def model = activitiRepositoryService.getBpmnModel(pi.processDefinitionId)
     procInst.flowElement = model.getFlowElement(procInst.activityId)
     return procInst
+  }
+
+  private BpmnExecution createExecution(Execution ex) {
+    def execInst = new BpmnExecution()
+    execInst.assignFromExecution(ex)
+    def model = activitiRepositoryService.getBpmnModel(ex.processDefinitionId)
+    execInst.flowElement = model.getFlowElement(execInst.activityId)
+    return execInst
+  }
+
+  private BpmnTask createTask(org.activiti.engine.task.Task task) {
+    def taskInst = new BpmnTask()
+    taskInst.assignFromTask(task)
+    return taskInst
   }
 
 }

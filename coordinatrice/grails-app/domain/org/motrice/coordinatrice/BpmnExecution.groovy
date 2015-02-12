@@ -47,6 +47,11 @@ class BpmnExecution {
   String processInstanceId
 
   /**
+   * Label obtained by "toString()".
+   */
+  String label
+
+  /**
    * Not a database object, never to be persisted
    */
   static mapWith = 'none'
@@ -63,6 +68,7 @@ class BpmnExecution {
     activityId = ex.activityId
     parentId = ex.parentId
     processInstanceId = ex.processInstanceId
+    label = ex.toString()
   }
 
   String getFlowElementName() {

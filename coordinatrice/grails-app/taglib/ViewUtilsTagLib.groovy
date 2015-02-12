@@ -115,4 +115,13 @@ class ViewUtilsTagLib {
     out << "${flag?NO_ICON:YES_ICON}"
   }
 
+  /**
+   * Join owner/assignee to a single string.
+   */
+  def ownerassignee = {attrs, body ->
+    def owner = attrs.owner ?: '--'
+    def assignee = attrs.assignee ?: '--'
+    out << "${owner}/${assignee}"
+  }
+
 }

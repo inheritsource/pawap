@@ -28,7 +28,7 @@
 	</g:if>
 	<g:if test="${procInst?.activityId}">
 	  <li class="fieldcontain">
-	    <span id="activityId-label" class="property-label"><g:message code="procinst.activityId.label" default="Activity Id" /></span>
+	    <span id="activityId-label" class="property-label"><g:message code="procinst.activityId.label" default="Activity" /></span>
 	    <span class="property-value" aria-labelledby="activityId-label"><g:fieldValue bean="${procInst}" field="activityId"/></span>
 	  </li>
 	</g:if>
@@ -46,22 +46,20 @@
 	</g:if>
 	<li class="fieldcontain">
 	  <span id="suspended-label" class="property-label"><g:message code="procinst.suspended.label" default="Suspended" /></span>
-	  <span class="property-value" aria-labelledby="suspended-label"><g:formatBoolean boolean="${procInst?.suspended}" /></span>
+	  <g:set var="imgfile"><g:disabled flag="${procInst?.suspended}"/></g:set>
+	  <span class="property-value" aria-labelledby="suspended-label"><g:img dir="images/silk" file="${imgfile}"/></span>
 	</li>
 	<li class="fieldcontain">
 	  <span id="ended-label" class="property-label"><g:message code="procinst.ended.label" default="Ended" /></span>
-	  <span class="property-value" aria-labelledby="ended-label"><g:formatBoolean boolean="${procInst?.ended}" /></span>
-	</li>
-	<li class="fieldcontain">
-	  <span id="executions-label" class="property-label"><g:message code="procinst.executions.label" default="Executions" /></span>
-	  <span class="property-value" aria-labelledby="executions-label">${execList.size()}</span>
+	  <g:set var="imgfile"><g:disabled flag="${procInst.ended}"/></g:set>
+	  <span class="property-value" aria-labelledby="ended-label"><g:img dir="images/silk" file="${imgfile}"/></span>
 	</li>
       </ol>
       <g:form>
 	<fieldset class="buttons">
-	  <g:hiddenField name="id" value="${procInst?.id}" />
-	  <g:link class="edit" action="edit" id="${procInst?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
-	  <g:link class="show" controller="bpmnExecution" action="list" id="${procInst?.processInstanceId}"><g:message code="default.button.list.label" default="List Executions"/></g:link>
+	  <g:hiddenField name="id" value="${procInst?.uuid}" />
+	  <g:link class="show" controller="bpmnExecution" action="listproc" id="${procInst?.processInstanceId}"><g:message code="procinst.list.executions.label" default="List Executions"/></g:link>
+	  <g:link class="show" controller="bpmnTask" action="listproc" id="${procInst?.processInstanceId}"><g:message code="procinst.list.tasks.label" default="List Tasks"/></g:link>
 	</fieldset>
       </g:form>
     </div>

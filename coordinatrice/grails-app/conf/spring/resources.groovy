@@ -95,5 +95,6 @@ beans = {
   activitiManagementService(processEngine: "getManagementService")
   activitiRepositoryService(processEngine: "getRepositoryService")
   activitiRuntimeService(processEngine: "getRuntimeService")
+  activitiTaskService(processEngine: "getTaskService")
 
 }
