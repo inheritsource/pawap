@@ -197,12 +197,10 @@ public class RuntimeService {
 		Map<String, Object> variableMap = new HashMap<String, Object>();
 		Open311v2ServiceRequest open311v2ServiceRequest = new Open311v2ServiceRequest();
 		// generate a type 4 UUID
-		String motriceStartFormInstanceId = java.util.UUID.randomUUID()
-				.toString();
+		// String motriceStartFormInstanceId = java.util.UUID.randomUUID()
+	// 			.toString();
 
 		variableMap.put("motriceStartFormAssignee", "admin");
-		variableMap.put("motriceStartFormInstanceId",
-				motriceStartFormInstanceId);
 		variableMap.put("motriceStartFormLat", lat);
 		variableMap.put("motriceStartFormLon", lon);
 		variableMap.put("motriceStartFormDefinitionKey" ,  "felanmalan/felanmalan--v010" ) ; // TODO  
@@ -240,12 +238,13 @@ public class RuntimeService {
 		try {
 			WebResource service = client
 					.resource("http://localhost:8080/exist/postxdb/data/array/felanmalan/felanmalan/v010"); // TODO
-			String response = service.type(MediaType.APPLICATION_JSON)
+			String motriceStartFormInstanceId = service.type(MediaType.APPLICATION_JSON)
 					.accept(MediaType.APPLICATION_JSON)
 					.post(String.class, open311v2ServiceRequest);
-			System.out.println("response= " + response);
-			variableMap.put("motriceStartFormInstanceId", response);
-			variableMap.put("motriceStartFormDataUri" ,  "MOTRICESTARTFORMDATAURI" ) ; // TODO  
+			System.out.println("motriceStartFormInstanceId= " + motriceStartFormInstanceId);
+			variableMap.put("motriceStartFormInstanceId", motriceStartFormInstanceId);
+			variableMap.put("motriceStartFormTypeId", new Long(1)); // Orbeon form 
+			// variableMap.put("motriceStartFormDataUri" ,  "MOTRICESTARTFORMDATAURI" ) ; // TODO  
 			// initialFormInstance.
 			String processInstanceId;
 
@@ -273,7 +272,7 @@ public class RuntimeService {
 				return Response.ok(open311v2ServiceResponse,
 						MediaType.APPLICATION_XML).build();
 			} else {
-				return null; // This should no happen
+				return null; // This should not happen
 			}
 		}
 
