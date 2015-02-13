@@ -171,6 +171,9 @@ class FormDef {
 
   /**
    * Traverse metadata to build a map of Tag as input for a FormMeta
+   * TODO: We assume there is only one title and description.
+   * The language of title and description are picked at random if there are more than
+   * one language.
    */
   private buildMeta(formMeta) {
     def metas = [:]
