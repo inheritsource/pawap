@@ -95,8 +95,9 @@ grails.project.dependency.resolution = {
     //compile(':rest-client-builder:2.0.0') {
     //  export = false
     //}
+    compile ":jquery-ui:1.10.4"
     runtime ":hibernate:$grailsVersion"
-    runtime ":jquery:1.8.3"
+    //runtime ":jquery:1.8.3"
     runtime ":resources:1.2"
 
     // Uncomment these (or add new ones) to enable additional resources capabilities
