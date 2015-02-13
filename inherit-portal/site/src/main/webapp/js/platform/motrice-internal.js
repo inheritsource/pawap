@@ -8,8 +8,12 @@ if(typeof String.prototype.trim !== 'function') {
 
 $(document).ready(function() {
 	   $(".motrice-accordion" ).accordion();	    
-  $("#mapWithPoint").html( mapWithOnePoint(18.1258670 , 59.3038489  )  );
- // $("#mapWithPoint").html( mapWithOnePoint(${startLogItem.longitude} , ${startLogItem.latitude}  )  );
+  $("#mapWithPoint").html( function() {
+	    var longitude = $(this).siblings("input[name='longitude']").attr("value");
+	    var latitude = $(this).siblings("input[name='latitude']").attr("value");
+            // mapWithOnePoint(18.1258670 , 59.3038489  )  );
+            mapWithOnePoint(longitude  , latitude   ) }   );
+            // $("#mapWithPoint").html( mapWithOnePoint(${startLogItem.longitude} , ${startLogItem.latitude}  )  );
 
 	    
         $(".motrice-assign-to").click(function() {

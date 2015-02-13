@@ -89,15 +89,17 @@
 	    </menu>
 	  </div>
 	</section>
+	 <c:if test="${not empty startLogItem.longitude and not empty startLogItem.latitude}">
 	<section class="box" contextmenu="map" id="map">
 	  <h1 class="box-title"><fmt:message key="map.lbl" /></h1>
 	  <div class="box-instructions">
 	  </div>
-	 <c:if test="${not empty startLogItem}">
+	 <input type="hidden" name="longitude" value="${startLogItem.longitude}"/>
+	 <input type="hidden" name="latitude" value="${startLogItem.latitude}"/>
 	  <div id="mapWithPoint" style="width: 350px; height: 350px;">
 	  </div>
-	</c:if>
 	</section>
+	</c:if>
 
 
 </aside>
