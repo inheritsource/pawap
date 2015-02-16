@@ -31,30 +31,12 @@
     </sequenceFlow>
     <scriptTask id="scripttask1" name="Map to group and prepare email" scriptFormat="groovy" activiti:autoStoreVariables="false">
       <script>
-
-try {
+// read the used variables. Otherwise there will be problems if they are not set.
+execution.setVariable("felanmalan_first_name", execution.getVariable("startevent1_first_name")) 
+execution.setVariable("felanmalan_address_string", execution.getVariable("startevent1_address_string")) 
+execution.setVariable("felanmalan_service_code", execution.getVariable("startevent1_service_code")) 
+execution.setVariable("felanmalan_email", execution.getVariable("startevent1_email")) 
 println("Hello world!"); 
-println("motriceStartFormAssignee =" + motriceStartFormAssignee) ; 
-println("startevent1_first_name :startevent1_first_name =" + startevent1_first_name ) ;
-println("startevent1_last_name :startevent1_last_name =" + startevent1_last_name ) ;
-println("startevent1_phone :startevent1_phone =" + startevent1_phone ) ;
-println("startevent1_email :startevent1_email =" + startevent1_email ) ;
-println("startevent1_address_string :startevent1_address_string =" + startevent1_address_string ) ;
-println("startevent1_description :startevent1_description =" + startevent1_description ) ;
-println("startevent1_description :startevent1_description =" + startevent1_description ) ;
-println("startevent1_device_id :startevent1_device_id =" + startevent1_device_id ) ;
-println("startevent1_account_id :startevent1_account_id =" + startevent1_account_id ) ;
-println("startevent1_service_code :startevent1_service_code =" + startevent1_service_code ) ;
-println("startevent1_media_url :startevent1_media_url =" + startevent1_media_url ) ;
-println("startevent1_lat :startevent1_lat =" + startevent1_lat ) ;
-println("startevent1_lon :startevent1_lon =" + startevent1_lon ) ;
-println("Handlggare_group :Handlggare_group =" + Handlggare_group ) ;
-println("Handlggare_comment :Handlggare_comment =" + Handlggare_comment ) ;
-} catch  (Exception e) {
-                        e.printStackTrace();
-                        e.printStackTrace();
-            println("Exception missing variable");
-}
 String group ; 
 if ( Handlggare_group.equals("two") )
   // { group = "elektriker" ; } 
@@ -67,9 +49,21 @@ else
   { group = "admin" ; }
 execution.setVariable("group" , group  ) ; 
 println("group :group =" + group ) ;
-def recipientEmail= startevent1_email  ;
+def recipientEmail= felanmalan_email   ;
 from = "noreply@motrice.se" ; 
-messageText = "Ditt Ärende på "+startevent1_address_string+"(service_code=" + startevent1_service_code + "  är utfört."+ Handlggare_comment ; 
+if ( felanmalan_service_code == null)
+  {
+  felanmalan_service_code = "Okänd service_code"
+  }
+if ( felanmalan_address_string == null)
+  {
+  felanmalan_address_string = "Okänd adress"
+  }
+if ( Handlggare_comment == null)
+  {
+  Handlggare_comment = ""
+  }
+messageText = "Ditt Ärende på "+felanmalan_address_string+"(service_code=" + felanmalan_service_code + "  är utfört."+ Handlggare_comment ; 
 messageSubject = "Ärende utfört" ; 
 execution.setVariable("from" , from  ) ; 
 execution.setVariable("recipientEmail" , recipientEmail  ) ; 
@@ -84,7 +78,7 @@ println("done ...") ;
     <userTask id="usertask2" name="Utförare" activiti:candidateUsers="admin" activiti:candidateGroups="${group}"></userTask>
     <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="usertask2"></sequenceFlow>
     <scriptTask id="scripttask2" name="Prepare email for rejection" scriptFormat="groovy" activiti:autoStoreVariables="false">
-      <script>String messageText2 = "Ditt Ärende på"+startevent1_address_string+"(service_code=" + startevent1_service_code + "  kommer inte att åtgärdas."+Handlggare_comment ; 
+      <script>String messageText2 = "Ditt Ärende på"+felanmalan_address_string+"(service_code=" + felanmalan_service_code + "  kommer inte att åtgärdas."+Handlggare_comment ; 
                messageSubject = "Ärende " ; 
                execution.setVariable("messageSubject" , messageSubject  ) ; 
                println("messageText2 :messageText2 =" + messageText2 ) ;
