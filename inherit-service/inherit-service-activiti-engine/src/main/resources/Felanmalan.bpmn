@@ -36,15 +36,16 @@ execution.setVariable("felanmalan_first_name", execution.getVariable("startevent
 execution.setVariable("felanmalan_address_string", execution.getVariable("startevent1_address_string")) 
 execution.setVariable("felanmalan_service_code", execution.getVariable("startevent1_service_code")) 
 execution.setVariable("felanmalan_email", execution.getVariable("startevent1_email")) 
+execution.setVariable("felanmalan_Handlggare_comment", execution.getVariable("Handlggare_comment")) 
 println("Hello world!"); 
 String group ; 
 if ( Handlggare_group.equals("two") )
   // { group = "elektriker" ; } 
-  { group = "Handlaggare" ; } 
+  { group = "Registrator" ; } 
 else if ( Handlggare_group.equals("three") )
-  { group = "renhallning" ; }
+  { group = "Assistent" ; }
 else if ( Handlggare_group.equals("four") )
-  { group = "vvs" ; }
+  { group = "Handlaggare" ; }
 else 
   { group = "admin" ; }
 execution.setVariable("group" , group  ) ; 
@@ -59,11 +60,11 @@ if ( felanmalan_address_string == null)
   {
   felanmalan_address_string = "Okänd adress"
   }
-if ( Handlggare_comment == null)
+if ( felanmalan_Handlggare_comment == null)
   {
-  Handlggare_comment = ""
+  felanmalan_Handlggare_comment = ""
   }
-messageText = "Ditt Ärende på "+felanmalan_address_string+"(service_code=" + felanmalan_service_code + "  är utfört."+ Handlggare_comment ; 
+messageText = "Ditt Ärende på "+felanmalan_address_string+"(service_code=" + felanmalan_service_code + "  är utfört."+ felanmalan_Handlggare_comment ; 
 messageSubject = "Ärende utfört" ; 
 execution.setVariable("from" , from  ) ; 
 execution.setVariable("recipientEmail" , recipientEmail  ) ; 
@@ -78,7 +79,7 @@ println("done ...") ;
     <userTask id="usertask2" name="Utförare" activiti:candidateUsers="admin" activiti:candidateGroups="${group}"></userTask>
     <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="usertask2"></sequenceFlow>
     <scriptTask id="scripttask2" name="Prepare email for rejection" scriptFormat="groovy" activiti:autoStoreVariables="false">
-      <script>String messageText2 = "Ditt Ärende på"+felanmalan_address_string+"(service_code=" + felanmalan_service_code + "  kommer inte att åtgärdas."+Handlggare_comment ; 
+      <script>String messageText2 = "Ditt Ärende på"+felanmalan_address_string+"(service_code=" + felanmalan_service_code + "  kommer inte att åtgärdas."+felanmalan_Handlggare_comment ; 
                messageSubject = "Ärende " ; 
                execution.setVariable("messageSubject" , messageSubject  ) ; 
                println("messageText2 :messageText2 =" + messageText2 ) ;
