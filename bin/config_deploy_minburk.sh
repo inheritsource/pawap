@@ -9,7 +9,7 @@ BUILD_DIR=${HOME}/workspaces/inheritsource-develop/pawap
 
 # ROOT of directory holding the j2ee containers
 . MOTRICE_REVISION
-CONTAINER_ROOT=/home/tostman/motrice201502181421
+CONTAINER_ROOT=/home/${HOME}/${MOTRICE_REVISION}
 
 # ROOT of Hippo jcr content repository
 CONTENT_ROOT=${CONTAINER_ROOT}/jcr-inherit-portal
