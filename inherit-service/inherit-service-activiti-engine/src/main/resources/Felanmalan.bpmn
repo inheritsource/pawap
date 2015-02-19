@@ -24,19 +24,8 @@
         <activiti:taskListener event="complete" class="org.inheritsource.service.delegates.CreateVariablesTaskListener"></activiti:taskListener>
       </extensionElements>
     </userTask>
-    <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="handlaggare1">
-      <extensionElements>
-        <activiti:executionListener event="take" class="org.inheritsource.service.delegates.CreateVariablesFlowListener"></activiti:executionListener>
-      </extensionElements>
-    </sequenceFlow>
     <scriptTask id="scripttask1" name="Map to group and prepare email" scriptFormat="groovy" activiti:autoStoreVariables="false">
       <script>
-// read the used variables. Otherwise there will be problems if they are not set.
-execution.setVariable("felanmalan_first_name", execution.getVariable("startevent1_first_name")) 
-execution.setVariable("felanmalan_address_string", execution.getVariable("startevent1_address_string")) 
-execution.setVariable("felanmalan_service_code", execution.getVariable("startevent1_service_code")) 
-execution.setVariable("felanmalan_email", execution.getVariable("startevent1_email")) 
-execution.setVariable("felanmalan_Handlggare_comment", execution.getVariable("Handlggare_comment")) 
 println("Hello world!"); 
 String group ; 
 if ( Handlggare_group.equals("two") )
@@ -45,7 +34,7 @@ if ( Handlggare_group.equals("two") )
 else if ( Handlggare_group.equals("three") )
   { group = "Assistent" ; }
 else if ( Handlggare_group.equals("four") )
-  { group = "Handlaggare" ; }
+  { group = "Chef" ; }
 else 
   { group = "admin" ; }
 execution.setVariable("group" , group  ) ; 
@@ -112,73 +101,161 @@ println("script2") ;
     <sequenceFlow id="flow8" sourceRef="exclusivegateway2" targetRef="servicetask1"></sequenceFlow>
     <endEvent id="endevent1" name="End"></endEvent>
     <sequenceFlow id="flow9" sourceRef="servicetask1" targetRef="endevent1"></sequenceFlow>
+    <scriptTask id="scripttask3" name="Script Task" scriptFormat="groovy" activiti:autoStoreVariables="false">
+<script>
+// read the used variables. Otherwise there will be problems if they are not set.
+execution.setVariable("felanmalan_first_name", execution.getVariable("startevent1_first_name")) 
+execution.setVariable("felanmalan_address_string", execution.getVariable("startevent1_address_string")) 
+execution.setVariable("felanmalan_service_code", execution.getVariable("startevent1_service_code")) 
+execution.setVariable("felanmalan_email", execution.getVariable("startevent1_email")) 
+execution.setVariable("felanmalan_Handlggare_comment", execution.getVariable("Handlggare_comment")) 
+String manuellt ; 
+if ( felanmalan_service_code.equals("vintervaghallning@motrice.se") || felanmalan_service_code.equals("avfallochatervinning@motrice.se") || felanmalan_service_code.equals("igensattbrunn@motrice.se") || felanmalan_service_code.equals("gatubelysning@motrice.se") ){
+  manuellt="false"   ; 
+} else {
+  manuellt="true"   ; 
+} 
+execution.setVariable("manuellt" , manuellt  ) ;
+     </script>
+</scriptTask>
+    <sequenceFlow id="flow10" sourceRef="startevent1" targetRef="scripttask3">
+      <extensionElements>
+        <activiti:executionListener event="take" class="org.inheritsource.service.delegates.CreateVariablesFlowListener"></activiti:executionListener>
+      </extensionElements>
+    </sequenceFlow>
+    <exclusiveGateway id="exclusivegateway3" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow11" sourceRef="scripttask3" targetRef="exclusivegateway3"></sequenceFlow>
+    <sequenceFlow id="flow12" sourceRef="exclusivegateway3" targetRef="handlaggare1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${manuellt==true}]]></conditionExpression>
+    </sequenceFlow>
+    <scriptTask id="scripttask4" name="Script Task" scriptFormat="groovy" activiti:autoStoreVariables="false">
+      <script>
+String Handlggare_group ; 
+if ( (felanmalan_service_code.equals("vintervaghallning@motrice.se")) || (felanmalan_service_code.equals("gatubelysning@motrice.se"))) {
+   Handlggare_group="two" ; 
+   // group = "Registrator" ; 
+}
+if (felanmalan_service_code.equals("avfallochatervinning@motrice.se")){
+   Handlggare_group="three" ; 
+   // group = "Assistent" ; 
+}
+if (felanmalan_service_code.equals("igensattbrunn@motrice.se")){
+   Handlggare_group="four" ; 
+   // group = "Chef" ; 
+}
+execution.setVariable("Handlggare_group" , Handlggare_group  ) ;
+execution.setVariable("felanmalan_Handlggare_comment" , " "  ) ;
+    </script>
+    </scriptTask>
+    <sequenceFlow id="flow13" sourceRef="exclusivegateway3" targetRef="scripttask4"></sequenceFlow>
+    <sequenceFlow id="flow14" sourceRef="scripttask4" targetRef="scripttask1"></sequenceFlow>
+    <textAnnotation id="textannotation1">
+      <text>Automatiskhandläggning av vissa ärenden</text>
+    </textAnnotation>
+    <textAnnotation id="textannotation2">
+      <text>Ärendekaraktär</text>
+    </textAnnotation>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_felanmalan">
     <bpmndi:BPMNPlane bpmnElement="felanmalan" id="BPMNPlane_felanmalan">
       <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
-        <omgdc:Bounds height="35.0" width="35.0" x="70.0" y="120.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="-40.0" y="120.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="handlaggare1" id="BPMNShape_handlaggare1">
-        <omgdc:Bounds height="55.0" width="105.0" x="150.0" y="110.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="320.0" y="210.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask1" id="BPMNShape_scripttask1">
-        <omgdc:Bounds height="55.0" width="105.0" x="310.0" y="110.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="470.0" y="108.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
-        <omgdc:Bounds height="40.0" width="40.0" x="460.0" y="117.0"></omgdc:Bounds>
+        <omgdc:Bounds height="40.0" width="40.0" x="598.0" y="115.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="usertask2" id="BPMNShape_usertask2">
-        <omgdc:Bounds height="55.0" width="105.0" x="550.0" y="110.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="688.0" y="108.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask2" id="BPMNShape_scripttask2">
-        <omgdc:Bounds height="55.0" width="105.0" x="550.0" y="220.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="688.0" y="218.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
-        <omgdc:Bounds height="40.0" width="40.0" x="720.0" y="119.0"></omgdc:Bounds>
+        <omgdc:Bounds height="40.0" width="40.0" x="858.0" y="117.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="servicetask1" id="BPMNShape_servicetask1">
-        <omgdc:Bounds height="55.0" width="105.0" x="790.0" y="112.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="928.0" y="110.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
-        <omgdc:Bounds height="35.0" width="35.0" x="940.0" y="122.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="1078.0" y="120.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
-        <omgdi:waypoint x="105.0" y="137.0"></omgdi:waypoint>
-        <omgdi:waypoint x="150.0" y="137.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape bpmnElement="scripttask3" id="BPMNShape_scripttask3">
+        <omgdc:Bounds height="55.0" width="105.0" x="80.0" y="110.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway3" id="BPMNShape_exclusivegateway3">
+        <omgdc:Bounds height="40.0" width="40.0" x="230.0" y="118.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="scripttask4" id="BPMNShape_scripttask4">
+        <omgdc:Bounds height="55.0" width="105.0" x="315.0" y="111.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation1" id="BPMNShape_textannotation1">
+        <omgdc:Bounds height="50.0" width="100.0" x="323.0" y="59.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation2" id="BPMNShape_textannotation2">
+        <omgdc:Bounds height="50.0" width="100.0" x="80.0" y="50.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
-        <omgdi:waypoint x="255.0" y="137.0"></omgdi:waypoint>
-        <omgdi:waypoint x="310.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="425.0" y="237.0"></omgdi:waypoint>
+        <omgdi:waypoint x="439.0" y="236.0"></omgdi:waypoint>
+        <omgdi:waypoint x="439.0" y="153.0"></omgdi:waypoint>
+        <omgdi:waypoint x="470.0" y="135.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
-        <omgdi:waypoint x="415.0" y="137.0"></omgdi:waypoint>
-        <omgdi:waypoint x="460.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="575.0" y="135.0"></omgdi:waypoint>
+        <omgdi:waypoint x="598.0" y="135.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
-        <omgdi:waypoint x="500.0" y="137.0"></omgdi:waypoint>
-        <omgdi:waypoint x="550.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="638.0" y="135.0"></omgdi:waypoint>
+        <omgdi:waypoint x="688.0" y="135.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
-        <omgdi:waypoint x="480.0" y="157.0"></omgdi:waypoint>
-        <omgdi:waypoint x="481.0" y="248.0"></omgdi:waypoint>
-        <omgdi:waypoint x="550.0" y="247.0"></omgdi:waypoint>
+        <omgdi:waypoint x="618.0" y="155.0"></omgdi:waypoint>
+        <omgdi:waypoint x="619.0" y="246.0"></omgdi:waypoint>
+        <omgdi:waypoint x="688.0" y="245.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
-        <omgdi:waypoint x="655.0" y="137.0"></omgdi:waypoint>
-        <omgdi:waypoint x="720.0" y="139.0"></omgdi:waypoint>
+        <omgdi:waypoint x="793.0" y="135.0"></omgdi:waypoint>
+        <omgdi:waypoint x="858.0" y="137.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
-        <omgdi:waypoint x="655.0" y="247.0"></omgdi:waypoint>
-        <omgdi:waypoint x="740.0" y="247.0"></omgdi:waypoint>
-        <omgdi:waypoint x="740.0" y="159.0"></omgdi:waypoint>
+        <omgdi:waypoint x="793.0" y="245.0"></omgdi:waypoint>
+        <omgdi:waypoint x="878.0" y="245.0"></omgdi:waypoint>
+        <omgdi:waypoint x="878.0" y="157.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
-        <omgdi:waypoint x="760.0" y="139.0"></omgdi:waypoint>
-        <omgdi:waypoint x="790.0" y="139.0"></omgdi:waypoint>
+        <omgdi:waypoint x="898.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="928.0" y="137.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
-        <omgdi:waypoint x="895.0" y="139.0"></omgdi:waypoint>
-        <omgdi:waypoint x="940.0" y="139.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1033.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1078.0" y="137.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
+        <omgdi:waypoint x="-5.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="80.0" y="137.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11">
+        <omgdi:waypoint x="185.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="230.0" y="138.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12">
+        <omgdi:waypoint x="250.0" y="158.0"></omgdi:waypoint>
+        <omgdi:waypoint x="250.0" y="237.0"></omgdi:waypoint>
+        <omgdi:waypoint x="320.0" y="237.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow13" id="BPMNEdge_flow13">
+        <omgdi:waypoint x="270.0" y="138.0"></omgdi:waypoint>
+        <omgdi:waypoint x="315.0" y="138.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow14" id="BPMNEdge_flow14">
+        <omgdi:waypoint x="420.0" y="138.0"></omgdi:waypoint>
+        <omgdi:waypoint x="470.0" y="135.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
