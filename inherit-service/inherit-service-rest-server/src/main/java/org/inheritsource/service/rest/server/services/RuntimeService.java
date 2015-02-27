@@ -25,7 +25,10 @@
 
 package org.inheritsource.service.rest.server.services;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -38,6 +41,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -47,13 +51,15 @@ import org.inheritsource.service.common.domain.ActivityInstanceItem;
 import org.inheritsource.service.common.domain.Open311v2ServiceResponse;
 import org.inheritsource.service.common.domain.Open311v2ServiceRequest;
 import org.inheritsource.service.common.domain.Open311v2ServiceResponseItem;
+import org.inheritsource.service.common.domain.Open311v2p1ServiceRequestUpdate;
+import org.inheritsource.service.common.domain.Open311v2p1ServiceRequestUpdates;
 import org.inheritsource.taskform.engine.TaskFormService;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
-
+import java.text.ParseException;
 @Component
 @Path("/runtime")
 public class RuntimeService {
@@ -198,14 +204,14 @@ public class RuntimeService {
 		Open311v2ServiceRequest open311v2ServiceRequest = new Open311v2ServiceRequest();
 		// generate a type 4 UUID
 		// String motriceStartFormInstanceId = java.util.UUID.randomUUID()
-	// 			.toString();
+		// .toString();
 
 		variableMap.put("motriceStartFormAssignee", "admin");
 		variableMap.put("motriceStartFormLat", lat);
 		variableMap.put("motriceStartFormLon", lon);
-		variableMap.put("motriceStartFormDefinitionKey" ,  "felanmalan/felanmalan--v010" ) ; // TODO  
-		
-		
+		variableMap.put("motriceStartFormDefinitionKey",
+				"felanmalan/felanmalan--v018"); // TODO
+
 		// motriceStartFormTypeId
 
 		open311v2ServiceRequest.setDescription(description);
@@ -229,7 +235,7 @@ public class RuntimeService {
 		// System.out.println(open311v2ServiceRequest);
 		String userId = "admin";
 
-		String processDefinitionId = "felanmalan:11:5408";// TODO in
+		String processDefinitionId = "felanmalan:20:9708";// TODO in
 		// coordinatrice ?
 
 		// fill in the document
@@ -237,20 +243,25 @@ public class RuntimeService {
 		Client client = Client.create(config);
 		try {
 			WebResource service = client
-					.resource("http://localhost:8080/exist/postxdb/data/array/felanmalan/felanmalan/v010"); // TODO
-			String motriceStartFormInstanceId = service.type(MediaType.APPLICATION_JSON)
+					.resource("http://localhost:8080/exist/postxdb/data/array/felanmalan/felanmalan/v018"); // TODO
+			String motriceStartFormInstanceId = service
+					.type(MediaType.APPLICATION_JSON)
 					.accept(MediaType.APPLICATION_JSON)
 					.post(String.class, open311v2ServiceRequest);
-			System.out.println("motriceStartFormInstanceId= " + motriceStartFormInstanceId);
-			variableMap.put("motriceStartFormInstanceId", motriceStartFormInstanceId);
-			variableMap.put("motriceStartFormTypeId", new Long(1)); // Orbeon form 
-			// variableMap.put("motriceStartFormDataUri" ,  "MOTRICESTARTFORMDATAURI" ) ; // TODO  
+			System.out.println("motriceStartFormInstanceId= "
+					+ motriceStartFormInstanceId);
+			variableMap.put("motriceStartFormInstanceId",
+					motriceStartFormInstanceId);
+			variableMap.put("motriceStartFormTypeId", new Long(1)); // Orbeon
+																	// form
+			// variableMap.put("motriceStartFormDataUri" ,
+			// "MOTRICESTARTFORMDATAURI" ) ; // TODO
 			// initialFormInstance.
 			String processInstanceId;
 
 			processInstanceId = engine.getActivitiEngineService().startProcess(
 					processDefinitionId, variableMap, userId);
-			System.out.println("processInstanceId = " + processInstanceId);
+//			System.out.println("processInstanceId = " + processInstanceId);
 
 			String service_notice = "Tack för felanmälan."; // TODO from
 															// configuration
@@ -279,6 +290,73 @@ public class RuntimeService {
 		catch (Exception ex) {
 			System.out.println("Exception : " + ex);
 			return null;
+		}
+
+	}
+
+	// fms extention
+	// https://github.com/mysociety/FixMyStreet/wiki/Open311-FMS---Proposed-differences-to-Open311
+	@Path("open311/v2/servicerequestupdates.{format}")
+	// TODO v2.1
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces({ "application/json", "application/xml" })
+	@GET
+	public Response requests(@PathParam("format") String format,
+			@QueryParam("jurisdiction_id") String jurisdiction_id,
+			@QueryParam("start_date") String start_date_string,
+			@QueryParam("end_date") String end_date_string) {
+		// With JAX-RS 2.0 this may be done with @BeanParam and annotation in
+		// the Java bean instead
+		// but other packages are still on JAX-RS 1.X
+
+		if (jurisdiction_id == null) {
+			// TODO This is only required if the endpoint serves multiple
+			// jurisdictions
+			return Response.status(Response.Status.BAD_REQUEST)
+					.type("text/plain").entity("Missing jurisdiction_id")
+					.build();
+		}
+		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss") ;
+		Date start_date = null;
+		try {
+			start_date = dateformat.parse(start_date_string);
+		} catch (ParseException e) {
+			return Response.status(Response.Status.BAD_REQUEST)
+					.type("text/plain").entity("Bad date format")
+					.build();
+		}
+		
+		Date end_date = null;
+		try {
+			end_date = dateformat.parse(end_date_string);
+		} catch (ParseException e) {
+			return Response.status(Response.Status.BAD_REQUEST)
+					.type("text/plain").entity("Bad date format")
+					.build();
+		}	
+		
+		if ((!(format.equals("json"))) && (!(format.equals("xml")))) {
+			return Response.status(Response.Status.BAD_REQUEST)
+					.type("text/plain").entity("Bad format").build();
+		}
+
+		String userId = "admin";
+	
+		String processLike = "felanmalan/felanmalan--v%" ;  
+		Open311v2p1ServiceRequestUpdates open311v2p1ServiceRequestUpdates = 
+				engine.getActivitiEngineService().getProcessInstancesOpen311(
+						userId, jurisdiction_id, start_date,
+						end_date, processLike );
+				
+
+		if (format.equals("json")) {
+			return Response.ok(open311v2p1ServiceRequestUpdates,
+					MediaType.APPLICATION_JSON).build();
+		} else if (format.equals("xml")) {
+			return Response.ok(open311v2p1ServiceRequestUpdates,
+					MediaType.APPLICATION_XML).build();
+		} else {
+			return null; // This should not happen
 		}
 
 	}

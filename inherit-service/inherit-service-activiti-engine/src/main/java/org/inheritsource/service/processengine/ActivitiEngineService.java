@@ -79,6 +79,8 @@ import org.inheritsource.service.common.domain.DocBoxFormData;
 import org.inheritsource.service.common.domain.FormInstance;
 import org.inheritsource.service.common.domain.GroupInfo;
 import org.inheritsource.service.common.domain.InboxTaskItem;
+import org.inheritsource.service.common.domain.Open311v2p1ServiceRequestUpdate;
+import org.inheritsource.service.common.domain.Open311v2p1ServiceRequestUpdates;
 import org.inheritsource.service.common.domain.PagedProcessInstanceSearchResult;
 import org.inheritsource.service.common.domain.ProcessDefinitionDetails;
 import org.inheritsource.service.common.domain.ProcessDefinitionInfo;
@@ -268,11 +270,12 @@ public class ActivitiEngineService {
 
 			item.setActivityCreated(task.getCreateTime());
 			item.setActivityDefinitionUuid(task.getTaskDefinitionKey());
-			//item.setActivityLabel(coordinatriceFacade.getLabel(
-			//		task.getProcessDefinitionId(), task.getName(), locale));
+			// item.setActivityLabel(coordinatriceFacade.getLabel(
+			// task.getProcessDefinitionId(), task.getName(), locale));
 			item.setActivityLabel(coordinatriceFacade.getLabelById(
-					task.getProcessDefinitionId(), task.getName(), task.getTaskDefinitionKey(), locale));
-			
+					task.getProcessDefinitionId(), task.getName(),
+					task.getTaskDefinitionKey(), locale));
+
 			item.setExpectedEndDate(task.getDueDate());
 			item.setProcessDefinitionUuid(task.getProcessDefinitionId());
 			item.setProcessInstanceUuid(task.getProcessInstanceId());
@@ -384,10 +387,11 @@ public class ActivitiEngineService {
 
 			item.setActivityCreated(task.getStartTime());
 			item.setActivityDefinitionUuid(task.getTaskDefinitionKey());
-			//item.setActivityLabel(coordinatriceFacade.getLabel(
-			//		task.getProcessDefinitionId(), task.getName(), locale));
+			// item.setActivityLabel(coordinatriceFacade.getLabel(
+			// task.getProcessDefinitionId(), task.getName(), locale));
 			item.setActivityLabel(coordinatriceFacade.getLabelById(
-					task.getProcessDefinitionId(), task.getName(), task.getTaskDefinitionKey(), locale));
+					task.getProcessDefinitionId(), task.getName(),
+					task.getTaskDefinitionKey(), locale));
 			item.setExpectedEndDate(task.getDueDate());
 			item.setProcessDefinitionUuid(task.getProcessDefinitionId());
 			item.setProcessInstanceUuid(task.getProcessInstanceId());
@@ -693,10 +697,11 @@ public class ActivitiEngineService {
 
 	private String getTaskName(Task task, Locale locale) {
 		String result = task.getName();
-		//String crdName = coordinatriceFacade.getLabel(
-		//		task.getProcessDefinitionId(), task.getName(), locale);
+		// String crdName = coordinatriceFacade.getLabel(
+		// task.getProcessDefinitionId(), task.getName(), locale);
 		String crdName = coordinatriceFacade.getLabelById(
-				task.getProcessDefinitionId(), task.getName(), task.getTaskDefinitionKey(), locale);
+				task.getProcessDefinitionId(), task.getName(),
+				task.getTaskDefinitionKey(), locale);
 		if (crdName != null) {
 			result = crdName;
 		}
@@ -705,14 +710,14 @@ public class ActivitiEngineService {
 
 	private String getHistoricTaskName(HistoricTaskInstance task, Locale locale) {
 		String result = task.getName();
-		//String crdName = coordinatriceFacade.getLabel(
-		//		task.getProcessDefinitionId(), task.getName(), locale);
+		// String crdName = coordinatriceFacade.getLabel(
+		// task.getProcessDefinitionId(), task.getName(), locale);
 		String crdName = coordinatriceFacade.getLabelById(
-				task.getProcessDefinitionId(), task.getName(), task.getTaskDefinitionKey(), locale);
+				task.getProcessDefinitionId(), task.getName(),
+				task.getTaskDefinitionKey(), locale);
 		if (crdName != null) {
 			result = crdName;
 		}
-
 
 		return result;
 	}
@@ -723,11 +728,11 @@ public class ActivitiEngineService {
 		String crdName = coordinatriceFacade.getLabel(
 				activity.getProcessDefinitionId(), activity.getActivityName(),
 				locale);
-		
+
 		if (crdName != null) {
 			result = crdName;
 		}
-	
+
 		return result;
 	}
 
@@ -1257,13 +1262,12 @@ public class ActivitiEngineService {
 		boolean result = true;
 
 		String personalId = taskFormDb.getUserSerialByUuid(userId);
-		// TODO add check if personal number is a proper one correct 
-		
+		// TODO add check if personal number is a proper one correct
+
 		// personalId = "197307290259"; // NOTE
-		log.info("personalId =" , personalId ) ; 
-		
-	
-		 String transactionId= null ; 
+		log.info("personalId =", personalId);
+
+		String transactionId = null;
 
 		// base 64
 		String signTextBase64 = "";
@@ -1273,30 +1277,27 @@ public class ActivitiEngineService {
 					Base64.encodeBase64(signText.getBytes()));
 		}
 
-	
-
 		String docBoxRef = docBoxFormData.getDocboxRef();
 		if (docBoxRef == null) {
-			log.error("failed to get docBoxRef") ; 
-			result = false ;
-			return(result ) ; 			
+			log.error("failed to get docBoxRef");
+			result = false;
+			return (result);
 		}
-		
-		DocBoxFacade docBox = new DocBoxFacade();
-				
 
-		JSONObject response = docBox.requestDocBoxSignature(docBoxRef, signTextBase64, personalId);
+		DocBoxFacade docBox = new DocBoxFacade();
+
+		JSONObject response = docBox.requestDocBoxSignature(docBoxRef,
+				signTextBase64, personalId);
 		log.info("response = {} ", response);
 		if (response == null) {
-			result = false ; 
-			return result ; 
+			result = false;
+			return result;
 		}
-		transactionId = (String) response.get("transactionId") ; 
-		String autoStartToken= (String) response.get("autoStartToken") ; 
-		log.info("transactionId = {} " , transactionId ) ; 
-		log.info("autoStartToken = {} " ,  autoStartToken) ; 
-	
-		
+		transactionId = (String) response.get("transactionId");
+		String autoStartToken = (String) response.get("autoStartToken");
+		log.info("transactionId = {} ", transactionId);
+		log.info("autoStartToken = {} ", autoStartToken);
+
 		// String transactionId = "TODOdocboxrestresult.transactionId";
 		Task task = engine
 				.getTaskService()
@@ -1306,16 +1307,14 @@ public class ActivitiEngineService {
 		engine.getTaskService().setVariableLocal(task.getId(),
 				SignStartFormTaskHandler.FORM_SIGN_TRANSACTION_ID,
 				transactionId);
-		
+
 		engine.getTaskService().setVariableLocal(task.getId(),
-				SignStartFormTaskHandler.FORM_SIGN_DOCBOXREF,
-				docBoxRef);
+				SignStartFormTaskHandler.FORM_SIGN_DOCBOXREF, docBoxRef);
 
 		engine.getTaskService().setVariableLocal(task.getId(),
 				SignStartFormTaskHandler.FORM_SIGN_FINGERPRINT,
 				docBoxFormData.getCheckSum());
 
-		
 		/*
 		 * FormInstance result = null; Task task =
 		 * engine.getTaskService().createTaskQuery
@@ -1353,9 +1352,9 @@ public class ActivitiEngineService {
 	}
 
 	public void pollCompletedSignRequest() {
-				
+
 		DocBoxFacade docBox = new DocBoxFacade();
-		
+
 		List<Task> tasks = engine
 				.getTaskService()
 				.createTaskQuery()
@@ -1370,51 +1369,70 @@ public class ActivitiEngineService {
 					SignStartFormTaskHandler.FORM_SIGN_DOCBOXREF);
 			String transactionId = (String) task.getTaskLocalVariables().get(
 					SignStartFormTaskHandler.FORM_SIGN_TRANSACTION_ID);
-			JSONObject json = docBox.checkOutcomeSignatureRequest(docboxRef, transactionId);
-			
+			JSONObject json = docBox.checkOutcomeSignatureRequest(docboxRef,
+					transactionId);
+
 			if (json != null) {
-			  if (json.getBoolean("processingComplete")) {
-				
+				if (json.getBoolean("processingComplete")) {
+
 					if (json.getBoolean("success")) {
-						log.info("successful signature for task: " + task.getId() + " transactionId=" + transactionId + " docboxRef=" + docboxRef);
+						log.info("successful signature for task: "
+								+ task.getId() + " transactionId="
+								+ transactionId + " docboxRef=" + docboxRef);
 						Map<String, Object> variables = new HashMap<String, Object>();
 						String docboxRefOut = json.getString("docboxRefOut");
-						String taskDocActVarName = DelegateUtil.calcTaskVariableName(FormEngine.FORM_ACT_URI, task.getId());
-						if (docboxRefOut!= null && docboxRefOut.trim().length()>0) { 
-							String taskDocRefVarName = DelegateUtil.calcTaskVariableName(FormEngine.FORM_DOCBOXREF, task.getId()); 
-							variables.put(taskDocRefVarName, docboxRefOut); 
-							variables.put(taskDocActVarName, docboxBaseUrl + docboxRefOut); 
-						} 
-						
-						// look up signing user. TODO think about internal user that can be even external users
+						String taskDocActVarName = DelegateUtil
+								.calcTaskVariableName(FormEngine.FORM_ACT_URI,
+										task.getId());
+						if (docboxRefOut != null
+								&& docboxRefOut.trim().length() > 0) {
+							String taskDocRefVarName = DelegateUtil
+									.calcTaskVariableName(
+											FormEngine.FORM_DOCBOXREF,
+											task.getId());
+							variables.put(taskDocRefVarName, docboxRefOut);
+							variables.put(taskDocActVarName, docboxBaseUrl
+									+ docboxRefOut);
+						}
+
+						// look up signing user. TODO think about internal user
+						// that can be even external users
 						String personalIdNo = json.getString("personalIdNo");
 						String userId = UserInfo.ANONYMOUS_UUID;
-						UserInfo user = taskFormDb.getUserBySerial(personalIdNo);
+						UserInfo user = taskFormDb
+								.getUserBySerial(personalIdNo);
 						if (user != null) {
 							userId = user.getUuid();
 						}
 						executeTask(task.getId(), variables, userId);
-						log.info("executed signature task: " + task.getId() + " transactionId=" + transactionId + " docboxRefOut=" + docboxRefOut);
+						log.info("executed signature task: " + task.getId()
+								+ " transactionId=" + transactionId
+								+ " docboxRefOut=" + docboxRefOut);
+					} else {
+						log.info("failed signature for task: " + task.getId()
+								+ " transactionId=" + transactionId
+								+ " docboxjson: " + json);
+						// failed sign - clean up temorary stored variables from
+						// sign request
+						engine.getTaskService()
+								.removeVariableLocal(
+										task.getId(),
+										SignStartFormTaskHandler.FORM_SIGN_TRANSACTION_ID);
+						engine.getTaskService().removeVariableLocal(
+								task.getId(),
+								SignStartFormTaskHandler.FORM_SIGN_DOCBOXREF);
 					}
-					else {
-						log.info("failed signature for task: " + task.getId() + " transactionId=" + transactionId + " docboxjson: " + json);
-						// failed sign - clean up temorary stored variables from sign request
-						engine.getTaskService().removeVariableLocal(task.getId(), SignStartFormTaskHandler.FORM_SIGN_TRANSACTION_ID);
-						engine.getTaskService().removeVariableLocal(task.getId(), SignStartFormTaskHandler.FORM_SIGN_DOCBOXREF);
-					}
-			  }
-		    }
-			  
-				
-		 }
-			// om fel i signatur... =>
-			// engine.getTaskService().removeVariable(task.getId(),
-			// SignStartFormTaskHandler.FORM_SIGN_TRANSACTION_ID);
+				}
+			}
 
-			// om lyckat => execute task med tillhörande act
+		}
+		// om fel i signatur... =>
+		// engine.getTaskService().removeVariable(task.getId(),
+		// SignStartFormTaskHandler.FORM_SIGN_TRANSACTION_ID);
+
+		// om lyckat => execute task med tillhörande act
 
 	}
-	
 
 	public String startProcess(String processDefinitionId,
 			Map<String, Object> variables, String userId) {
@@ -2427,6 +2445,115 @@ public class ActivitiEngineService {
 		return null;
 	}
 
+	
+
+	/**
+	 * Search updates of processes started by a call to the open311 interface
+	 * 
+	 * @param userId
+	 * @param jurisdiction_id     name of jurisdiction_id or null 
+	 * @param start_date
+	 * @param end_date   
+	 * @param processLike   search pattern for process definition 
+	 * @return
+	 */
+	public Open311v2p1ServiceRequestUpdates getProcessInstancesOpen311(
+			String userId, String jurisdiction_id, Date start_date,
+			Date end_date, String processLike) {
+		// TODO Auto-generated method stub
+		// make a search TODO
+		List<HistoricProcessInstance> processes;
+		HistoricProcessInstanceQuery historicProcessInstanceQuery = engine
+				.getHistoryService().createHistoricProcessInstanceQuery();
+		engine.getIdentityService().setAuthenticatedUserId(userId);
+
+	
+		boolean useDefault = true;
+		if (start_date != null) {
+			historicProcessInstanceQuery.finishedAfter(start_date);
+			useDefault = false;
+		}
+
+		if (end_date != null) {
+			historicProcessInstanceQuery.finishedBefore(end_date);
+			useDefault = false;
+		}
+
+		if (useDefault) {
+			// report for last 24 h
+			// TODO
+			// String timeStamp = new
+			// SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+			// historicProcessInstanceQuery.finishedAfter(timeStamp) ;
+			return null;
+		}
+
+		historicProcessInstanceQuery.orderByProcessInstanceStartTime().desc();
+
+		if (userId != null && !userId.isEmpty()) {
+			historicProcessInstanceQuery.startedBy(userId);
+		}
+		if (jurisdiction_id == null) {
+			processes = historicProcessInstanceQuery
+					.excludeSubprocesses(true)
+					.variableValueLike("motriceStartFormDefinitionKey",
+							processLike).includeProcessVariables().list();
+		} else {
+			processes = historicProcessInstanceQuery
+					.excludeSubprocesses(true)
+					.variableValueEquals("startevent1_jurisdiction_id", jurisdiction_id )
+					.variableValueLike("motriceStartFormDefinitionKey",
+							processLike).includeProcessVariables().list();
+		}
+
+		// get the data
+		Open311v2p1ServiceRequestUpdates open311v2p1ServiceRequestUpdates = new Open311v2p1ServiceRequestUpdates();
+		int count = 0;
+		int maxCount = 1000; // max number of reports
+		for (HistoricProcessInstance proc : processes) {
+			count++;
+			if (count < maxCount) {
+				count++;
+				Map<String, Object> variableMap = proc.getProcessVariables();
+
+				String Handlggare_comment = (String) variableMap
+						.get("Handlggare_comment");
+				// System.out
+				// .println("Handlggare_comment = " + Handlggare_comment);
+				String motriceStartFormInstanceId = (String) variableMap
+						.get("motriceStartFormInstanceId");
+
+				// System.out.println("proc.getProcessDefinitionId() "
+				// + proc.getProcessDefinitionId());
+
+				String endTime = proc.getEndTime().toString();
+				// System.out.println("endTime =   " + endTime);
+				Open311v2p1ServiceRequestUpdate open311v2p1ServiceRequestUpdate = new Open311v2p1ServiceRequestUpdate();
+				String description = Handlggare_comment; // "description";
+				String media_url = ""; // "media_url";
+				// String service_request_id = "service_request_id";
+				String service_request_id = motriceStartFormInstanceId;
+				String status = "CLOSED"; // Possible values: OPEN, CLOSED
+				// motriceStartFormInstanceId
+				String update_id = "update_id";
+				// String updated_datetime = "updated_datetime";
+				String updated_datetime = endTime;
+				open311v2p1ServiceRequestUpdate.setDescription(description);
+				open311v2p1ServiceRequestUpdate.setMedia_url(media_url);
+				open311v2p1ServiceRequestUpdate
+						.setService_request_id(service_request_id);
+				open311v2p1ServiceRequestUpdate.setStatus(status);
+				open311v2p1ServiceRequestUpdate.setUpdate_id(update_id);
+				open311v2p1ServiceRequestUpdate
+						.setUpdated_datetime(updated_datetime);
+				open311v2p1ServiceRequestUpdates
+						.addOpen311v2p1ServiceRequestUpdate(open311v2p1ServiceRequestUpdate);
+
+			}
+		}
+		return open311v2p1ServiceRequestUpdates;
+	}
+	
 	public static void main(String[] args) {
 
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
@@ -2714,14 +2841,13 @@ public class ActivitiEngineService {
 		return tag;
 	}
 
-	public DocBoxFormData getDocBoxFormData(
-			String docBoxRef, Locale locale) {
+	public DocBoxFormData getDocBoxFormData(String docBoxRef, Locale locale) {
 		DocBoxFacade docBox = new DocBoxFacade();
 		DocBoxFormData docBoxFormData = null;
 
 		return null; // TODO
 	}
-	
+
 	public DocBoxFormData getDocBoxFormDataToSign(
 			ActivityInstanceItem activity, Locale locale) {
 		DocBoxFacade docBox = new DocBoxFacade();
@@ -2860,4 +2986,5 @@ public class ActivitiEngineService {
 		}
 		return logItemToNotify;
 	}
+
 }
