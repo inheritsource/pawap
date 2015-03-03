@@ -278,9 +278,12 @@ class ProcessEngineService {
 
   Procinst findProcessInstance(String id) {
     if (log.debugEnabled) log.debug "findProcessInstance << ${id}"
-    def pi = activitiRuntimeService.createProcessInstanceQuery().
-    processInstanceId(id).singleResult()
-    def result = pi? createProcinst(pi) : null
+    def result = null
+    if (id) {
+      def pi = activitiRuntimeService.createProcessInstanceQuery().
+      processInstanceId(id).singleResult()
+      result = pi? createProcinst(pi) : null
+    }
     if (log.debugEnabled) log.debug "findProcessInstance >> ${result}"
     return result
   }
@@ -327,6 +330,9 @@ class ProcessEngineService {
     return result
   }
 
+  /**
+   * Find all tasks given a  process instance id.
+   */
   List findTasksByPi(String processInstanceId) {
     if (log.debugEnabled) log.debug "findTasksByPi << ${processInstanceId}"
     def list = activitiTaskService.createTaskQuery().
@@ -340,6 +346,7 @@ class ProcessEngineService {
 
   /**
    * Find a task by its id.
+   * Return the task or null.
    */
   BpmnTask findTask(String id) {
     if (log.debugEnabled) log.debug "findTask << ${id}"
@@ -347,6 +354,50 @@ class ProcessEngineService {
     def result = task? createTask(task) : null
     if (log.debugEnabled) log.debug "findTask >> ${result}"
     return result
+  }
+
+  /**
+   * Send a signal to an execution.
+   */
+  def signalExecution(BpmnExecution exec) {
+    if (log.debugEnabled) log.debug "signalExecution << ${exec}"
+    def uuid = exec.uuid
+
+    try {
+      activitiRuntimeService.signal(exec.uuid)
+    } catch (ActivitiException exc) {
+      throw new ServiceException("Problem signalling execution ${uuid}",
+				 'bpmnExecution.signal.conflict', [uuid, exc.message])
+    } catch (NullPointerException exc) {
+      throw new ServiceException("Problem signalling execution ${uuid}",
+				 'bpmnExecution.signal.conflict', [uuid, 'Internal conflict'])
+    }
+
+    if (log.debugEnabled) log.debug "signalExecution >>"
+  }
+
+  /**
+   * Update a task given user input.
+   * Return the updated task.
+   */
+  BpmnTask updateTask(BpmnTaskCommand cmd, boolean completeFlag) {
+    if (log.debugEnabled) log.debug "updateTask << ${cmd}, ${completeFlag}"
+    def uuid = cmd.id
+    def task = findTask(uuid)
+    if (!task) throw new ServiceException("Task ${uuid} not found",
+					  'default.not.found.message', [uuid])
+    task.activitiTask.assignee = cmd.assignee
+    task.activitiTask.dueDate = cmd.dueTime
+    task.activitiTask.description = cmd.description
+    task.activitiTask.priority = cmd.priority
+    task.assignFromTask()
+    activitiTaskService.saveTask(task.activitiTask)
+    if (completeFlag) {
+      activitiTaskService.complete(uuid)
+      if (log.debugEnabled) log.debug "updateTask: Task ${uuid} COMPLETED"
+    }
+    if (log.debugEnabled) log.debug "updateTask >> ${task}"
+    return task
   }
 
   private Procinst createProcinst(ProcessInstance pi) {

@@ -78,7 +78,7 @@
       <g:form>
 	<fieldset class="buttons">
 	  <g:hiddenField name="id" value="${bpmnTaskInst?.id}" />
-	  <g:link class="edit" action="edit" id="${bpmnTaskInst?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
+	  <g:link class="edit" action="edit" id="${bpmnTaskInst?.uuid}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
 	  <g:if test="${bpmnTaskInst?.processInstanceId}">
 	    <g:link class="show" controller="procinst" action="show" id="${bpmnTaskInst.processInstanceId}"><g:message code="default.button.list.label" default="Process Instance"/></g:link>
 	  </g:if>

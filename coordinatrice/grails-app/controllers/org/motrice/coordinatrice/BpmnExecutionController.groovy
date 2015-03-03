@@ -39,6 +39,28 @@ class BpmnExecutionController {
     [bpmnExecInst: bpmnExecInst]
   }
 
+  def signal(String id) {
+    if (log.debugEnabled) log.debug "SIGNAL EXECUTION ${params}"
+    def bpmnExecInst = processEngineService.findExecution(id)
+    if (!bpmnExecInst) {
+      flash.message = message(code: 'default.not.found.message', args: [message(code: 'bpmnExecution.label', default: 'BpmnExecution'), id])
+      redirect(action: "list")
+      return
+    }
+
+    def pi = bpmnExecInst.processInstanceId
+    if (log.debugEnabled) log.debug "signal execution PI = ${pi}"
+    try {
+      pi = processEngineService.signalExecution(bpmnExecInst)
+      flash.message = message(code: 'bpmnExecution.signal.msg', args: [id])
+    } catch (ServiceException exc) {
+      handleServiceException('Signal Execution', exc)
+    }
+
+    if (log.debugEnabled) log.debug "signal execution redirect id = ${pi}"
+    redirect(controller: 'procinst', action: 'show', id: pi)
+  }
+
   def edit(Long id) {
     def bpmnExecInst = BpmnExecution.get(id)
     if (!bpmnExecInst) {
@@ -97,4 +119,14 @@ class BpmnExecutionController {
       redirect(action: "show", id: id)
     }
   }
+
+  private handleServiceException(String op, ServiceException exc) {
+    log.error "${op} ${exc?.message}"
+    if (exc.key) {
+      flash.message = message(code: exc.key, args: exc.args ?: [])
+    } else {
+      flash.message = exc.message
+    }
+  }
+
 }

@@ -27,21 +27,6 @@ class BpmnTaskController {
     [bpmnTaskInstList: taskList, bpmnTaskInstTotal: taskList.size(), procInst: procInst]
   }
 
-  def create() {
-    [bpmnTaskInst: new BpmnTask(params)]
-  }
-
-  def save() {
-    def bpmnTaskInst = new BpmnTask(params)
-    if (!bpmnTaskInst.save(flush: true)) {
-      render(view: "create", model: [bpmnTaskInst: bpmnTaskInst])
-      return
-    }
-
-    flash.message = message(code: 'default.created.message', args: [message(code: 'bpmnTask.label', default: 'BpmnTask'), bpmnTaskInst.id])
-    redirect(action: "show", id: bpmnTaskInst.id)
-  }
-
   def show(String id) {
     if (log.debugEnabled) log.debug "SHOW TASK ${params}"
     def bpmnTaskInst = processEngineService.findTask(id)
@@ -54,8 +39,8 @@ class BpmnTaskController {
     [bpmnTaskInst: bpmnTaskInst]
   }
 
-  def edit(Long id) {
-    def bpmnTaskInst = BpmnTask.get(id)
+  def edit(String id) {
+    def bpmnTaskInst = processEngineService.findTask(id)
     if (!bpmnTaskInst) {
       flash.message = message(code: 'default.not.found.message', args: [message(code: 'bpmnTask.label', default: 'BpmnTask'), id])
       redirect(action: "list")
@@ -65,33 +50,37 @@ class BpmnTaskController {
     [bpmnTaskInst: bpmnTaskInst]
   }
 
-  def update(Long id, Long version) {
-    def bpmnTaskInst = BpmnTask.get(id)
-    if (!bpmnTaskInst) {
-      flash.message = message(code: 'default.not.found.message', args: [message(code: 'bpmnTask.label', default: 'BpmnTask'), id])
-      redirect(action: "list")
+  def update(BpmnTaskCommand cmd) {
+    if (log.debugEnabled) log.debug "UPDATE TASK << ${cmd} ${params}"
+    def bpmnTaskInst = null
+    try {
+      bpmnTaskInst = processEngineService.updateTask(cmd, false)
+    } catch (ServiceException exc) {
+      handleServiceException('Update Task', exc)
+      redirect(controller: 'procinst', action: 'list')
       return
     }
 
-    if (version != null) {
-      if (bpmnTaskInst.version > version) {
-	bpmnTaskInst.errors.rejectValue("version", "default.optimistic.locking.failure",
-					[message(code: 'bpmnTask.label', default: 'BpmnTask')] as Object[],
-					"Another user has updated this BpmnTask while you were editing")
-	render(view: "edit", model: [bpmnTaskInst: bpmnTaskInst])
-	return
-      }
-    }
+    flash.message = message(code: 'default.updated.message', args: [message(code: 'bpmnTask.label', default: 'BpmnTask'), bpmnTaskInst.uuid])
+    redirect(action: "show", id: bpmnTaskInst.uuid)
+  }
 
-    bpmnTaskInst.properties = params
-
-    if (!bpmnTaskInst.save(flush: true)) {
-      render(view: "edit", model: [bpmnTaskInst: bpmnTaskInst])
+  def updatecomplete(BpmnTaskCommand cmd) {
+    if (log.debugEnabled) log.debug "UPDATE/COMPLETE TASK << ${cmd} ${params}"
+    def bpmnTaskInst = null
+    try {
+      bpmnTaskInst = processEngineService.updateTask(cmd, true)
+    } catch (ServiceException exc) {
+      handleServiceException('Update Task', exc)
+      redirect(controller: 'procinst', action: 'list')
       return
     }
 
-    flash.message = message(code: 'default.updated.message', args: [message(code: 'bpmnTask.label', default: 'BpmnTask'), bpmnTaskInst.id])
-    redirect(action: "show", id: bpmnTaskInst.id)
+    flash.message = message(code: 'bpmnTask.update.complete.msg', args: [bpmnTaskInst.uuid])
+    redirect(controller: 'procinst', action: 'show', id: bpmnTaskInst.processInstanceId)
+  }
+
+  private doUpdate(BpmnTask task, BpmnTaskCommand cmd) {
   }
 
   def delete(Long id) {
@@ -111,5 +100,27 @@ class BpmnTaskController {
       flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'bpmnTask.label', default: 'BpmnTask'), id])
       redirect(action: "show", id: id)
     }
+  }
+
+  private handleServiceException(String op, ServiceException exc) {
+    log.error "${op} ${exc?.message}"
+    if (exc.key) {
+      flash.message = message(code: exc.key, args: exc.args ?: [])
+    } else {
+      flash.message = exc.message
+    }
+  }
+
+}
+
+class BpmnTaskCommand {
+  String id
+  String assignee
+  Date dueTime
+  String description
+  Integer priority
+
+  String toString() {
+    "[BpmnTaskCommand(${id}): '${assignee}','${dueTime}','${description}','${priority}']"
   }
 }

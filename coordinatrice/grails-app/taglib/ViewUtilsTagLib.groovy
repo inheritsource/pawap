@@ -124,4 +124,12 @@ class ViewUtilsTagLib {
     out << "${owner}/${assignee}"
   }
 
+  /**
+   * Owner or dashes
+   */
+  def owner = {attrs, body ->
+    def owner = attrs.owner ?: '--'
+    out << owner
+  }
+
 }

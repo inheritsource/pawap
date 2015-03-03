@@ -634,7 +634,7 @@ th:hover, tr:hover {
 
 .buttons .delete, .buttons .edit, .buttons .save, .buttons .show,
 .buttons .add, .buttons .checkall, .buttons .clearall, .buttons .remove,
-.buttons .export, .buttons .upload, .buttons .install {
+.buttons .export, .buttons .upload, .buttons .install, .buttons .zap {
 	background-position: 0.7em center;
 	background-repeat: no-repeat;
 	text-indent: 21px;
@@ -667,6 +667,10 @@ th:hover, tr:hover {
 
 .buttons .remove {
 	background-image: url(../images/silk/delete.png);
+}
+
+.buttons .zap {
+	background-image: url(../images/silk/lightning.png);
 }
 
 #textForAddContaining {
