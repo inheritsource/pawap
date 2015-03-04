@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,13 +54,16 @@ import org.inheritsource.service.common.domain.Open311v2ServiceRequest;
 import org.inheritsource.service.common.domain.Open311v2ServiceResponseItem;
 import org.inheritsource.service.common.domain.Open311v2p1ServiceRequestUpdate;
 import org.inheritsource.service.common.domain.Open311v2p1ServiceRequestUpdates;
+import org.inheritsource.service.processengine.ActivitiEngineService;
 import org.inheritsource.taskform.engine.TaskFormService;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+
 import java.text.ParseException;
+
 @Component
 @Path("/runtime")
 public class RuntimeService {
@@ -191,11 +195,11 @@ public class RuntimeService {
 					.type("text/plain").entity("Bad format").build();
 		}
 
-		System.out.println("api_key = " + api_key); //
+		log.debug("api_key = {}",   api_key);
 		String correct_api_key = "xyz"; // TODO make key configurable
-		System.out.println("format = " + format);
+		log.debug("format = {}", format);
 		if (api_key.equals(correct_api_key)) {
-			System.out.println("correct api_key ");
+			log.debug("correct api_key ");
 		} else {
 			return Response.status(Response.Status.BAD_REQUEST)
 					.type("text/plain").entity("Bad format").build();
@@ -231,8 +235,7 @@ public class RuntimeService {
 		open311v2ServiceRequest.setLat(lat); // duplicate
 		open311v2ServiceRequest.setLon(lon); // duplicate
 
-		System.out.println(variableMap);
-		// System.out.println(open311v2ServiceRequest);
+		log.debug("variableMap= {} " , variableMap);
 		String userId = "admin";
 
 		String processDefinitionId = "felanmalan:20:9708";// TODO in
@@ -248,20 +251,17 @@ public class RuntimeService {
 					.type(MediaType.APPLICATION_JSON)
 					.accept(MediaType.APPLICATION_JSON)
 					.post(String.class, open311v2ServiceRequest);
-			System.out.println("motriceStartFormInstanceId= "
-					+ motriceStartFormInstanceId);
+			log.debug(" motriceStartFormInstanceId= {}" , 
+					 motriceStartFormInstanceId);
 			variableMap.put("motriceStartFormInstanceId",
 					motriceStartFormInstanceId);
 			variableMap.put("motriceStartFormTypeId", new Long(1)); // Orbeon
 																	// form
-			// variableMap.put("motriceStartFormDataUri" ,
-			// "MOTRICESTARTFORMDATAURI" ) ; // TODO
-			// initialFormInstance.
+	
 			String processInstanceId;
 
 			processInstanceId = engine.getActivitiEngineService().startProcess(
 					processDefinitionId, variableMap, userId);
-//			System.out.println("processInstanceId = " + processInstanceId);
 
 			String service_notice = "Tack för felanmälan."; // TODO from
 															// configuration
@@ -288,7 +288,7 @@ public class RuntimeService {
 		}
 
 		catch (Exception ex) {
-			System.out.println("Exception : " + ex);
+			log.error("Exception : " + ex);
 			return null;
 		}
 
@@ -301,7 +301,7 @@ public class RuntimeService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces({ "application/json", "application/xml" })
 	@GET
-	public Response requests(@PathParam("format") String format,
+	public Response servicerequestupdates(@PathParam("format") String format,
 			@QueryParam("jurisdiction_id") String jurisdiction_id,
 			@QueryParam("start_date") String start_date_string,
 			@QueryParam("end_date") String end_date_string) {
@@ -316,39 +316,44 @@ public class RuntimeService {
 					.type("text/plain").entity("Missing jurisdiction_id")
 					.build();
 		}
-		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss") ;
+		SimpleDateFormat dateformat = new SimpleDateFormat(
+				"yyyy-MM-dd'T'hh:mm:ss");
+		dateformat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		log.debug("start_date_string = {}",  start_date_string);
+		log.debug("end_date_string = {}" , end_date_string);
 		Date start_date = null;
 		try {
 			start_date = dateformat.parse(start_date_string);
-		} catch (ParseException e) {
+		} catch (Exception ex) {
+			log.error("start_date") ;
+			log.error("Exception : " + ex);
 			return Response.status(Response.Status.BAD_REQUEST)
-					.type("text/plain").entity("Bad date format")
-					.build();
+					.type("text/plain").entity("Bad date format").build();
 		}
-		
+
 		Date end_date = null;
 		try {
 			end_date = dateformat.parse(end_date_string);
-		} catch (ParseException e) {
+		} catch (Exception ex) {
+			log.error("end_date") ;
+			log.error("Exception : " + ex);
 			return Response.status(Response.Status.BAD_REQUEST)
-					.type("text/plain").entity("Bad date format")
-					.build();
-		}	
-		
+					.type("text/plain").entity("Bad date format").build();
+		}
+
+		log.debug("start_date = {}", start_date) ;
+		log.debug("end_date = {}", end_date) ;
 		if ((!(format.equals("json"))) && (!(format.equals("xml")))) {
 			return Response.status(Response.Status.BAD_REQUEST)
 					.type("text/plain").entity("Bad format").build();
 		}
 
 		String userId = "admin";
-	
-		String processLike = "felanmalan/felanmalan--v%" ;  
-		Open311v2p1ServiceRequestUpdates open311v2p1ServiceRequestUpdates = 
-				engine.getActivitiEngineService().getProcessInstancesOpen311(
-						userId, jurisdiction_id, start_date,
-						end_date, processLike );
-				
-
+		String processLike = "felanmalan/felanmalan--v%";
+		Open311v2p1ServiceRequestUpdates open311v2p1ServiceRequestUpdates = engine
+				.getActivitiEngineService().getProcessInstancesOpen311(userId,
+						jurisdiction_id, start_date, end_date, processLike);
+		log.debug("open311v2p1ServiceRequestUpdates = {} " , open311v2p1ServiceRequestUpdates ) ; 
 		if (format.equals("json")) {
 			return Response.ok(open311v2p1ServiceRequestUpdates,
 					MediaType.APPLICATION_JSON).build();
@@ -361,4 +366,23 @@ public class RuntimeService {
 
 	}
 
+	public static void main(String[] args) {
+		// Some example of date conversions used by the Open311 API 
+		String start_date_string = "2015-03-03T14:13:09Z";
+		System.out.println("start_date_string = " + start_date_string);
+		SimpleDateFormat dateformat = new SimpleDateFormat(
+				"yyyy-MM-dd'T'hh:mm:ss");
+		dateformat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		Date start_date = null;
+		try {
+			start_date = dateformat.parse(start_date_string);
+			System.out.println("start_date =" + start_date);
+			String W3CDTFDate = ActivitiEngineService.getW3CDTFDate(start_date); 
+			System.out.println("W3CDTFDate =" + W3CDTFDate);
+		} catch (Exception e) {
+			System.out.println("Exception:" + e);
+		}
+		System.exit(0);
+
+	}
 }

@@ -2445,29 +2445,26 @@ public class ActivitiEngineService {
 		return null;
 	}
 
-	
-
 	/**
 	 * Search updates of processes started by a call to the open311 interface
 	 * 
 	 * @param userId
-	 * @param jurisdiction_id     name of jurisdiction_id or null 
+	 * @param jurisdiction_id
+	 *            name of jurisdiction_id or null
 	 * @param start_date
-	 * @param end_date   
-	 * @param processLike   search pattern for process definition 
+	 * @param end_date
+	 * @param processLike
+	 *            search pattern for process definition
 	 * @return
 	 */
 	public Open311v2p1ServiceRequestUpdates getProcessInstancesOpen311(
 			String userId, String jurisdiction_id, Date start_date,
 			Date end_date, String processLike) {
-		// TODO Auto-generated method stub
-		// make a search TODO
 		List<HistoricProcessInstance> processes;
 		HistoricProcessInstanceQuery historicProcessInstanceQuery = engine
 				.getHistoryService().createHistoricProcessInstanceQuery();
 		engine.getIdentityService().setAuthenticatedUserId(userId);
 
-	
 		boolean useDefault = true;
 		if (start_date != null) {
 			historicProcessInstanceQuery.finishedAfter(start_date);
@@ -2482,9 +2479,6 @@ public class ActivitiEngineService {
 		if (useDefault) {
 			// report for last 24 h
 			// TODO
-			// String timeStamp = new
-			// SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-			// historicProcessInstanceQuery.finishedAfter(timeStamp) ;
 			return null;
 		}
 
@@ -2501,7 +2495,8 @@ public class ActivitiEngineService {
 		} else {
 			processes = historicProcessInstanceQuery
 					.excludeSubprocesses(true)
-					.variableValueEquals("startevent1_jurisdiction_id", jurisdiction_id )
+					.variableValueEquals("startevent1_jurisdiction_id",
+							jurisdiction_id)
 					.variableValueLike("motriceStartFormDefinitionKey",
 							processLike).includeProcessVariables().list();
 		}
@@ -2515,28 +2510,21 @@ public class ActivitiEngineService {
 			if (count < maxCount) {
 				count++;
 				Map<String, Object> variableMap = proc.getProcessVariables();
-
 				String Handlggare_comment = (String) variableMap
 						.get("Handlggare_comment");
-				// System.out
-				// .println("Handlggare_comment = " + Handlggare_comment);
 				String motriceStartFormInstanceId = (String) variableMap
 						.get("motriceStartFormInstanceId");
 
-				// System.out.println("proc.getProcessDefinitionId() "
-				// + proc.getProcessDefinitionId());
+				String endTime = getW3CDTFDate(proc.getEndTime());
 
-				String endTime = proc.getEndTime().toString();
-				// System.out.println("endTime =   " + endTime);
 				Open311v2p1ServiceRequestUpdate open311v2p1ServiceRequestUpdate = new Open311v2p1ServiceRequestUpdate();
-				String description = Handlggare_comment; // "description";
-				String media_url = ""; // "media_url";
-				// String service_request_id = "service_request_id";
+				String description = Handlggare_comment;
+				String media_url = "";
 				String service_request_id = motriceStartFormInstanceId;
 				String status = "CLOSED"; // Possible values: OPEN, CLOSED
-				// motriceStartFormInstanceId
-				String update_id = "update_id";
-				// String updated_datetime = "updated_datetime";
+											// //TODO
+				String update_id = motriceStartFormInstanceId; // TODO
+
 				String updated_datetime = endTime;
 				open311v2p1ServiceRequestUpdate.setDescription(description);
 				open311v2p1ServiceRequestUpdate.setMedia_url(media_url);
@@ -2553,7 +2541,7 @@ public class ActivitiEngineService {
 		}
 		return open311v2p1ServiceRequestUpdates;
 	}
-	
+
 	public static void main(String[] args) {
 
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
@@ -2985,6 +2973,19 @@ public class ActivitiEngineService {
 			logItemToNotify.setActUri(activity.getActUri());
 		}
 		return logItemToNotify;
+	}
+
+	private static final String W3CDTF_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+
+	public static String getW3CDTFDate(Date date) {
+		if (date == null) {
+			return null;
+		} else {
+			String str = new SimpleDateFormat(W3CDTF_FORMAT).format(date);
+			str = str.substring(0, str.length() - 2) + ":"
+					+ str.substring(str.length() - 2);
+			return str;
+		}
 	}
 
 }
