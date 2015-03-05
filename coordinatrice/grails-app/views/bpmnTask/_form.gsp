@@ -61,3 +61,9 @@
   </label>
   <g:fieldValue bean="${bpmnTaskInst}" field="processInstanceId"/>
 </div>
+<div class="fieldcontain">
+  <label for="comment">
+    <g:message code="bpmnTask.add.comment.label" default="Comment" />
+  </label>
+  <g:textArea class="wide" name="comment"/>
+</div>

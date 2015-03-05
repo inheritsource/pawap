@@ -3,6 +3,9 @@ package org.motrice.coordinatrice
 import org.activiti.engine.task.DelegationState
 import org.activiti.engine.task.Task
 
+import org.motrice.coordinatrice.pxd.PxdFormdefVer
+import org.motrice.coordinatrice.pxd.PxdItem
+
 /**
  * A BPMN task as implemented by Activity.
  * This class is NOT PERSISTED, constructed read-only from the BPMN engine.
@@ -13,6 +16,21 @@ class BpmnTask {
    * The name "uuid" is used to avoid inteference with Grails conventions.
    */
   String uuid
+
+  /**
+   * Activity form definition.
+   */
+  PxdFormdefVer formdef
+
+  /**
+   * Activity form instance.
+   */
+  PxdItem forminst
+
+  /**
+   * Process to form connection.
+   */
+  MtfActivityFormDefinition mafd
 
   /**
    * The name or title of this task.
@@ -69,6 +87,12 @@ class BpmnTask {
    */
   String processInstanceId
 
+  /**
+   * Process variables (transient).
+   * Used when completing a task forcefully.
+   */
+  Map variables
+
   /***** Transient fields containing Activiti objects *****/
 
   /**
@@ -86,10 +110,11 @@ class BpmnTask {
    */
   static mapWith = 'none'
 
-  static transients = ['activitiTask', 'delegationState']
+  static transients = ['activitiTask', 'delegationState', 'procdefId', 'variables']
   static constraints = {
     definitionKey nullable: true
     assignee nullable: true
+    formdef nullable: true
   }
 
   /**
@@ -115,6 +140,10 @@ class BpmnTask {
   def assignFromTask(Task task) {
     activitiTask = task
     assignFromTask()
+  }
+
+  String getProcdefId() {
+    activitiTask?.processDefinitionId
   }
 
   String toString() {

@@ -1,9 +1,11 @@
 package org.motrice.coordinatrice
 
 import org.springframework.dao.DataIntegrityViolationException
+import org.motrice.coordinatrice.pxd.PxdFormdefVer
 
 class BpmnTaskController {
 
+  def formMapService
   def processEngineService
 
   static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -39,6 +41,41 @@ class BpmnTaskController {
     [bpmnTaskInst: bpmnTaskInst]
   }
 
+  /**
+   * Complete (= finish) a task forcefully.
+   * First step is to collect input.
+   */
+  def complete(String id) {
+    if (log.debugEnabled) log.debug "COMPLETE TASK ${params}"
+    def taskInst = null
+    try {
+      taskInst = processEngineService.taskCompletePrepare(id)
+    } catch (ServiceException exc) {
+      handleServiceException('Complete Task Prepare', exc)
+      redirect(controller: 'procinst', action: 'list')
+      return
+    }
+
+    [bpmnTaskInst: taskInst]
+  }
+
+  /**
+   * Complete (= finish) a task forcefully.
+   */
+  def completeAction(BpmnTaskCompleteCommand cmd) {
+    if (log.debugEnabled) log.debug "COMPLETE TASK ACTION ${cmd} ${params}"
+    def procInstId = null
+    try {
+      procInstId = processEngineService.taskCompleteFinish(cmd)
+    } catch (ServiceException exc) {
+      handleServiceException('Complete Task Action', exc)
+      redirect(controller: 'procinst', action: 'list')
+      return
+    }
+
+    redirect(controller: 'procinst', action: 'show', id: procInstId)
+  }
+
   def edit(String id) {
     def bpmnTaskInst = processEngineService.findTask(id)
     if (!bpmnTaskInst) {
@@ -54,7 +91,7 @@ class BpmnTaskController {
     if (log.debugEnabled) log.debug "UPDATE TASK << ${cmd} ${params}"
     def bpmnTaskInst = null
     try {
-      bpmnTaskInst = processEngineService.updateTask(cmd, false)
+      bpmnTaskInst = processEngineService.updateTask(cmd)
     } catch (ServiceException exc) {
       handleServiceException('Update Task', exc)
       redirect(controller: 'procinst', action: 'list')
@@ -63,24 +100,6 @@ class BpmnTaskController {
 
     flash.message = message(code: 'default.updated.message', args: [message(code: 'bpmnTask.label', default: 'BpmnTask'), bpmnTaskInst.uuid])
     redirect(action: "show", id: bpmnTaskInst.uuid)
-  }
-
-  def updatecomplete(BpmnTaskCommand cmd) {
-    if (log.debugEnabled) log.debug "UPDATE/COMPLETE TASK << ${cmd} ${params}"
-    def bpmnTaskInst = null
-    try {
-      bpmnTaskInst = processEngineService.updateTask(cmd, true)
-    } catch (ServiceException exc) {
-      handleServiceException('Update Task', exc)
-      redirect(controller: 'procinst', action: 'list')
-      return
-    }
-
-    flash.message = message(code: 'bpmnTask.update.complete.msg', args: [bpmnTaskInst.uuid])
-    redirect(controller: 'procinst', action: 'show', id: bpmnTaskInst.processInstanceId)
-  }
-
-  private doUpdate(BpmnTask task, BpmnTaskCommand cmd) {
   }
 
   def delete(Long id) {
@@ -119,8 +138,24 @@ class BpmnTaskCommand {
   Date dueTime
   String description
   Integer priority
+  String comment
 
   String toString() {
-    "[BpmnTaskCommand(${id}): '${assignee}','${dueTime}','${description}','${priority}']"
+    "[TaskUpdateCommand(${id}): '${assignee}','${dueTime}','${description}','${priority}',${comment?.size()}]"
+  }
+}
+
+/**
+ * Turns out not all fields are used.
+ */
+class BpmnTaskCompleteCommand {
+  String id
+  Long formConnection
+  Long formDef
+  String formDataPath
+  String commentText
+
+  String toString() {
+    "[TaskCompleteCommand(${id}): '${formConnection}','${formDef}','${formDataPath}',${commentText?.size()}]"
   }
 }

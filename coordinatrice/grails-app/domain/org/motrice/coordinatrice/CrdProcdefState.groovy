@@ -230,6 +230,13 @@ class CrdProcdefState {
     return result
   }
 
+  /**
+   * Official string representation
+   */
+  String toCanonicalString() {
+    "${id}|${defaultMessage}"
+  }
+
   String toString() {
     defaultMessage
   }
