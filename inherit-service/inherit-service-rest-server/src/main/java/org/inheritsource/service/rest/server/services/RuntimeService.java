@@ -26,8 +26,10 @@
 package org.inheritsource.service.rest.server.services;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -49,9 +51,11 @@ import javax.ws.rs.core.Response;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.inheritsource.service.common.domain.ActivityInstanceItem;
+import org.inheritsource.service.common.domain.Open311v2Service;
 import org.inheritsource.service.common.domain.Open311v2ServiceResponse;
 import org.inheritsource.service.common.domain.Open311v2ServiceRequest;
 import org.inheritsource.service.common.domain.Open311v2ServiceResponseItem;
+import org.inheritsource.service.common.domain.Open311v2Services;
 import org.inheritsource.service.common.domain.Open311v2p1ServiceRequestUpdate;
 import org.inheritsource.service.common.domain.Open311v2p1ServiceRequestUpdates;
 import org.inheritsource.service.processengine.ActivitiEngineService;
@@ -146,6 +150,64 @@ public class RuntimeService {
 		return "<html><body><h1>Hello, World!!</body></h1></html>";
 	}
 
+	@Path("open311/v2/services.{format}")
+	// TODO v2.1
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces({ "application/json", "application/xml" })
+	@GET
+	public Response services(@PathParam("format") String format,
+			@QueryParam("jurisdiction_id") String jurisdiction_id) {
+		// TODO move to Coordinatrice
+		List<String> defaultService = new ArrayList<String>();
+		defaultService.add("Avfall och återvinning");
+		defaultService.add("Badplatser");
+		defaultService.add("Cykelställ");
+		defaultService.add("Gator");
+		defaultService.add("Gatubelysning");
+		defaultService.add("Gång- och cykelbana");
+		defaultService.add("Hundrastgårdar");
+		defaultService.add("Hållplats");
+		defaultService.add("Igensatt brunn");
+		defaultService.add("Klotter");
+		defaultService.add("Lekplatser");
+		defaultService.add("Nedskräpning");
+		defaultService.add("Nedskräpning gator");
+		defaultService.add("Nedskräpning park");
+		defaultService.add("Offentlig toalett");
+		defaultService.add("Park");
+		defaultService.add("Park/Grönyta");
+		defaultService.add("Parkering");
+		defaultService.add("Trafiksignaler");
+		defaultService.add("Träd och buskage");
+		defaultService.add("Vatten och avlopp");
+		defaultService.add("Vinterväghållning");
+		defaultService.add("Vägar");
+		defaultService.add("Vägmärken och skyltar");
+		defaultService.add("Övrigt");
+
+		Open311v2Services open311v2Services = new Open311v2Services();
+		for (String service : defaultService) {
+			Open311v2Service open311v2Service = new Open311v2Service();
+			open311v2Service.setDescription(service);
+			open311v2Service.setService_code(service);
+			open311v2Service.setService_name(service);
+			open311v2Service.setType("realtime");
+			open311v2Service.setMetadata("false");
+			open311v2Services.add(open311v2Service);
+		}
+
+		if (format.equals("json")) {
+			return Response.ok(open311v2Services, MediaType.APPLICATION_JSON)
+					.build();
+		} else if (format.equals("xml")) {
+			return Response.ok(open311v2Services, MediaType.APPLICATION_XML)
+					.build();
+		} else {
+			return null; // This should not happen
+		}
+
+	}
+
 	@Path("open311/v2/requests.{format}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces({ "application/json", "application/xml" })
@@ -195,7 +257,7 @@ public class RuntimeService {
 					.type("text/plain").entity("Bad format").build();
 		}
 
-		log.debug("api_key = {}",   api_key);
+		log.debug("api_key = {}", api_key);
 		String correct_api_key = "xyz"; // TODO make key configurable
 		log.debug("format = {}", format);
 		if (api_key.equals(correct_api_key)) {
@@ -235,7 +297,7 @@ public class RuntimeService {
 		open311v2ServiceRequest.setLat(lat); // duplicate
 		open311v2ServiceRequest.setLon(lon); // duplicate
 
-		log.debug("variableMap= {} " , variableMap);
+		log.debug("variableMap= {} ", variableMap);
 		String userId = "admin";
 
 		String processDefinitionId = "felanmalan:20:9708";// TODO in
@@ -251,13 +313,13 @@ public class RuntimeService {
 					.type(MediaType.APPLICATION_JSON)
 					.accept(MediaType.APPLICATION_JSON)
 					.post(String.class, open311v2ServiceRequest);
-			log.debug(" motriceStartFormInstanceId= {}" , 
-					 motriceStartFormInstanceId);
+			log.debug(" motriceStartFormInstanceId= {}",
+					motriceStartFormInstanceId);
 			variableMap.put("motriceStartFormInstanceId",
 					motriceStartFormInstanceId);
 			variableMap.put("motriceStartFormTypeId", new Long(1)); // Orbeon
 																	// form
-	
+
 			String processInstanceId;
 
 			processInstanceId = engine.getActivitiEngineService().startProcess(
@@ -319,13 +381,13 @@ public class RuntimeService {
 		SimpleDateFormat dateformat = new SimpleDateFormat(
 				"yyyy-MM-dd'T'hh:mm:ss");
 		dateformat.setTimeZone(TimeZone.getTimeZone("UTC"));
-		log.debug("start_date_string = {}",  start_date_string);
-		log.debug("end_date_string = {}" , end_date_string);
+		log.debug("start_date_string = {}", start_date_string);
+		log.debug("end_date_string = {}", end_date_string);
 		Date start_date = null;
 		try {
 			start_date = dateformat.parse(start_date_string);
 		} catch (Exception ex) {
-			log.error("start_date") ;
+			log.error("start_date");
 			log.error("Exception : " + ex);
 			return Response.status(Response.Status.BAD_REQUEST)
 					.type("text/plain").entity("Bad date format").build();
@@ -335,14 +397,14 @@ public class RuntimeService {
 		try {
 			end_date = dateformat.parse(end_date_string);
 		} catch (Exception ex) {
-			log.error("end_date") ;
+			log.error("end_date");
 			log.error("Exception : " + ex);
 			return Response.status(Response.Status.BAD_REQUEST)
 					.type("text/plain").entity("Bad date format").build();
 		}
 
-		log.debug("start_date = {}", start_date) ;
-		log.debug("end_date = {}", end_date) ;
+		log.debug("start_date = {}", start_date);
+		log.debug("end_date = {}", end_date);
 		if ((!(format.equals("json"))) && (!(format.equals("xml")))) {
 			return Response.status(Response.Status.BAD_REQUEST)
 					.type("text/plain").entity("Bad format").build();
@@ -353,7 +415,8 @@ public class RuntimeService {
 		Open311v2p1ServiceRequestUpdates open311v2p1ServiceRequestUpdates = engine
 				.getActivitiEngineService().getProcessInstancesOpen311(userId,
 						jurisdiction_id, start_date, end_date, processLike);
-		log.debug("open311v2p1ServiceRequestUpdates = {} " , open311v2p1ServiceRequestUpdates ) ; 
+		log.debug("open311v2p1ServiceRequestUpdates = {} ",
+				open311v2p1ServiceRequestUpdates);
 		if (format.equals("json")) {
 			return Response.ok(open311v2p1ServiceRequestUpdates,
 					MediaType.APPLICATION_JSON).build();
@@ -367,7 +430,7 @@ public class RuntimeService {
 	}
 
 	public static void main(String[] args) {
-		// Some example of date conversions used by the Open311 API 
+		// Some example of date conversions used by the Open311 API
 		String start_date_string = "2015-03-03T14:13:09Z";
 		System.out.println("start_date_string = " + start_date_string);
 		SimpleDateFormat dateformat = new SimpleDateFormat(
@@ -377,7 +440,7 @@ public class RuntimeService {
 		try {
 			start_date = dateformat.parse(start_date_string);
 			System.out.println("start_date =" + start_date);
-			String W3CDTFDate = ActivitiEngineService.getW3CDTFDate(start_date); 
+			String W3CDTFDate = ActivitiEngineService.getW3CDTFDate(start_date);
 			System.out.println("W3CDTFDate =" + W3CDTFDate);
 		} catch (Exception e) {
 			System.out.println("Exception:" + e);
