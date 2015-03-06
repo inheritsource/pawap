@@ -226,7 +226,7 @@ class FormMapService {
     def forminst = null
     if (forminstPath) {
       forminst = PxdItem.findByPath(forminstPath)
-      if (!procdef) {
+      if (!forminst) {
 	def msg = "Form instance not found with path ${forminstPath}"
 	throw new ServiceException(msg, 'procinst.form.data.not.found', [forminstPath])
       }

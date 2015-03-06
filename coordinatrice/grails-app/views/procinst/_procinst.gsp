@@ -1,5 +1,5 @@
 <%@ page import="org.motrice.coordinatrice.Procinst" %>
-<div class="fieldcontain ${hasErrors(bean: procinstInst, field: 'procdef', 'error')} required">
+<div class="fieldcontain ${hasErrors(bean: procInst, field: 'procdef', 'error')} required">
   <label for="procdef">
     <g:message code="procinst.procdef.label" default="Procdef" />
   </label>
@@ -9,7 +9,7 @@
   </label>
   ${procInst?.procdef?.vno}
 </div>
-<div class="fieldcontain ${hasErrors(bean: procinstInst, field: 'formdef', 'error')} ">
+<div class="fieldcontain ${hasErrors(bean: procInst, field: 'formdef', 'error')} ">
   <label for="formdef">
     <g:message code="procinst.formdef.label" default="Formdef" />
   </label>
@@ -25,7 +25,13 @@
   <label class="narrow" for="motriceStartFormAssignee">motriceStartFormAssignee</label>
   <g:textField name="startFormAssignee" class="wide" maxlength="200"/>
 </div>
-<div class="fieldcontain ${hasErrors(bean: procinstInst, field: 'msfd', 'error')}">
+<div class="fieldcontain">
+  <label for="commentText">
+    <g:message code="procinst.add.comment.label"/>
+  </label>
+  <g:textArea name="commentText" class="wide" maxlength="1200"><g:message code="procinst.started.by.coordinatrice"/></g:textArea>
+</div>
+<div class="fieldcontain ${hasErrors(bean: procInst, field: 'msfd', 'error')}">
   <label class="narrow" for="motriceStartFormTypeId">motriceStartFormTypeId</label>
   ${procInst?.msfd?.formHandlerId}
 </div>

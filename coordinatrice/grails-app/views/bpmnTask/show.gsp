@@ -15,11 +15,11 @@
       </g:if>
       <ol class="property-list bpmnTask">
 	<li class="fieldcontain">
-	  <span id="name-label" class="property-label"><g:message code="bpmnTask.nameid.label" default="Name (Id)" /></span>
+	  <span id="name-label" class="property-label"><g:message code="bpmnTask.nameid.label" default="Name"/></span>
 	  <span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${bpmnTaskInst}" field="name"/>&nbsp;&nbsp;(<g:fieldValue bean="${bpmnTaskInst}" field="uuid"/>)</span>
 	</li>
 	<li class="fieldcontain">
-	  <span id="owner-label" class="property-label"><g:message code="bpmnTask.ownerassignee.label" default="Owner/Assignee" /></span>
+	  <span id="owner-label" class="property-label"><g:message code="bpmnTask.ownerassignee.label" default="Own/Ass" /></span>
 	  <span class="property-value" aria-labelledby="owner-label"><g:ownerassignee owner="${bpmnTaskInst?.owner}" assignee="${bpmnTaskInst?.assignee}"/></span>
 	</li>
 	<g:if test="${bpmnTaskInst?.description}">
@@ -78,7 +78,8 @@
       <g:form>
 	<fieldset class="buttons">
 	  <g:hiddenField name="id" value="${bpmnTaskInst?.id}" />
-	  <g:link class="edit" action="edit" id="${bpmnTaskInst?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
+	  <g:link class="edit" action="edit" id="${bpmnTaskInst?.uuid}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
+	  <g:link class="edit" action="complete" id="${bpmnTaskInst?.uuid}"><g:message code="bpmnTask.complete.label" default="Complete" /></g:link>
 	  <g:if test="${bpmnTaskInst?.processInstanceId}">
 	    <g:link class="show" controller="procinst" action="show" id="${bpmnTaskInst.processInstanceId}"><g:message code="default.button.list.label" default="Process Instance"/></g:link>
 	  </g:if>

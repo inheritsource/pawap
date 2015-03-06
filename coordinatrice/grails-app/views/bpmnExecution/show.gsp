@@ -57,11 +57,11 @@
       </ol>
       <g:form>
 	<fieldset class="buttons">
-	  <g:hiddenField name="id" value="${bpmnExecInst?.id}" />
-	  <g:link class="edit" action="edit" id="${bpmnExecInst?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
+	  <g:hiddenField name="id" value="${bpmnExecInst?.uuid}" />
 	  <g:if test="${bpmnExecInst?.processInstanceId}">
 	    <g:link class="show" controller="procinst" action="show" id="${bpmnExecInst.processInstanceId}"><g:message code="default.button.list.label" default="Process Instance"/></g:link>
 	  </g:if>
+	  <g:actionSubmit class="zap" action="signal" value="${message(code:'bpmnExecution.signal.label')}"/>
 	</fieldset>
       </g:form>
     </div>

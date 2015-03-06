@@ -58,7 +58,6 @@ class Procdef implements Comparable {
 
   /**
    * State of this process definition
-   * Valid values are Active and Suspended
    */
   CrdProcdefState state
 

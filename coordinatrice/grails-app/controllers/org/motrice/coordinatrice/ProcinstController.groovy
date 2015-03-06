@@ -6,6 +6,7 @@ import org.motrice.coordinatrice.pxd.PxdFormdefVer
 class ProcinstController {
 
   def formMapService
+  def pastProcinstService
   def processEngineService
 
   static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -52,6 +53,7 @@ class ProcinstController {
    */
   def createinstance() {
     if (log.debugEnabled) log.debug "LAUNCH INSTANCE ${params}"
+    def commentText = params?.commentText?.trim()
     def procInst = null
     try {
       procInst = formMapService.processInstancePrepare(params.formConnection, params.formDataPath,
@@ -82,9 +84,16 @@ class ProcinstController {
     vmap.motriceStartFormAssignee = procInst.assignee
     vmap.motriceStartFormTypeId = procInst.msfd?.formHandlerId
     vmap.motriceStartFormDefinitionKey = procInst.msfd?.formConnectionKey
+    vmap.motriceProcdefState = procInst.procdef?.state?.toCanonicalString()
     // Process kick off
     procInst.variables = vmap
-    procInst = processEngineService.startProcessInstance(procInst)
+    try {
+      procInst = processEngineService.startProcessInstance(procInst, commentText)
+    } catch (ServiceException exc) {
+      handleServiceException('Start Process Instance', exc)
+      redirect(controller: 'procdef', action: 'list')
+      return
+    }
 
     flash.message = message(code: 'procinst.created', args: [procInst.processInstanceId])
     redirect(controller: 'procinst', action: 'listprocdef', id: procInst?.procdef?.uuid)
@@ -94,9 +103,15 @@ class ProcinstController {
     if (log.debugEnabled) log.debug "SHOW PROCINST ${params}"
     def procInst = processEngineService.findProcessInstance(id)
     if (!procInst) {
-      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procinst.label'), id])
-      redirect(action: "list")
-      return
+      def existFlag = pastProcinstService.checkPastProcinst(id)
+      if (existFlag) {
+	redirect(controller: 'pastProcinst', action: 'show', id: id)
+	return
+      } else {
+	flash.message = message(code: 'default.not.found.message', args: [message(code: 'procinst.label'), id])
+	redirect(action: "list")
+	return
+      }
     }
 
     [procInst: procInst]
@@ -142,27 +157,26 @@ class ProcinstController {
     redirect(action: "show", id: procInst.id)
   }
 
-  def delete(Long id) {
-    def procInst = Procinst.get(id)
-    if (!procInst) {
-      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procinst.label'), id])
-      redirect(action: "list")
+  def delete(String id) {
+    if (log.debugEnabled) log.debug "DELETE ${params}"
+    def reasonText = params.deleteReason?.trim()
+    if (reasonText) {
+      try {
+	processEngineService.deleteProcessInstance(id, reasonText)
+      } catch (ServiceException exc) {
+	handleServiceException('Delete Process Instance', exc)
+      }
+    } else {
+      flash.message = message(code: 'procinst.deletion.not.done')
+      redirect(action: 'show', id: id)
       return
     }
 
-    try {
-      procInst.delete(flush: true)
-      flash.message = message(code: 'default.deleted.message', args: [message(code: 'procinst.label'), id])
-      redirect(action: "list")
-    }
-    catch (DataIntegrityViolationException e) {
-      flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'procinst.label'), id])
-      redirect(action: "show", id: id)
-    }
+    redirect(action: "list")
   }
 
   private handleServiceException(String op, ServiceException exc) {
-    log.error "${op} ${exc?.message}"
+    log.error "[${op}] ${exc?.message}"
     if (exc.key) {
       flash.message = message(code: exc.key, args: exc.args ?: [])
     } else {

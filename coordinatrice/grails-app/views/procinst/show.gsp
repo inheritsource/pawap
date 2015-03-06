@@ -4,6 +4,7 @@
   <head>
     <meta name="layout" content="main"/>
     <g:set var="entityName" value="${message(code: 'procinst.label', default: 'Procinst')}" />
+    <g:javascript library="jquery" plugin="jquery"/>
     <title><g:message code="default.show.label" args="[entityName]" /></title>
   </head>
   <body>
@@ -56,8 +57,16 @@
 	</li>
       </ol>
       <g:form>
+	<r:script>
+	  function askReason(label, defaultReason) {
+	  var reason = prompt(label, defaultReason);
+	  $("#deleteReasonText").val(reason);
+	  }
+	</r:script>
 	<fieldset class="buttons">
-	  <g:hiddenField name="id" value="${procInst?.uuid}" />
+	  <g:hiddenField name="id" value="${procInst?.uuid}"/>
+	  <g:hiddenField name="deleteReason" id="deleteReasonText"/>
+	  <g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="askReason('${message(code: 'procinst.delete.label')}','');" />
 	  <g:link class="show" controller="bpmnExecution" action="listproc" id="${procInst?.processInstanceId}"><g:message code="procinst.list.executions.label" default="List Executions"/></g:link>
 	  <g:link class="show" controller="bpmnTask" action="listproc" id="${procInst?.processInstanceId}"><g:message code="procinst.list.tasks.label" default="List Tasks"/></g:link>
 	</fieldset>

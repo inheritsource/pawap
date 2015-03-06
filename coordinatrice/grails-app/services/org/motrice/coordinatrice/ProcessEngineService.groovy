@@ -39,6 +39,9 @@ import org.activiti.engine.runtime.Execution
 import org.activiti.engine.runtime.ProcessInstance
 import org.apache.commons.logging.LogFactory
 
+import org.motrice.coordinatrice.pxd.PxdFormdefVer
+import org.motrice.coordinatrice.pxd.PxdItem
+
 /**
  * All interaction with the process engine except keeping a tab on
  * process definitions.
@@ -47,12 +50,16 @@ class ProcessEngineService {
   // We don't manage these transactions
   static transactional = false
 
-  // Injection magic, see resources.groovy
+  // Injection magic
   def activityFormdefService
+  def formMapService
+  def procdefService
+
+  // Activiti services, see resources.groovy
   def activitiRepositoryService
   def activitiRuntimeService
   def activitiTaskService
-  def procdefService
+
   private static final log = LogFactory.getLog(this)
 
   /**
@@ -264,23 +271,36 @@ class ProcessEngineService {
   }
 
   /**
-   * Start a process instance.
-   * SIDE EFFECT: Sets properties 
+   * Start a process instance and add a comment, if provided.
+   * SIDE EFFECT: Fills in properties in the Procinst object from the new
+   * Activiti process instance.
    */
-  Procinst startProcessInstance(Procinst procInst) {
+  Procinst startProcessInstance(Procinst procInst, String commentText) {
     if (log.debugEnabled) log.debug "startProcessInstance << ${procInst}"
-    def activitiInst = activitiRuntimeService.
-    startProcessInstanceById(procInst.procdef.uuid, procInst.variables)
-    procInst.assignFromExecution(activitiInst)
+    try {
+      def activitiInst = activitiRuntimeService.
+      startProcessInstanceById(procInst.procdef.uuid, procInst.variables)
+      procInst.assignFromExecution(activitiInst)
+      if (commentText) {
+	def comment = activitiTaskService.addComment(null, procInst.uuid, commentText)
+	if (log.debugEnabled) log.debug "startProcessInstance COMMENT id: ${comment?.id}"
+      }
+    } catch (ActivitiException exc) {
+      throw new ServiceException("Problem starting process instance: ${exc}",
+				 'procinst.start.failure', [exc.message])
+    }
     if (log.debugEnabled) log.debug "startProcessInstance >> ${procInst}"
     return procInst
   }
 
   Procinst findProcessInstance(String id) {
     if (log.debugEnabled) log.debug "findProcessInstance << ${id}"
-    def pi = activitiRuntimeService.createProcessInstanceQuery().
-    processInstanceId(id).singleResult()
-    def result = pi? createProcinst(pi) : null
+    def result = null
+    if (id) {
+      def pi = activitiRuntimeService.createProcessInstanceQuery().
+      processInstanceId(id).singleResult()
+      result = pi? createProcinst(pi) : null
+    }
     if (log.debugEnabled) log.debug "findProcessInstance >> ${result}"
     return result
   }
@@ -302,6 +322,17 @@ class ProcessEngineService {
 
   List listProcessInstances() {
     listProcessInstances(null)
+  }
+
+  def deleteProcessInstance(String uuid, String reasonText) {
+    if (log.debugEnabled) log.debug "deleteProcessInstance << ${uuid}, ${reasonText}"
+    try {
+      activitiRuntimeService.deleteProcessInstance(uuid, reasonText)
+    } catch (ActivitiException exc) {
+      throw new ServiceException("Problem deleting process instance ${uuid}: ${exc}",
+				 'procinst.deletion.conflict', [uuid, exc.message])
+    }
+    if (log.debugEnabled) log.debug "deleteProcessInstance >>"
   }
 
   List findExecutionsByPi(String processInstanceId) {
@@ -327,6 +358,9 @@ class ProcessEngineService {
     return result
   }
 
+  /**
+   * Find all tasks given a  process instance id.
+   */
   List findTasksByPi(String processInstanceId) {
     if (log.debugEnabled) log.debug "findTasksByPi << ${processInstanceId}"
     def list = activitiTaskService.createTaskQuery().
@@ -340,6 +374,7 @@ class ProcessEngineService {
 
   /**
    * Find a task by its id.
+   * Return the task or null.
    */
   BpmnTask findTask(String id) {
     if (log.debugEnabled) log.debug "findTask << ${id}"
@@ -347,6 +382,125 @@ class ProcessEngineService {
     def result = task? createTask(task) : null
     if (log.debugEnabled) log.debug "findTask >> ${result}"
     return result
+  }
+
+  /**
+   * Send a signal to an execution.
+   */
+  def signalExecution(BpmnExecution exec) {
+    if (log.debugEnabled) log.debug "signalExecution << ${exec}"
+    def uuid = exec.uuid
+
+    try {
+      activitiRuntimeService.signal(exec.uuid)
+    } catch (ActivitiException exc) {
+      throw new ServiceException("Problem signalling execution ${uuid}",
+				 'bpmnExecution.signal.conflict', [uuid, exc.message])
+    } catch (NullPointerException exc) {
+      throw new ServiceException("Problem signalling execution ${uuid}",
+				 'bpmnExecution.signal.conflict', [uuid, 'Internal conflict'])
+    }
+
+    if (log.debugEnabled) log.debug "signalExecution >>"
+  }
+
+  /**
+   * Check parameters before completing a task.
+   * This step prepares for input.
+   * taskId must be the uuid of a task.
+   */
+  BpmnTask taskCompletePrepare(String taskId) {
+    if (log.debugEnabled) log.debug "taskCompletePrepare << ${taskId}"
+    def bpmnTask = findTask(taskId)
+    if (!bpmnTask) throw new ServiceException("Task ${taskId} not found",
+					  'default.not.found.message', [taskId])
+    def procdefId = bpmnTask.procdefId
+    def mafd = MtfActivityFormDefinition.findByProcdefIdAndActdefId(procdefId, bpmnTask.definitionKey)
+    if (!mafd) {
+      String msg = "Activity form def (${procdefId}, ${bpmnTask.definitionKey}) not found"
+      throw new ServiceException(msg, 'bpmnTask.form.not.found.msg', [taskId])
+    }
+
+    bpmnTask.mafd = mafd
+    bpmnTask.formdef = PxdFormdefVer.get(mafd.formdefId)
+    if (log.debugEnabled) log.debug "taskCompletePrepare >> ${bpmnTask}"
+    return bpmnTask
+  }
+
+  /**
+   * Complete a task after setting appropriate process variables.
+   * RETURN the process instance id.
+   */
+  String taskCompleteFinish(BpmnTaskCompleteCommand cmd) {
+    if (log.debugEnabled) log.debug "taskCompleteFinish << ${cmd}"
+    def forminst = PxdItem.findByPath(cmd.formDataPath)
+    if (!forminst) {
+      def msg = "Form instance not found with path ${cmd.formDataPath}"
+      throw new ServiceException(msg, 'bpmnTask.form.data.not.found', [cmd.formDataPath])
+    }
+
+    def bpmnTask = findTask(cmd.id)
+    if (!bpmnTask) throw new ServiceException("Task ${cmd.id} not found",
+					  'default.not.found.message', [cmd.id])
+
+    def procInstId = bpmnTask.processInstanceId
+    def formConnection = MtfActivityFormDefinition.get(cmd.formConnection)
+    if (!formConnection) {
+      def msg = "Activity form definition not found with id ${cmd.formConnection}"
+      throw new ServiceException(msg, 'mtfActivityFormDefinition.not.found', [cmd.formConnection])
+    }
+
+    // Process instance variables from form data
+    def map = formMapService.createVariableMap(cmd.formDef, forminst)
+
+    // Add Motrice variables
+    map.motriceFormTypeId = formConnection.formHandlerType.id
+    map.motriceFormDefinitionKey = formConnection.formConnectionKey
+    map.motriceFormInstanceId = forminst.path
+    bpmnTask.variables = map
+    activitiRuntimeService.setVariables(bpmnTask.executionId, map)
+
+    // Add a comment to the task
+    if (cmd.commentText) {
+      def comment = activitiTaskService.addComment(bpmnTask.uuid, null, cmd.commentText)
+      if (log.debugEnabled) log.debug "taskCompleteFinish COMMENT id: ${comment?.id}"
+    }
+
+    // Complete the task
+    try {
+      activitiTaskService.complete(bpmnTask.uuid)
+    } catch (ActivitiException exc) {
+      def uuid = bpmnTask.uuid
+      throw new ServiceException("Problem completing task ${uuid}",
+				 'bpmnTask.completion.conflict', [uuid, exc.message])
+    }
+
+    if (log.debugEnabled) log.debug "taskCompleteFinish >> ${procInstId}"
+    return procInstId
+  }
+
+  /**
+   * Update a task given user input.
+   * Return the updated task.
+   */
+  BpmnTask updateTask(BpmnTaskCommand cmd) {
+    if (log.debugEnabled) log.debug "updateTask << ${cmd}"
+    def uuid = cmd.id
+    def task = findTask(uuid)
+    if (!task) throw new ServiceException("Task ${uuid} not found",
+					  'default.not.found.message', [uuid])
+    if (cmd.comment) {
+      def comment = activitiTaskService.addComment(uuid, null, cmd.comment)
+      if (log.debugEnabled) log.debug "updateTask added COMMENT ${comment?.id} "
+    }
+    task.activitiTask.assignee = cmd.assignee
+    task.activitiTask.dueDate = cmd.dueTime
+    task.activitiTask.description = cmd.description
+    task.activitiTask.priority = cmd.priority
+    task.assignFromTask()
+    activitiTaskService.saveTask(task.activitiTask)
+    if (log.debugEnabled) log.debug "updateTask >> ${task}"
+    return task
   }
 
   private Procinst createProcinst(ProcessInstance pi) {
