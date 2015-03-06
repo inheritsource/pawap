@@ -50,13 +50,16 @@ class ProcessEngineService {
   // We don't manage these transactions
   static transactional = false
 
-  // Injection magic, see resources.groovy
+  // Injection magic
   def activityFormdefService
+  def formMapService
+  def procdefService
+
+  // Activiti services, see resources.groovy
   def activitiRepositoryService
   def activitiRuntimeService
   def activitiTaskService
-  def formMapService
-  def procdefService
+
   private static final log = LogFactory.getLog(this)
 
   /**

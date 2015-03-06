@@ -23,11 +23,6 @@ class BpmnTask {
   PxdFormdefVer formdef
 
   /**
-   * Activity form instance.
-   */
-  PxdItem forminst
-
-  /**
    * Process to form connection.
    */
   MtfActivityFormDefinition mafd

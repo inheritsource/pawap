@@ -92,6 +92,7 @@ beans = {
     processEngineConfiguration = activitiConfiguration
   }
 
+  activitiHistoryService(processEngine: "getHistoryService")
   activitiManagementService(processEngine: "getManagementService")
   activitiRepositoryService(processEngine: "getRepositoryService")
   activitiRuntimeService(processEngine: "getRuntimeService")

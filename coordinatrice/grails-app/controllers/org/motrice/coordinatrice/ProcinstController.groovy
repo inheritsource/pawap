@@ -6,6 +6,7 @@ import org.motrice.coordinatrice.pxd.PxdFormdefVer
 class ProcinstController {
 
   def formMapService
+  def pastProcinstService
   def processEngineService
 
   static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -102,9 +103,15 @@ class ProcinstController {
     if (log.debugEnabled) log.debug "SHOW PROCINST ${params}"
     def procInst = processEngineService.findProcessInstance(id)
     if (!procInst) {
-      flash.message = message(code: 'default.not.found.message', args: [message(code: 'procinst.label'), id])
-      redirect(action: "list")
-      return
+      def existFlag = pastProcinstService.checkPastProcinst(id)
+      if (existFlag) {
+	redirect(controller: 'pastProcinst', action: 'show', id: id)
+	return
+      } else {
+	flash.message = message(code: 'default.not.found.message', args: [message(code: 'procinst.label'), id])
+	redirect(action: "list")
+	return
+      }
     }
 
     [procInst: procInst]
