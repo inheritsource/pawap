@@ -16,7 +16,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.test.skip>true</maven.test.skip>
+    <!-- <maven.test.skip>true</maven.test.skip>  --> 
   </properties>
 
   <build>
@@ -32,9 +32,14 @@
 	<directory>src/main/resources</directory>
 	<filtering>true</filtering>
       </resource>
+      <resource>
+	<directory>src/test/java</directory>
+	<filtering>false</filtering>
+      </resource>
     </resources>
 
     <plugins>
+
       <plugin>
 		<groupId>org.codehaus.mojo</groupId>
 		<artifactId>exec-maven-plugin</artifactId>
