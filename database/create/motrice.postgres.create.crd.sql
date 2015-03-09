@@ -46,6 +46,31 @@ CREATE TABLE crd_procdef
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
+CREATE TABLE crd_process_instance_filter
+(
+  id bigint NOT NULL,
+  version bigint NOT NULL,
+  date_created timestamp without time zone,
+  finished_after timestamp without time zone,
+  finished_after_flag boolean,
+  finished_before timestamp without time zone,
+  finished_before_flag boolean,
+  finished_state integer,
+  order_by_property character varying(24),
+  order_direction character varying(24),
+  procdef_exclude_key character varying(400),
+  procdef_id character varying(80),
+  started_after timestamp without time zone,
+  started_after_flag boolean,
+  started_before timestamp without time zone,
+  started_before_flag boolean,
+  started_by character varying(40),
+  variable_name character varying(80),
+  variable_pattern character varying(120),
+  session character varying(200),
+  CONSTRAINT crd_process_instance_filter_pkey PRIMARY KEY (id)
+);
+
 CREATE TABLE crd_task_type
 (
   id bigint NOT NULL,

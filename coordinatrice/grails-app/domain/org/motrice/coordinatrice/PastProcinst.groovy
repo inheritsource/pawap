@@ -88,16 +88,21 @@ class PastProcinst {
    */
   String getDurationFmt() {
     def millis = durationMillis
-    def days = TimeUnit.MILLISECONDS.toDays(millis)
-    millis = millis - TimeUnit.DAYS.toMillis(days)
-    def hours = TimeUnit.MILLISECONDS.toHours(millis)
-    millis = millis - TimeUnit.HOURS.toMillis(hours)
-    def minutes = TimeUnit.MILLISECONDS.toMinutes(millis)
-    return String.format('%01dd %02d:%02d', days, hours, minutes)
+    def result = '-d --:--'
+    if (millis >= 0) {
+      def days = TimeUnit.MILLISECONDS.toDays(millis)
+      millis = millis - TimeUnit.DAYS.toMillis(days)
+      def hours = TimeUnit.MILLISECONDS.toHours(millis)
+      millis = millis - TimeUnit.HOURS.toMillis(hours)
+      def minutes = TimeUnit.MILLISECONDS.toMinutes(millis)
+      result = String.format('%01dd %02d:%02d', days, hours, minutes)
+    }
+
+    return result
   }
 
   Long getDurationMillis() {
-    endTime.time - startTime.time
+    finished? (endTime.time - startTime.time) : -1
   }
 
   String getEndTimeFmt() {
@@ -106,6 +111,10 @@ class PastProcinst {
 
   String getStartTimeFmt() {
     startTime?.format(DATE_FMT)
+  }
+
+  boolean isFinished() {
+    endTime != null
   }
 
   String toString() {

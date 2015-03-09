@@ -9,7 +9,7 @@
   <body>
     <a href="#show-pastProcinst" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
     <div id="show-pastProcinst" class="content scaffold-show" role="main">
-      <h1><g:message code="default.show.label" args="[entityName]" /></h1>
+      <h1><g:message code="pastProcinst.label" default="Past Process Instance"/></h1>
       <g:if test="${flash.message}">
 	<div class="message" role="status">${flash.message}</div>
       </g:if>
@@ -43,7 +43,7 @@
 	    <span class="property-value" aria-labelledby="startTime-label"><g:formatDate date="${pastProcInst?.startTime}"/>&nbsp;/&nbsp;<g:formatDate date="${pastProcInst?.endTime}"/></span>
 	  </li>
 	  <li class="fieldcontain">
-	    <span id="duration-label" class="property-label"><g:message code="pastProcinst.duration.label" default="End Time" /></span>
+	    <span id="duration-label" class="property-label"><g:message code="pastProcinst.durationFmt.label" default="Duration" /></span>
 	    <span class="property-value" aria-labelledby="duration-label">${pastProcInst?.durationFmt?.encodeAsHTML()}</span>
 	  </li>
 	<g:if test="${pastProcInst?.startActivityId}">
@@ -64,6 +64,11 @@
 	    <span class="property-value" aria-labelledby="startUserId-label"><g:fieldValue bean="${pastProcInst}" field="startUserId"/></span>
 	  </li>
 	</g:if>
+	<li class="fieldcontain">
+	  <span id="startUserId-label" class="property-label"><g:message code="pastProcinst.finished.label" default="Finished" /></span>
+	  <g:set var="imgfile"><g:disabled flag="${pastProcInst?.finished}"/></g:set>
+	  <span class="property-value" aria-labelledby="startUserId-label"><g:img dir="images/silk" file="${imgfile}"/></span>
+	</li>
       </ol>
       <g:form>
 	<fieldset class="buttons">

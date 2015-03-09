@@ -18,6 +18,12 @@
 	  <span id="name-label" class="property-label"><g:message code="bpmnTask.nameid.label" default="Name"/></span>
 	  <span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${bpmnTaskInst}" field="name"/>&nbsp;&nbsp;(<g:fieldValue bean="${bpmnTaskInst}" field="uuid"/>)</span>
 	</li>
+	<g:if test="${bpmnTaskInst?.definitionKey}">
+	  <li class="fieldcontain">
+	    <span id="definitionKey-label" class="property-label"><g:message code="bpmnTask.definitionKey.label" default="Definition Key" /></span>
+	    <span class="property-value" aria-labelledby="definitionKey-label"><g:fieldValue bean="${bpmnTaskInst}" field="definitionKey"/></span>
+	  </li>
+	</g:if>
 	<li class="fieldcontain">
 	  <span id="owner-label" class="property-label"><g:message code="bpmnTask.ownerassignee.label" default="Own/Ass" /></span>
 	  <span class="property-value" aria-labelledby="owner-label"><g:ownerassignee owner="${bpmnTaskInst?.owner}" assignee="${bpmnTaskInst?.assignee}"/></span>
@@ -52,12 +58,6 @@
 	    <span class="property-value" aria-labelledby="priority-label"><g:fieldValue bean="${bpmnTaskInst}" field="priority"/></span>
 	  </li>
 	</g:if>
-	<g:if test="${bpmnTaskInst?.definitionKey}">
-	  <li class="fieldcontain">
-	    <span id="definitionKey-label" class="property-label"><g:message code="bpmnTask.definitionKey.label" default="Definition Key" /></span>
-	    <span class="property-value" aria-labelledby="definitionKey-label"><g:fieldValue bean="${bpmnTaskInst}" field="definitionKey"/></span>
-	  </li>
-	</g:if>
 	<g:if test="${bpmnTaskInst?.executionId}">
 	  <li class="fieldcontain">
 	    <span id="executionId-label" class="property-label"><g:message code="bpmnTask.executionId.label" default="Execution Id" /></span>
@@ -72,7 +72,8 @@
 	</g:if>
 	<li class="fieldcontain">
 	  <span id="suspended-label" class="property-label"><g:message code="bpmnTask.suspended.label" default="Suspended" /></span>
-	  <span class="property-value" aria-labelledby="suspended-label"><g:formatBoolean boolean="${bpmnTaskInst?.suspended}" /></span>
+	  <g:set var="imgfile"><g:disabled flag="${bpmnTaskInst.suspended}"/></g:set>
+	  <span class="property-value" aria-labelledby="suspended-label"><g:img dir="images/silk" file="${imgfile}"/></span>
 	</li>
       </ol>
       <g:form>

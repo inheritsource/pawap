@@ -100,6 +100,43 @@ class ProcdefService {
 
   /**
    * Get all process definitions from Activiti.
+   * Return a map with entries,
+   * keys: a list of process definition id (List of String),
+   * values: a list of process definition names (List of String)
+   */
+  Map allProcessDefinitionsIdNameLists() {
+    if (log.debugEnabled) log.debug "allProcessDefinitionsIdNameLists <<"
+    def entityList = activitiRepositoryService.createProcessDefinitionQuery().
+    orderByProcessDefinitionId().asc().list()
+    def keyList = []
+    def valueList = []
+    entityList.each {entity ->
+      def name = "${entity.name ?:entity.key} [v${entity.version}]"
+      keyList.add(entity.id)
+      valueList.add(name)
+    }
+    def result = [keys: keyList, values: valueList]
+    if (log.debugEnabled) log.debug "allProcessDefinitionsIdNameLists >> (${result?.keys?.size()},${result?.values?.size()})"
+    return result
+  }
+
+  /**
+   * Get all process definition keys.
+   * Return a sorted list of String.
+   */
+  List allProcessDefinitionKeys() {
+    if (log.debugEnabled) log.debug "allProcessDefinitionKeys <<"
+    def entityList = activitiRepositoryService.createProcessDefinitionQuery().
+    orderByProcessDefinitionKey().asc().list()
+    def result = entityList.collect {entity ->
+      entity.key
+    }
+    if (log.debugEnabled) log.debug "allProcessDefinitionKeys >> ${result.size()}"
+    return result
+  }
+
+  /**
+   * Get all process definitions from Activiti.
    * deploymentId must be a deployment id.
    * Return a list of process definitions (List of Procdef)
    * SIDE EFFECT: Updates crd_procdef
