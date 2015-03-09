@@ -22,37 +22,23 @@
       <table>
 	<thead>
 	  <tr>
-	    
 	    <th><g:message code="pastProcinst.procdef.label" default="Procdef" /></th>
-	    
 	    <g:sortableColumn property="businessKey" title="${message(code: 'pastProcinst.businessKey.label', default: 'Business Key')}" />
-	    
 	    <g:sortableColumn property="deleteReason" title="${message(code: 'pastProcinst.deleteReason.label', default: 'Delete Reason')}" />
-	    
 	    <g:sortableColumn property="endTime" title="${message(code: 'pastProcinst.endTime.label', default: 'End Time')}" />
-	    
 	    <g:sortableColumn property="startActivityId" title="${message(code: 'pastProcinst.startActivityId.label', default: 'Start Activity Id')}" />
-	    
 	    <g:sortableColumn property="startTime" title="${message(code: 'pastProcinst.startTime.label', default: 'Start Time')}" />
-	    
 	  </tr>
 	</thead>
 	<tbody>
 	  <g:each in="${pastProcInstList}" status="i" var="pastProcInst">
 	    <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-	      
 	      <td><g:link action="show" id="${pastProcInst.id}">${fieldValue(bean: pastProcInst, field: "procdef")}</g:link></td>
-	      
 	      <td>${fieldValue(bean: pastProcInst, field: "businessKey")}</td>
-	      
 	      <td>${fieldValue(bean: pastProcInst, field: "deleteReason")}</td>
-	      
 	      <td><g:formatDate date="${pastProcInst.endTime}" /></td>
-	      
 	      <td>${fieldValue(bean: pastProcInst, field: "startActivityId")}</td>
-	      
 	      <td><g:formatDate date="${pastProcInst.startTime}" /></td>
-	      
 	    </tr>
 	  </g:each>
 	</tbody>

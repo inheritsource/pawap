@@ -33,6 +33,7 @@
 	<ul class="submenu">
 	  <li><g:link controller="procdef" action="list"><g:message code="procdef.list.menu"/></g:link></li>
 	  <li><g:link controller="procinst" action="list"><g:message code="procinst.list.menu"/></g:link></li>
+	  <li><g:link controller="pastProcinst" action="filterdef"><g:message code="pastProcinst.query.menu"/></g:link></li>
 	  <li><g:link controller="procdef" action="create"><g:message code="procdef.upload.bpmn.label"/></g:link></li>
 	  <li><g:link controller="crdProcCategory" action="list"><g:message code="crdProcCategory.list.menu"/></g:link></li>
 	  <li><g:link class="create" action="create"><g:message code="crdProcCategory.create.menu"/></g:link></li>
