@@ -62,11 +62,25 @@ class PastProcinst {
   Map variables
 
   /**
+   * Number of finished instances (transient).
+   * Used for summaries.
+   */
+  Integer finishedCount
+
+  /**
+   * Number of unfinished instances (transient).
+   * Used for summaries.
+   */
+  Integer unfinishedCount
+
+  /**
    * Not a database object, never to be persisted
    */
   static mapWith = 'none'
 
-  static transients = ['variables']
+  // Nothing is persisted, but the transient feature is used to flag these
+  // fields as even more transient.
+  static transients = ['finishedCount', 'unfinishedCount', 'variables']
   static constraints = {
     procdef nullable: false
   }

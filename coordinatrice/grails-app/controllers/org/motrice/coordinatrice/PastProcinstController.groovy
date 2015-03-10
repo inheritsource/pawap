@@ -10,11 +10,14 @@ class PastProcinstController {
   static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
   def index() {
-    redirect(action: "list", params: params)
+    redirect(action: "filterlist", params: params)
   }
 
   /**
    * Define filter for querying historic process instances.
+   * Special parameters:
+   * clearform (Integer): clear the form if > 0
+   * selectedProcdef (String): pre-selected process definition id.
    */
   def filterdef() {
     if (log.debugEnabled) log.debug "FILTER DEF ${params}"
@@ -23,8 +26,11 @@ class PastProcinstController {
     def procdefIdList = procdefs.keys
     def procdefNameList = procdefs.values
 
+    def lastFilter = params.clearform? null : pastProcinstService.findLastFilter(session.id)
+    def selectedProcdef = params.selectedProcdef ?: lastFilter?.procdefId
+
     [procdefKeyList: procdefKeyList, procdefIdList: procdefIdList, procdefNameList: procdefNameList,
-    procdefKeyList: procdefKeyList, selectedProcdef: null, filterId: null]
+    procdefKeyList: procdefKeyList, filterInst: lastFilter, selectedProcdef: selectedProcdef]
   }
 
   /**
@@ -32,29 +38,28 @@ class PastProcinstController {
    * The filter is persisted to allow paging.
    */
   def filterlist(Integer max) {
-    if (log.debugEnabled) log.debug "FILTER LIST ${max}"
-    def filterId = params.filterId
-    def filter = null
-    if (filterId) {
-      filter = CrdProcessInstanceFilter.get(filterId)
-    } else {
-      def session = cookie(name: 'JSESSIONID')
-      filter = new CrdProcessInstanceFilter(params)
-      filter.session = session
-      filter.save()
-    }
+    if (log.debugEnabled) log.debug "FILTER LIST (${max}) filter=${params?.filterId}"
+    def filter = pastProcinstService.lookupOrCreateFilter(params, session.id)
+    def result = pastProcinstService.filterProcessInstancesUnpopulated(filter)
 
-    def result = pastProcinstService.filterProcessInstances(filter)
-    params.max = Math.min(max ?: 10, 100)
-    def total = result?.size() ?: 0
-    if (log.debugEnabled) log.debug "RESULT ${result} (${total})"
-    [pastProcInstList: result, pastProcInstTotal: total, filterId: filter.id]
+    params.max = Math.min(max ?: 15, 100)
+    params.offset = params.offset as Integer ?: 0
+    def total = result?.size()
+    def maxIndex = Math.min(params.offset + params.max, total)
+    def procInstView = result.subList(params.offset, maxIndex)
+    // After computing the slice to be shown, populate it.
+    def procInstList = pastProcinstService.populateProcessInstances(procInstView)
+    [pastProcInstList: procInstList, pastProcInstTotal: total, filterId: filter.id]
   }
 
-  def list(Integer max) {
-    if (log.debugEnabled) log.debug "LIST PAST PROCINST ${params}"
-    params.max = Math.min(max ?: 10, 100)
-    [pastProcInstList: PastProcinst.list(params), pastProcInstTotal: PastProcinst.count()]
+  /**
+   * Create a summary from filtering process instances.
+   */
+  def filtersummary() {
+    if (log.debugEnabled) log.debug "FILTER SUMMARY ${params}"
+    def filter = pastProcinstService.lookupOrCreateFilter(params, session.id)
+    def piList = pastProcinstService.filteredProcessInstanceSummary(filter)
+    [pastProcInstList: piList, pastProcInstTotal: piList.size(), filterId: filter.id]
   }
 
   def show(String id) {

@@ -68,6 +68,7 @@ CREATE TABLE crd_process_instance_filter
   variable_name character varying(80),
   variable_pattern character varying(120),
   session character varying(200),
+  exclude_subprocesses boolean,
   CONSTRAINT crd_process_instance_filter_pkey PRIMARY KEY (id)
 );
 
