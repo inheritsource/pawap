@@ -45,7 +45,7 @@ def doit(String locale) {
     }
   }
 
-  println "Missing entries in locale '${locale}':"
+  println "========= Missing entries in locale '${locale}':"
   missingSet.each {println "${it}"}
 
   missingSet.clear()
@@ -56,7 +56,7 @@ def doit(String locale) {
     }
   }
 
-  println "Missing entries in locale 'en':"
+  println "========= Missing entries in locale 'en':"
   missingSet.each {println "${it}"}
 }
 

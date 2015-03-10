@@ -20,12 +20,17 @@
 	  </g:eachError>
 	</ul>
       </g:hasErrors>
-      <g:form action="filterlist" >
+      <g:form>
 	<fieldset class="form">
 	  <g:render template="filter"/>
 	</fieldset>
 	<fieldset class="buttons">
-	  <g:submitButton name="create" class="save" value="${message(code: 'pastProcinst.list.details.label', default: 'Create')}" />
+	  <g:hiddenField name="filterId" value="${filterInst?.id}" />
+	  <g:actionSubmit name="details" action="filterlist" class="show"
+			  value="${message(code: 'pastProcinst.list.details.label', default: 'Details')}" />
+	  <g:actionSubmit name="summary" action="filtersummary" class="show"
+			  value="${message(code: 'pastProcinst.list.summary.label', default: 'Summary')}" />
+	  <g:link class="edit" action="filterdef" params="['clearform':1]"><g:message code="pastProcinst.clear.label"/></g:link>
 	</fieldset>
       </g:form>
     </div>

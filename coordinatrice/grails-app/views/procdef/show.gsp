@@ -145,6 +145,7 @@
 	    <g:link class="edit" action="editstate" id="${procdefInst?.uuid}"><g:message code="procdef.edit.state.label"/></g:link>
 	  </g:if>
 	  <g:link class="show" controller="procinst" action="listprocdef" id="${procdefInst?.uuid}"><g:message code="procdef.list.instances.label"/></g:link>
+	  <g:link class="show" controller="pastProcinst" action="filterdef" params="${['selectedProcdef':procdefInst?.uuid,'clearform':1]}"><g:message code="procdef.history.label"/></g:link>
 	</fieldset>
       </g:form>
     </div>

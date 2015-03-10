@@ -112,6 +112,11 @@ class CrdProcessInstanceFilter {
    */
   String orderDirection
 
+  /**
+   * Exclude subprocesses?
+   */
+  Boolean excludeSubprocesses
+
   static constraints = {
     session nullable: true, maxSize: 200
     dateCreated nullable: true
@@ -131,23 +136,32 @@ class CrdProcessInstanceFilter {
     variablePattern nullable: true, maxSize: 120
     orderByProperty nullable: true, maxSize: 24
     orderDirection nullable: true, maxSize: 24
+    excludeSubprocesses nullable: true
+  }
+
+  /**
+   * Get the process definition keys to exclude as a List of String.
+   */
+  List getExcludeKeys() {
+    procdefExcludeKey? procdefExcludeKey.split(',').toList() : []
   }
 
   String toString() {
     def sb = new StringBuilder()
     sb.append('[ProcInstFilter(').append(id?:'').append(')')
-    if (finishedState) sb.append(' finishedState:').append(finishedState)
+    if (finishedState != null) sb.append(' finishedState:').append(finishedState)
     if (startedBeforeFlag) sb.append(' startedBefore:').append(startedBefore)
     if (startedAfterFlag) sb.append(' startedAfter:').append(startedAfter)
     if (startedBy) sb.append(' startedBy:').append(startedBy)
     if (finishedBeforeFlag) sb.append(' finishedBefore:').append(finishedBefore)
     if (finishedAfterFlag) sb.append(' finishedAfter:').append(finishedAfter)
     if (procdefId) sb.append(' procdefId:').append(procdefId)
-    if (procdefExcludeKey) sb.append(' procdefExcludeKey:').append(procdefExcludeKey)
-    if (variableName) sb.append(' variableName:').append(variableName)
-    if (variablePattern) sb.append(' variablePattern:').append(variablePattern)
+    if (procdefExcludeKey) sb.append(' procdefExcludeKey[').append(procdefExcludeKey).append(']')
+    if (variableName) sb.append(' variableName|').append(variableName).append('|')
+    if (variablePattern) sb.append(' variablePattern|').append(variablePattern).append('|')
     if (orderByProperty) sb.append(' orderByProperty:').append(orderByProperty)
     if (orderDirection) sb.append(' orderDirection:').append(orderDirection)
+    if (excludeSubprocesses) sb.append(' excludeSubprocesses:').append(excludeSubprocesses)
     sb.append(']')
     return sb.toString()
   }
