@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.io.FileInputStream;
 
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -13,18 +12,21 @@ import org.activiti.engine.test.ActivitiRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class ProcessTestGenericmessagetest {
+public class ProcessTestGenericmessageTest {
 
-	private String filename = "/home/tostman/workspace20140410/pawap/inherit-service/inherit-service-activiti-engine/src/main/resources/GenericMessageTest.bpmn";
-
+	private String filename = "GenericMessageTest.bpmn";
+	private String processname = "genericmessagetest";
 	@Rule
 	public ActivitiRule activitiRule = new ActivitiRule();
 
 	@Test
 	public void startProcess() throws Exception {
-		RepositoryService repositoryService = activitiRule.getRepositoryService();
-		repositoryService.createDeployment().addInputStream("generic_message_test.bpmn20.xml",
-				new FileInputStream(filename)).deploy();
+		
+		RepositoryService repositoryService = activitiRule
+				.getRepositoryService();
+		repositoryService.createDeployment().addClasspathResource(filename)
+				.name(processname).deploy();
+		
 		RuntimeService runtimeService = activitiRule.getRuntimeService();
 		Map<String, Object> variableMap = new HashMap<String, Object>();
 		variableMap.put("name", "Activiti");
@@ -32,6 +34,9 @@ public class ProcessTestGenericmessagetest {
 		variableMap.put("from", "yyy@motrice.se");
 		variableMap.put("messageText", "This is a message. Dags att titta på ett ärende  ");
 		variableMap.put("messageSubject", "This is the subject");
+		variableMap.put("startevent1_personnummer", "195204151517");
+		variableMap.put("startevent1_meddelande", "hello world");	
+		
 		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("generic_message_test", variableMap);
 		assertNotNull(processInstance.getId());
 		System.out.println("id " + processInstance.getId() + " "

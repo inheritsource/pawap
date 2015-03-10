@@ -21,8 +21,8 @@
  * mail: Motrice AB, Långsjövägen 8, SE-131 33 NACKA, SWEDEN 
  * phone: +46 8 641 64 14 
  
- */ 
- 
+ */
+
 package org.activiti.designer.test;
 
 import static org.junit.Assert.*;
@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
-import java.io.FileInputStream;
 
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -44,24 +43,22 @@ import org.activiti.engine.test.ActivitiRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class ProcessTestScriptprocess {
+public class ProcessScriptprocessTest {
 
-	private String filename = "/home/tostman/workspace20140410/pawap/inherit-service/inherit-service-activiti-engine/src/main/resources/ScriptProcess.bpmn";
+	private String filename = "ScriptProcess.bpmn";
+	private String processname = "scriptprocess";
 
-	
-	
 	@Rule
 	public ActivitiRule activitiRule = new ActivitiRule(
 			"activiti.cfg-mem-fullhistory.xml");
 
 	@Test
 	public void teststartProcess() throws Exception {
+
 		RepositoryService repositoryService = activitiRule
 				.getRepositoryService();
-		repositoryService
-				.createDeployment()
-				.addInputStream("scriptprocess.bpmn20.xml",
-						new FileInputStream(filename)).deploy();
+		repositoryService.createDeployment().addClasspathResource(filename)
+				.name(processname).deploy();
 		RuntimeService runtimeService = activitiRule.getRuntimeService();
 
 		TaskService taskService = activitiRule.getTaskService();
@@ -74,20 +71,19 @@ public class ProcessTestScriptprocess {
 		currentGroupList.add(1L);
 		currentGroupList.add(4L);
 		currentGroupList.add(6L);
-		int nVariables = 0 ; 
+		int nVariables = 0;
 		for (long currentgroup : currentGroupList) {
 			Map<String, Object> variableMap = new HashMap<String, Object>();
 			variableMap.put("motrice_form_data_name", "Activiti");
-			variableMap.put("startevent1_start_forename", "Fozzie");
-			variableMap.put("startevent1_start_lastname", "The Bear");
-			variableMap.put("startevent1_start_emailaddress", "fozzie@nowhere");
-			variableMap.put("startevent1_start_phonenumber", "47114711");
-			variableMap
-					.put("startevent1_start_currentgroup_long", currentgroup);
-			variableMap.put("startevent1_start_info", "test info");
+			variableMap.put("startevent1_forename", "Fozzie");
+			variableMap.put("startevent1_lastname", "The Bear");
+			variableMap.put("startevent1_emailaddress", "fozzie@nowhere");
+			variableMap.put("startevent1_phonenumber", "47114711");
+			variableMap.put("startevent1_currentgroup_long", currentgroup);
+			variableMap.put("startevent1_info", "test info");
 			ProcessInstance processInstance = runtimeService
 					.startProcessInstanceByKey("scriptprocess", variableMap);
-			nVariables += variableMap.size(); 
+			nVariables += variableMap.size();
 			assertNotNull(processInstance.getId());
 			System.out.println("id " + processInstance.getId() + " "
 					+ processInstance.getProcessDefinitionId());
@@ -103,7 +99,6 @@ public class ProcessTestScriptprocess {
 			Map<String, Object> variableMap2 = processInstance
 					.getProcessVariables();
 
-			
 			System.out.println("variableMap2 = " + variableMap2);
 
 			List<Task> availableTaskList = taskService.createTaskQuery()
@@ -113,10 +108,11 @@ public class ProcessTestScriptprocess {
 				System.out.println("Completing task with id :" + task.getId());
 				taskService.setVariable(task.getId(),
 						"motrice_form_data_comment", "Min kommentar");
-				nVariables ++; 
+				nVariables++;
 				taskService.complete(task.getId());
 			}
-			nVariables ++; // myVar is set in the script so more variable is created 
+			nVariables++; // myVar is set in the script so more variable is
+							// created
 			System.out.println("=======================================");
 			//
 		}

@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.io.FileInputStream;
 
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -14,22 +13,27 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
 import org.activiti.engine.test.ActivitiRule;
+
 import org.junit.Rule;
 import org.junit.Test;
 
-public class ProcessTestServeringsTillstand {
+public class ProcessServeringsTillstandTest {
 
-	private String filename = "/home/tostman/workspace20140410/pawap/inherit-service/inherit-service-activiti-engine/src/main/resources/ServeringsTillstand.bpmn";
-
+	private String filename = "ServeringsTillstand.bpmn";
+	private String processname = "serveringstillstand";
+	
 	@Rule
 	public ActivitiRule activitiRule = new ActivitiRule();
 	private TaskService taskService;
 	private String userAssignee = "admin";
+
 	@Test
 	public void startProcess() throws Exception {
-		RepositoryService repositoryService = activitiRule.getRepositoryService();
-		repositoryService.createDeployment().addInputStream("serveringsTillstand.bpmn20.xml",
-				new FileInputStream(filename)).deploy();
+		RepositoryService repositoryService = activitiRule
+				.getRepositoryService();
+		repositoryService.createDeployment().addClasspathResource(filename)
+				.name(processname).deploy();
+		
 		RuntimeService runtimeService = activitiRule.getRuntimeService();
 		Map<String, Object> variableMap = new HashMap<String, Object>();
 		variableMap.put("name", "Activiti");
