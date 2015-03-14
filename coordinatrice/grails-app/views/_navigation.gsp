@@ -53,5 +53,15 @@
 	  <li><g:link controller="migPackage" action="listexp"><g:message code="migPackage.create.menu"/></g:link></li>
 	</ul>
     </li>
+    <li><g:link controller="o311Jurisdiction" action="list">Open311</g:link>
+	<ul class="submenu">
+	  <li><g:link controller="o311Jurisdiction" action="list"><g:message code="o311Jurisdiction.list.menu"/></g:link></li>
+	  <li><g:link controller="o311Jurisdiction" action="create"><g:message code="o311Jurisdiction.create.menu"/></g:link></li>
+	  <li><g:link controller="o311Service" action="list"><g:message code="o311Service.list.menu"/></g:link></li>
+	  <li><g:link controller="o311Service" action="create"><g:message code="o311Service.create.menu"/></g:link></li>
+	  <li><g:link controller="o311Tenant" action="list"><g:message code="o311Tenant.list.menu"/></g:link></li>
+	  <li><g:link controller="o311Tenant" action="create"><g:message code="o311Tenant.create.menu"/></g:link></li>
+	</ul>
+    </li>
   </ul>
 </div>

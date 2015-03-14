@@ -45,7 +45,7 @@
 	</head>
 	<body>
 	        <g:set var="site" bean="siteService"/>
-		<div id="grailsLogo" role="banner"><g:render template="/navigation"/><div class="meta"><a href="http://motrice.org"><img src="${resource(dir: 'images', file: 'piano-61x35.png')}" alt="Motrice"/></a>coordinatrice <g:meta name="app.version"/> <g:message code="at.site.banner"/>: ${site.localSiteName()}</div></div>
+		<div id="grailsLogo" role="banner"><g:render template="/navigation"/><div class="meta"><a href="http://motrice.org"><img src="${resource(dir: 'images', file: 'piano-61x35.png')}" alt="Motrice"/></a>${site.localSiteName()}&nbsp;&nbsp;v<g:meta name="app.version"/></div></div>
 		<g:layoutBody/>
 		<div id="motriceLogo" class="footer" role="contentinfo">
 		  <a href="http://motrice.org"><img src="${resource(dir: 'images', file: 'motrice_logo99x27.png')}" alt="Motrice"/></a>
