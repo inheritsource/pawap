@@ -14,18 +14,6 @@
 	<div class="message" role="status">${flash.message}</div>
       </g:if>
       <ol class="property-list o311Service">
-	<g:if test="${o311ServiceInst?.dateCreated}">
-	  <li class="fieldcontain">
-	    <span id="dateCreated-label" class="property-label"><g:message code="o311Service.dateCreated.label" default="Date Created" /></span>
-	    <span class="property-value" aria-labelledby="dateCreated-label"><g:formatDate date="${o311ServiceInst?.dateCreated}" /></span>
-	  </li>
-	</g:if>
-	<g:if test="${o311ServiceInst?.lastUpdated}">
-	  <li class="fieldcontain">
-	    <span id="lastUpdated-label" class="property-label"><g:message code="o311Service.lastUpdated.label" default="Last Updated" /></span>
-	    <span class="property-value" aria-labelledby="lastUpdated-label"><g:formatDate date="${o311ServiceInst?.lastUpdated}" /></span>
-	  </li>
-	</g:if>
 	<g:if test="${o311ServiceInst?.code}">
 	  <li class="fieldcontain">
 	    <span id="code-label" class="property-label"><g:message code="o311Service.code.label" default="Code" /></span>
@@ -44,12 +32,10 @@
 	    <span class="property-value" aria-labelledby="description-label"><g:fieldValue bean="${o311ServiceInst}" field="description"/></span>
 	  </li>
 	</g:if>
-	<g:if test="${o311ServiceInst?.jurisdCnx}">
+	<g:if test="${o311ServiceInst?.dateCreated}">
 	  <li class="fieldcontain">
-	    <span id="jurisdCnx-label" class="property-label"><g:message code="o311Service.jurisdCnx.label" default="Jurisd Cnx" /></span>
-	    <g:each in="${o311ServiceInst.jurisdCnx}" var="j">
-	      <span class="property-value" aria-labelledby="jurisdCnx-label"><g:link controller="o311ServiceInJurisd" action="show" id="${j.id}">${j?.encodeAsHTML()}</g:link></span>
-	    </g:each>
+	    <span id="dateCreated-label" class="property-label"><g:message code="o311.created.updated.label" default="Date Created"/></span>
+	    <span class="property-value" aria-labelledby="dateCreated-label"><g:formatDate date="${o311ServiceInst?.dateCreated}"/>&nbsp;/&nbsp;<g:formatDate date="${o311ServiceInst?.lastUpdated}"/></span>
 	  </li>
 	</g:if>
       </ol>

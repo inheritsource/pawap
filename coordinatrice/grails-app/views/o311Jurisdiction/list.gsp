@@ -16,23 +16,22 @@
       <table>
 	<thead>
 	  <tr>
-	    <g:sortableColumn property="dateCreated" title="${message(code: 'o311Jurisdiction.dateCreated.label', default: 'Date Created')}" />
-	    <g:sortableColumn property="lastUpdated" title="${message(code: 'o311Jurisdiction.lastUpdated.label', default: 'Last Updated')}" />
 	    <g:sortableColumn property="jurisdictionId" title="${message(code: 'o311Jurisdiction.jurisdictionId.label', default: 'Jurisdiction Id')}" />
 	    <g:sortableColumn property="fullName" title="${message(code: 'o311Jurisdiction.fullName.label', default: 'Full Name')}" />
 	    <g:sortableColumn property="enabledFlag" title="${message(code: 'o311Jurisdiction.enabledFlag.label', default: 'Enabled Flag')}" />
-	    <g:sortableColumn property="serviceNotice" title="${message(code: 'o311Jurisdiction.serviceNotice.label', default: 'Service Notice')}" />
+	    <g:sortableColumn property="procdefUuid" title="${message(code: 'o311Jurisdiction.procdefUuid.label')}" />
+	    <g:sortableColumn property="lastUpdated" title="${message(code: 'o311.lastUpdated.label', default: 'Last Updated')}" />
 	  </tr>
 	</thead>
 	<tbody>
 	  <g:each in="${o311JurisdictionInstList}" status="i" var="o311JurisdictionInst">
 	    <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-	      <td><g:link action="show" id="${o311JurisdictionInst.id}">${fieldValue(bean: o311JurisdictionInst, field: "dateCreated")}</g:link></td>
-	      <td><g:formatDate date="${o311JurisdictionInst.lastUpdated}" /></td>
-	      <td>${fieldValue(bean: o311JurisdictionInst, field: "jurisdictionId")}</td>
+	      <td><g:link action="show" id="${o311JurisdictionInst.id}">${fieldValue(bean: o311JurisdictionInst, field: "jurisdictionId")}</g:link></td>
 	      <td>${fieldValue(bean: o311JurisdictionInst, field: "fullName")}</td>
-	      <td><g:formatBoolean boolean="${o311JurisdictionInst.enabledFlag}" /></td>
-	      <td>${fieldValue(bean: o311JurisdictionInst, field: "serviceNotice")}</td>
+	      <g:set var="iconimg"><g:enabled flag="${o311JurisdictionInst.enabledFlag}"/></g:set>
+	      <td><g:img dir="images/silk" file="${iconimg}"/></td>
+	      <td>${fieldValue(bean: o311JurisdictionInst, field: "procdefDisplay")}</td>
+	      <td><g:formatDate date="${o311JurisdictionInst.lastUpdated}" /></td>
 	    </tr>
 	  </g:each>
 	</tbody>

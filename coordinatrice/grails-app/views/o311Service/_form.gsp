@@ -11,24 +11,11 @@
     <g:message code="o311Service.name.label" default="Name" />
     <span class="required-indicator">*</span>
   </label>
-  <g:textField name="name" maxlength="120" required="" value="${o311ServiceInst?.name}"/>
+  <g:textField name="name" class="wide" maxlength="120" required="" value="${o311ServiceInst?.name}"/>
 </div>
 <div class="fieldcontain ${hasErrors(bean: o311ServiceInst, field: 'description', 'error')} ">
   <label for="description">
     <g:message code="o311Service.description.label" default="Description" />
   </label>
-  <g:textField name="description" maxlength="240" value="${o311ServiceInst?.description}"/>
-</div>
-<div class="fieldcontain ${hasErrors(bean: o311ServiceInst, field: 'jurisdCnx', 'error')} ">
-  <label for="jurisdCnx">
-    <g:message code="o311Service.jurisdCnx.label" default="Jurisd Cnx" />
-  </label>
-  <ul class="one-to-many">
-    <g:each in="${o311ServiceInst?.jurisdCnx?}" var="j">
-      <li><g:link controller="o311ServiceInJurisd" action="show" id="${j.id}">${j?.encodeAsHTML()}</g:link></li>
-    </g:each>
-    <li class="add">
-      <g:link controller="o311ServiceInJurisd" action="create" params="['o311Service.id': o311ServiceInst?.id]">${message(code: 'default.add.label', args: [message(code: 'o311ServiceInJurisd.label', default: 'O311ServiceInJurisd')])}</g:link>
-    </li>
-  </ul>
+  <g:textArea name="description" class="wide" maxlength="240" value="${o311ServiceInst?.description}"/>
 </div>

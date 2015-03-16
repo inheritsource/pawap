@@ -67,7 +67,7 @@ class O311Tenant {
   /**
    * Generate a new API key.
    * The current implementation is the hex encoding of a SHA-256 hash
-   * over random bytes.
+   * over random bytes limited to 40 characters.
    * Base64 encoding would have to be uuencoded before using over the web.
    */
   def generateApiKey() {
@@ -75,7 +75,7 @@ class O311Tenant {
     def random = new java.security.SecureRandom()
     random.nextBytes(bytes)
     apiKey = java.security.MessageDigest.getInstance("SHA-256").digest(bytes).
-    collect { String.format("%02x", it) }.join('')
+    collect { String.format("%02x", it) }.join('').substring(0, 40)
   }
 
   String toDebug() {

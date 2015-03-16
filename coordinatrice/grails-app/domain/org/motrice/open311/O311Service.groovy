@@ -35,6 +35,7 @@ class O311Service implements Comparable {
   String description
 
   static hasMany = [jurisdCnx: O311ServiceInJurisd]
+  static transients = ['descriptionAbbrev']
   static constraints = {
     dateCreated nullable: true
     lastUpdated nullable: true
@@ -45,7 +46,7 @@ class O311Service implements Comparable {
   }
 
   String getDescriptionAbbrev() {
-    (descripton?.size() > 24)? description.substring(0, 22) + '...' : description
+    (description?.size() > 44)? description.substring(0, 42) + '...' : description
   }
 
   String toDebug() {

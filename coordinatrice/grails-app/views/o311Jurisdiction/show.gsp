@@ -14,18 +14,6 @@
 	<div class="message" role="status">${flash.message}</div>
       </g:if>
       <ol class="property-list o311Jurisdiction">
-	<g:if test="${o311JurisdictionInst?.dateCreated}">
-	  <li class="fieldcontain">
-	    <span id="dateCreated-label" class="property-label"><g:message code="o311Jurisdiction.dateCreated.label" default="Date Created" /></span>
-	    <span class="property-value" aria-labelledby="dateCreated-label"><g:formatDate date="${o311JurisdictionInst?.dateCreated}" /></span>
-	  </li>
-	</g:if>
-	<g:if test="${o311JurisdictionInst?.lastUpdated}">
-	  <li class="fieldcontain">
-	    <span id="lastUpdated-label" class="property-label"><g:message code="o311Jurisdiction.lastUpdated.label" default="Last Updated" /></span>
-	    <span class="property-value" aria-labelledby="lastUpdated-label"><g:formatDate date="${o311JurisdictionInst?.lastUpdated}" /></span>
-	  </li>
-	</g:if>
 	<g:if test="${o311JurisdictionInst?.jurisdictionId}">
 	  <li class="fieldcontain">
 	    <span id="jurisdictionId-label" class="property-label"><g:message code="o311Jurisdiction.jurisdictionId.label" default="Jurisdiction Id" /></span>
@@ -38,10 +26,15 @@
 	    <span class="property-value" aria-labelledby="fullName-label"><g:fieldValue bean="${o311JurisdictionInst}" field="fullName"/></span>
 	  </li>
 	</g:if>
-	<g:if test="${o311JurisdictionInst?.enabledFlag}">
+	<li class="fieldcontain">
+	  <span id="enabledFlag-label" class="property-label"><g:message code="o311Jurisdiction.enabledFlag.label" default="Enabled Flag" /></span>
+	  <g:set var="iconimg"><g:enabled flag="${o311JurisdictionInst.enabledFlag}"/></g:set>
+	  <span class="property-value" aria-labelledby="enabledFlag-label"><g:img dir="images/silk" file="${iconimg}"/></span>
+	</li>
+	<g:if test="${o311JurisdictionInst?.dateCreated}">
 	  <li class="fieldcontain">
-	    <span id="enabledFlag-label" class="property-label"><g:message code="o311Jurisdiction.enabledFlag.label" default="Enabled Flag" /></span>
-	    <span class="property-value" aria-labelledby="enabledFlag-label"><g:formatBoolean boolean="${o311JurisdictionInst?.enabledFlag}" /></span>
+	    <span id="dateCreated-label" class="property-label"><g:message code="o311.created.updated.label" default="Date Created"/></span>
+	    <span class="property-value" aria-labelledby="dateCreated-label"><g:formatDate date="${o311JurisdictionInst?.dateCreated}"/>&nbsp;/&nbsp;<g:formatDate date="${o311JurisdictionInst?.lastUpdated}"/></span>
 	  </li>
 	</g:if>
 	<g:if test="${o311JurisdictionInst?.serviceNotice}">
@@ -53,7 +46,7 @@
 	<g:if test="${o311JurisdictionInst?.procdefUuid}">
 	  <li class="fieldcontain">
 	    <span id="procdefUuid-label" class="property-label"><g:message code="o311Jurisdiction.procdefUuid.label" default="Procdef Uuid" /></span>
-	    <span class="property-value" aria-labelledby="procdefUuid-label"><g:fieldValue bean="${o311JurisdictionInst}" field="procdefUuid"/></span>
+	    <span class="property-value" aria-labelledby="procdefUuid-label"><g:link controller="procdef" action="show" id="${o311JurisdictionInst?.procdefUuid}"><g:fieldValue bean="${o311JurisdictionInst}" field="procdefDisplay"/></g:link></span>
 	  </li>
 	</g:if>
 	<g:if test="${o311JurisdictionInst?.serviceCnx}">

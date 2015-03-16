@@ -14,18 +14,6 @@
 	<div class="message" role="status">${flash.message}</div>
       </g:if>
       <ol class="property-list o311Tenant">
-	<g:if test="${o311TenantInst?.dateCreated}">
-	  <li class="fieldcontain">
-	    <span id="dateCreated-label" class="property-label"><g:message code="o311Tenant.dateCreated.label" default="Date Created" /></span>
-	    <span class="property-value" aria-labelledby="dateCreated-label"><g:formatDate date="${o311TenantInst?.dateCreated}" /></span>
-	  </li>
-	</g:if>
-	<g:if test="${o311TenantInst?.lastUpdated}">
-	  <li class="fieldcontain">
-	    <span id="lastUpdated-label" class="property-label"><g:message code="o311Tenant.lastUpdated.label" default="Last Updated" /></span>
-	    <span class="property-value" aria-labelledby="lastUpdated-label"><g:formatDate date="${o311TenantInst?.lastUpdated}" /></span>
-	  </li>
-	</g:if>
 	<g:if test="${o311TenantInst?.displayName}">
 	  <li class="fieldcontain">
 	    <span id="displayName-label" class="property-label"><g:message code="o311Tenant.displayName.label" default="Display Name" /></span>
@@ -36,6 +24,12 @@
 	  <li class="fieldcontain">
 	    <span id="organizationName-label" class="property-label"><g:message code="o311Tenant.organizationName.label" default="Organization Name" /></span>
 	    <span class="property-value" aria-labelledby="organizationName-label"><g:fieldValue bean="${o311TenantInst}" field="organizationName"/></span>
+	  </li>
+	</g:if>
+	<g:if test="${o311TenantInst?.dateCreated}">
+	  <li class="fieldcontain">
+	    <span id="dateCreated-label" class="property-label"><g:message code="o311.created.updated.label" default="Date Created"/></span>
+	    <span class="property-value" aria-labelledby="dateCreated-label"><g:formatDate date="${o311TenantInst?.dateCreated}"/>&nbsp;/&nbsp;<g:formatDate date="${o311TenantInst?.lastUpdated}"/></span>
 	  </li>
 	</g:if>
 	<g:if test="${o311TenantInst?.firstName}">

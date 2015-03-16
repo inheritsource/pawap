@@ -93,6 +93,10 @@ class O311Jurisdiction implements Comparable {
     }
   }
 
+  String getProcdefDisplay() {
+    (procdef ?: procdefUuid) ?: '--'
+  }
+
   boolean isDefaultJurisdiction() {
     jurisdictionId == DEFAULT_JURISDICTION_ID
   }

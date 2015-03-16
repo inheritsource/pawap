@@ -1,4 +1,4 @@
-n<%@ page import="org.motrice.open311.O311Service" %>
+<%@ page import="org.motrice.open311.O311Service" %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -16,21 +16,19 @@ n<%@ page import="org.motrice.open311.O311Service" %>
       <table>
 	<thead>
 	  <tr>
-	    <g:sortableColumn property="dateCreated" title="${message(code: 'o311Service.dateCreated.label', default: 'Date Created')}" />
-	    <g:sortableColumn property="lastUpdated" title="${message(code: 'o311Service.lastUpdated.label', default: 'Last Updated')}" />
 	    <g:sortableColumn property="code" title="${message(code: 'o311Service.code.label', default: 'Code')}" />
 	    <g:sortableColumn property="name" title="${message(code: 'o311Service.name.label', default: 'Name')}" />
 	    <g:sortableColumn property="description" title="${message(code: 'o311Service.description.label', default: 'Description')}" />
+	    <g:sortableColumn property="lastUpdated" title="${message(code: 'o311.lastUpdated.label', default: 'Last Updated')}" />
 	  </tr>
 	</thead>
 	<tbody>
 	  <g:each in="${o311ServiceInstList}" status="i" var="o311ServiceInst">
 	    <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-	      <td><g:link action="show" id="${o311ServiceInst.id}">${fieldValue(bean: o311ServiceInst, field: "dateCreated")}</g:link></td>
-	      <td><g:formatDate date="${o311ServiceInst.lastUpdated}" /></td>
-	      <td>${fieldValue(bean: o311ServiceInst, field: "code")}</td>
+	      <td><g:link action="show" id="${o311ServiceInst.id}">${fieldValue(bean: o311ServiceInst, field: "code")}</g:link></td>
 	      <td>${fieldValue(bean: o311ServiceInst, field: "name")}</td>
-	      <td>${fieldValue(bean: o311ServiceInst, field: "description")}</td>
+	      <td>${o311ServiceInst?.descriptionAbbrev?.encodeAsHTML()}</td>
+	      <td><g:formatDate date="${o311ServiceInst.lastUpdated}" /></td>
 	    </tr>
 	  </g:each>
 	</tbody>

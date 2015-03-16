@@ -1,0 +1,135 @@
+<services>
+  <service>
+    <service_code>gras</service_code>
+    <service_name>Gräsytor</service_name>
+    <description>
+      Gräsytor som behöver klippas eller åtgärdas på annat sätt.
+    </description>
+  </service>
+  <service>
+    <service_code>fordon-uppstalln</service_code>
+    <service_name>Fordon, övergivet</service_name>
+    <description>
+      Fordon som misstänks vara övergivet eller som har stått på samma ställe i mer än en vecka.
+    </description>
+  </service>
+  <service>
+    <service_code>nedskrapning</service_code>
+    <service_name>Nedskräpning</service_name>
+    <description>
+      Nedskräpning och nedsmutsning av alla slag utom graffiti.
+    </description>
+  </service>
+  <service>
+    <service_code>graffiti</service_code>
+    <service_name>Graffiti</service_name>
+    <description>
+      Byggnader eller allmän egendom som vandaliserats genom graffiti.
+    </description>
+  </service>
+  <service>
+    <service_code>toalett</service_code>
+    <service_name>Toaletter</service_name>
+    <description>
+      Behov av åtgärd eller reparation på offentlig toalett.
+    </description>
+  </service>
+  <service>
+    <service_code>belysning</service_code>
+    <service_name>Belysning</service_name>
+    <description>
+      Belysning på gata eller annan allmän plats som behöver åtgärdas.
+    </description>
+  </service>
+  <service>
+    <service_code>trafiksignal</service_code>
+    <service_name>Trafiksignal</service_name>
+    <description>
+      Trafiksignal eller signal för fotgängare helt eller delvis ur funktion.
+    </description>
+  </service>
+  <service>
+    <service_code>trafiksakerhet</service_code>
+    <service_name>Trafiksäkerhet</service_name>
+    <description>
+      Trafikhinder, hinder för fri sikt, tappad last är exempel. Allt som påverkar säkerheten för bil- och cykeltrafik.
+    </description>
+  </service>
+  <service>
+    <service_code>vintervag</service_code>
+    <service_name>Vinterväghållning</service_name>
+    <description>
+      Snö eller is hindrar framkomlighet på gata, väg, eller gångväg. Snö dumpad på olämplig plats.
+    </description>
+  </service>
+  <service>
+    <service_code>trottoar</service_code>
+    <service_name>Trottoar</service_name>
+    <description>
+      Trottoar eller annan gångväg som har hål, sprickor eller bulor.
+    </description>
+  </service>
+  <service>
+    <service_code>papperskorg</service_code>
+    <service_name>Papperskorg</service_name>
+    <description>
+      Papperskorg som svämmar över.
+    </description>
+  </service>
+  <service>
+    <service_code>trad</service_code>
+    <service_name>Träd</service_name>
+    <description>
+      Träd på allmän mark som behöver underhåll eller som riskerar skada person eller egendom.
+    </description>
+  </service>
+  <service>
+    <service_code>skyltar</service_code>
+    <service_name>Skyltning väg eller parkering</service_name>
+    <description>
+      Skyltning vid gata, väg, parkering eller liknande som behöver åtgärdas.
+    </description>
+  </service>
+  <service>
+    <service_code>affisch</service_code>
+    <service_name>Affischering (olaglig)</service_name>
+    <description>
+      Affischer, klistermärken, reklammaterial där sådant inte får eller bör finnas.
+    </description>
+  </service>
+  <service>
+    <service_code>korbana-defekt</service_code>
+    <service_name>Körbana defekt</service_name>
+    <description>
+      Defekt i gata eller cykelbana, exempelvis hål, bulor, sprickor eller lock på brunnar som ligger fel.
+    </description>
+  </service>
+  <service>
+    <service_code>gangvag</service_code>
+    <service_name>Gångväg blockerad</service_name>
+    <description>
+      Trottoar eller annan gångväg som blockeras av fordon eller andra hinder.
+    </description>
+  </service>
+  <service>
+    <service_code>vandalisering</service_code>
+    <service_name>Allmän egendom skadad</service_name>
+    <description>
+      Allmän egendom som är skadad eller vandaliserad och behöver reparation eller annan åtgärd.
+    </description>
+  </service>
+  <service>
+    <service_code>avlopp</service_code>
+    <service_name>Avlopp, avrinning, översvämning</service_name>
+    <description>
+      Problem med avrinning, översvämning av olika slag.
+    </description>
+  </service>
+  <service>
+    <service_code>ovrigt</service_code>
+    <service_name>Övrigt</service_name>
+    <description>
+      Problem eller behov som inte passar in under någon annan rubrik.
+    </description>
+  </service>
+</services>

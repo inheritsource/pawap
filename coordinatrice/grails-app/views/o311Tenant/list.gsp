@@ -16,23 +16,19 @@
       <table>
 	<thead>
 	  <tr>
-	    <g:sortableColumn property="dateCreated" title="${message(code: 'o311Tenant.dateCreated.label', default: 'Date Created')}" />
-	    <g:sortableColumn property="lastUpdated" title="${message(code: 'o311Tenant.lastUpdated.label', default: 'Last Updated')}" />
 	    <g:sortableColumn property="displayName" title="${message(code: 'o311Tenant.displayName.label', default: 'Display Name')}" />
+	    <g:sortableColumn property="dateCreated" title="${message(code: 'o311.dateCreated.label', default: 'Date Created')}" />
+	    <g:sortableColumn property="lastUpdated" title="${message(code: 'o311.lastUpdated.label', default: 'Last Updated')}" />
 	    <g:sortableColumn property="organizationName" title="${message(code: 'o311Tenant.organizationName.label', default: 'Organization Name')}" />
-	    <g:sortableColumn property="firstName" title="${message(code: 'o311Tenant.firstName.label', default: 'First Name')}" />
-	    <g:sortableColumn property="lastName" title="${message(code: 'o311Tenant.lastName.label', default: 'Last Name')}" />
 	  </tr>
 	</thead>
 	<tbody>
 	  <g:each in="${o311TenantInstList}" status="i" var="o311TenantInst">
 	    <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-	      <td><g:link action="show" id="${o311TenantInst.id}">${fieldValue(bean: o311TenantInst, field: "dateCreated")}</g:link></td>
+	      <td><g:link action="show" id="${o311TenantInst.id}">${fieldValue(bean: o311TenantInst, field: "displayName")}</g:link></td>
+	      <td><g:formatDate date="${o311TenantInst.dateCreated}" /></td>
 	      <td><g:formatDate date="${o311TenantInst.lastUpdated}" /></td>
-	      <td>${fieldValue(bean: o311TenantInst, field: "displayName")}</td>
 	      <td>${fieldValue(bean: o311TenantInst, field: "organizationName")}</td>
-	      <td>${fieldValue(bean: o311TenantInst, field: "firstName")}</td>
-	      <td>${fieldValue(bean: o311TenantInst, field: "lastName")}</td>
 	    </tr>
 	  </g:each>
 	</tbody>
