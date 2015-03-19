@@ -18,6 +18,15 @@ class O311ServiceInJurisd {
     serviceGroup nullable: true
   }
 
+  static List allByJurisdiction(Long jurisdId) {
+    def cr = O311ServiceInJurisd.createCriteria()
+    cr.list {
+      jurisdiction {
+	idEq(jurisdId)
+      }
+    }
+  }
+
   String toDebug() {
     "[ServiceInJurisd(${id}) '${jurisdiction?.fullName}':'${service?.name} (${serviceGroup?.displayName})]"
   }

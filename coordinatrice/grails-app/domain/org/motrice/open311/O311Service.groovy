@@ -36,13 +36,22 @@ class O311Service implements Comparable {
 
   static hasMany = [jurisdCnx: O311ServiceInJurisd]
   static transients = ['descriptionAbbrev']
+  static mapping = {
+    sort 'name'
+  }
   static constraints = {
     dateCreated nullable: true
     lastUpdated nullable: true
     code size: 3..64, blank: false, matches: '[A-Za-z][A-Za-z0-9._-]*', unique: true
-    name size: 3..120, blank: false
+    name size: 3..120, blank: false, unique: true
     description nullable: true, maxSize: 240
     jurisdCnx nullable: true
+  }
+
+  static namedQueries = {
+    listAll {
+      
+    }
   }
 
   String getDescriptionAbbrev() {
@@ -60,16 +69,16 @@ class O311Service implements Comparable {
   //-------------------- Comparable --------------------
 
   int hashCode() {
-    code.hashCode()
+    name.hashCode()
   }
 
   boolean equals(Object obj) {
-    (obj instanceof O311Service) && ((O311Service)obj).code == code
+    (obj instanceof O311Service) && ((O311Service)obj).name == name
   }
 
   int compareTo(Object obj) {
     def other = (O311Service)obj
-    return code.compareTo(obj.code)
+    return name.compareTo(obj.name)
   }
 
 }

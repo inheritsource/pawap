@@ -12,8 +12,8 @@ class O311ServiceController {
 
   def list(Integer max) {
     params.max = Math.min(max ?: 12, 100)
-    if (!params.sort) params.sort = 'code'
-    [o311ServiceInstList: O311Service.list(params), o311ServiceInstTotal: O311Service.count()]
+    def services = params.sort? O311Service.listOrderByName(params) : O311Service.list(params)
+    [o311ServiceInstList: services, o311ServiceInstTotal: O311Service.count()]
   }
 
   def create() {

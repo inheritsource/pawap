@@ -9,18 +9,84 @@ class O311JurisdictionController {
 
   static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
+  /**
+   * Prefix used for service checkboxes.
+   */
+  final static String CHECKBOX_PREFIX = 'SERVICE@'
+  final static int CHECKBOX_PREFIX_LEN = CHECKBOX_PREFIX.length()
+
+  /**
+   * Prefix used for service group drop-downs.
+   */
+  final static String DROPDOWN_PREFIX = 'SGROUP@'
+  final static int DROPDOWN_PREFIX_LEN = DROPDOWN_PREFIX.length()
+
   def index() {
     redirect(action: "list", params: params)
   }
 
   def list(Integer max) {
     params.max = Math.min(max ?: 15, 100)
-    if (!params.sort) params.sort = 'jurisdictionId'
     def jurisdList = O311Jurisdiction.list(params)
     jurisdList.each {jurisd ->
       if (jurisd.procdefUuid) jurisd.procdef = procdefService.findShallowProcdef(jurisd.procdefUuid)
     }
+
     [o311JurisdictionInstList: jurisdList, o311JurisdictionInstTotal: O311Jurisdiction.count()]
+  }
+
+  /**
+   * Show all services, allowing the user to include/exclude from this jurisdiction
+   * and collect in service groups.
+   * id must be a jurisdiction id.
+   */
+  def listservices(Long id) {
+    def jurisdictionInst = O311Jurisdiction.get(id)
+    if (!jurisdictionInst) {
+      flash.message = message(code: 'default.not.found.message', args: [message(code: 'o311Jurisdiction.label', default: 'O311Jurisdiction'), id])
+      redirect(action: "list")
+      return
+    }
+
+    def serviceSelectionList = open311Service.serviceSelectionList(jurisdictionInst)
+    def serviceGroupList = O311ServiceGroup.findAllByJurisdiction(jurisdictionInst)
+
+    [jurisdictionInst: jurisdictionInst, serviceList: serviceSelectionList,
+    serviceGroupList: serviceGroupList,
+    servicePrefix: CHECKBOX_PREFIX, serviceGroupPrefix: DROPDOWN_PREFIX]
+  }
+
+  /**
+   * Update the selection of services included in a given jurisdiction.
+   * More accurately, the jurisdiction or the services are not touched, only the
+   * connections between jurisdictions, services and service groups.
+   */
+  def updateservices(Long id) {
+    if (log.debugEnabled) log.debug "UPDATE ${params}"
+    def jurisdictionInst = O311Jurisdiction.get(id)
+    if (!jurisdictionInst) {
+      flash.message = message(code: 'default.not.found.message', args: [message(code: 'o311Jurisdiction.label', default: 'O311Jurisdiction'), id])
+      redirect(action: "list")
+      return
+    }
+
+    def includeList = params.inject([]) {list, entry ->
+      if (entry.key.startsWith(CHECKBOX_PREFIX) && entry.value == 'on') {
+	list << entry.key.substring(CHECKBOX_PREFIX_LEN)
+      }
+
+      return list
+    }
+    def serviceGroupList = params.inject([]) {list, entry ->
+      if (entry.key.startsWith(DROPDOWN_PREFIX) && entry.value != 'null') {
+	list << [service: entry.key.substring(DROPDOWN_PREFIX_LEN), group: entry.value]
+      }
+
+      return list
+    }
+
+    open311Service.updateJurisdictionServices(jurisdictionInst, includeList, serviceGroupList)
+    redirect(action: 'show', id: id)
   }
 
   def create() {
@@ -57,7 +123,8 @@ class O311JurisdictionController {
     if (o311JurisdictionInst.procdefUuid) {
       o311JurisdictionInst.procdef = procdefService.findShallowProcdef(o311JurisdictionInst.procdefUuid)
     }
-    [o311JurisdictionInst: o311JurisdictionInst]
+
+    [o311JurisdictionInst: o311JurisdictionInst, tenantList: o311JurisdictionInst.tenants]
   }
 
   def edit(Long id) {

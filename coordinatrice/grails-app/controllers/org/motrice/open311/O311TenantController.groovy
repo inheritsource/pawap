@@ -9,14 +9,59 @@ class O311TenantController {
 
   static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
+  /**
+   * Prefix used for jurisdiction checkboxes.
+   */
+  final static String CHECKBOX_PREFIX = 'JURISD@'
+  final static int CHECKBOX_PREFIX_LEN = CHECKBOX_PREFIX.length()
+
   def index() {
     redirect(action: "list", params: params)
   }
 
   def list(Integer max) {
     params.max = Math.min(max ?: 15, 100)
-    if (!params.sort) params.sort = 'displayName'
     [o311TenantInstList: O311Tenant.list(params), o311TenantInstTotal: O311Tenant.count()]
+  }
+
+  /**
+   * Show all jurisdictions, allowing the user to include/exclude for this tenant.
+   * id must be a tenant id.
+   */
+  def listjurisd(Long id) {
+    def tenantInst = O311Tenant.get(id)
+    if (!tenantInst) {
+      flash.message = message(code: 'default.not.found.message', args: [message(code: 'o311Tenant.label', default: 'O311Tenant'), id])
+      redirect(action: "list")
+      return
+    }
+
+    def selectionList = open311Service.jurisdictionSelectionList(tenantInst)
+    [tenantInst: tenantInst, jurisdictionSelectionList: selectionList, checkboxPrefix: CHECKBOX_PREFIX]
+  }
+
+  /**
+   * Update the selection of jurisdictions admitting a given tenant.
+   */
+  def updatejurisd(Long id) {
+    if (log.debugEnabled) log.debug "UPDATE JURISD ${params}"
+    def tenantInst = O311Tenant.get(id)
+    if (!tenantInst) {
+      flash.message = message(code: 'default.not.found.message', args: [message(code: 'o311Tenant.label', default: 'O311Tenant'), id])
+      redirect(action: "list")
+      return
+    }
+
+    def includeList = params.inject([]) {list, entry ->
+      if (entry.key.startsWith(CHECKBOX_PREFIX) && entry.value == 'on') {
+	list << entry.key.substring(CHECKBOX_PREFIX_LEN)
+      }
+
+      return list
+    }
+
+    open311Service.updateTenantInJurisdictions(tenantInst, includeList)
+    redirect(action: 'show', id: id)
   }
 
   def create() {

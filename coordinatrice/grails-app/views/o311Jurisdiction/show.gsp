@@ -49,14 +49,6 @@
 	    <span class="property-value" aria-labelledby="procdefUuid-label"><g:link controller="procdef" action="show" id="${o311JurisdictionInst?.procdefUuid}"><g:fieldValue bean="${o311JurisdictionInst}" field="procdefDisplay"/></g:link></span>
 	  </li>
 	</g:if>
-	<g:if test="${o311JurisdictionInst?.serviceCnx}">
-	  <li class="fieldcontain">
-	    <span id="serviceCnx-label" class="property-label"><g:message code="o311Jurisdiction.serviceCnx.label" default="Service Cnx" /></span>
-	    <g:each in="${o311JurisdictionInst.serviceCnx}" var="s">
-	      <span class="property-value" aria-labelledby="serviceCnx-label"><g:link controller="o311ServiceInJurisd" action="show" id="${s.id}">${s?.encodeAsHTML()}</g:link></span>
-	    </g:each>
-	  </li>
-	</g:if>
 	<g:if test="${o311JurisdictionInst?.serviceGroups}">
 	  <li class="fieldcontain">
 	    <span id="serviceGroups-label" class="property-label"><g:message code="o311Jurisdiction.serviceGroups.label" default="Service Groups" /></span>
@@ -65,11 +57,11 @@
 	    </g:each>
 	  </li>
 	</g:if>
-	<g:if test="${o311JurisdictionInst?.tenantCnx}">
+	<g:if test="${tenantList}">
 	  <li class="fieldcontain">
-	    <span id="tenantCnx-label" class="property-label"><g:message code="o311Jurisdiction.tenantCnx.label" default="Tenant Cnx" /></span>
-	    <g:each in="${o311JurisdictionInst.tenantCnx}" var="t">
-	      <span class="property-value" aria-labelledby="tenantCnx-label"><g:link controller="o311TenantInJurisd" action="show" id="${t.id}">${t?.encodeAsHTML()}</g:link></span>
+	    <span id="tenant-label" class="property-label"><g:message code="o311Jurisdiction.tenants.label" default="Tenants" /></span>
+	    <g:each in="${tenantList}" var="t">
+	      <span class="property-value" aria-labelledby="tenant-label"><g:link controller="o311Tenant" action="show" id="${t.id}">${t?.encodeAsHTML()}</g:link></span>
 	    </g:each>
 	  </li>
 	</g:if>
@@ -77,8 +69,10 @@
       <g:form>
 	<fieldset class="buttons">
 	  <g:hiddenField name="id" value="${o311JurisdictionInst?.id}" />
-	  <g:link class="edit" action="edit" id="${o311JurisdictionInst?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
+	  <g:link class="edit" action="edit" id="${o311JurisdictionInst?.id}"><g:message code="o311Jurisdiction.edit.label" default="Edit" /></g:link>
 	  <g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+	  <g:link class="show" controller="o311ServiceGroup" action="list" id="${o311JurisdictionInst?.id}"><g:message code="o311ServiceGroup.list.menu" default="List" /></g:link>
+	  <g:link class="show" action="listservices" id="${o311JurisdictionInst?.id}"><g:message code="o311Jurisdiction.configure.services.label" default="Services" /></g:link>
 	</fieldset>
       </g:form>
     </div>

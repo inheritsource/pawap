@@ -25,6 +25,15 @@ class O311TenantInJurisd {
     id maxSize: 240, blank: false, unique: true
   }
 
+  static List allByTenant(Long tenantId) {
+    def cr = O311TenantInJurisd.createCriteria()
+    cr.list {
+      tenant {
+	idEq(tenantId)
+      }
+    }
+  }
+
   static String compoundId(String apiKey, String jurisdictionId) {
     "${apiKey}|${jurisdictionId}"
   }
@@ -35,8 +44,7 @@ class O311TenantInJurisd {
   }
 
   def assignId(O311Tenant tenant, O311Jurisdiction jurisdiction) {
-    def jid = jurisdiction.defaultJurisdiction? '' : jurisdiction.jurisdictionId
-    id = compoundId(tenant.apiKey, jurisdictionId)
+    id = compoundId(tenant, jurisdiction)
   }
 
   String toDebug() {

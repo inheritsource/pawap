@@ -28,11 +28,35 @@ class O311ServiceGroup implements Comparable {
   String displayName
 
   static belongsTo = [jurisdiction: O311Jurisdiction]
+  static transients = ['services']
+  static mapping = {
+    sort 'displayName'
+  }
   static constraints = {
     dateCreated nullable: true
     lastUpdated nullable: true
     code size: 3..64, matches: '[A-Za-z][A-Za-z0-9._-]*', unique: 'jurisdiction'
-    displayName size: 3..120
+    displayName size: 3..120, blank: false, unique: true
+  }
+
+  /**
+   * Get an ordered list of all services in this service group.
+   */
+  List getServices() {
+    def cr = O311ServiceInJurisd.createCriteria()
+    def jurisdId = jurisdiction?.id
+    def sijList = cr.list {
+      and {
+	jurisdiction {
+	  idEq(jurisdId)
+	}
+	serviceGroup {
+	  idEq(id)
+	}
+      }
+    }
+
+    return sijList? sijList.collect{O311Service.get(it.service.id)}.sort() : []
   }
 
   String toDebug() {
@@ -46,16 +70,16 @@ class O311ServiceGroup implements Comparable {
   //-------------------- Comparable --------------------
 
   int hashCode() {
-    code.hashCode()
+    displayName.hashCode()
   }
 
   boolean equals(Object obj) {
-    (obj instanceof O311ServiceGroup) && ((O311ServiceGroup)obj).code == code
+    (obj instanceof O311ServiceGroup) && ((O311ServiceGroup)obj).displayName == displayName
   }
 
   int compareTo(Object obj) {
     def other = (O311ServiceGroup)obj
-    return code.compareTo(obj.code)
+    return displayName.compareTo(obj.displayName)
   }
 
 }

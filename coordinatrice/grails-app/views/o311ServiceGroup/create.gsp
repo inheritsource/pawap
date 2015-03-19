@@ -9,18 +9,19 @@
   <body>
     <a href="#create-o311ServiceGroup" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
     <div id="create-o311ServiceGroup" class="content scaffold-create" role="main">
-      <h1><g:message code="default.create.label" args="[entityName]" /></h1>
+      <h1><g:message code="o311ServiceGroup.create.label" args="[jurisdictionInst]" /></h1>
       <g:if test="${flash.message}">
 	<div class="message" role="status">${flash.message}</div>
       </g:if>
-      <g:hasErrors bean="${o311ServiceGroupInst}">
+      <g:hasErrors bean="${serviceGroupInst}">
 	<ul class="errors" role="alert">
-	  <g:eachError bean="${o311ServiceGroupInst}" var="error">
+	  <g:eachError bean="${serviceGroupInst}" var="error">
 	    <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
 	  </g:eachError>
 	</ul>
       </g:hasErrors>
       <g:form action="save" >
+	<g:hiddenField name="jurisdiction.id" value="${jurisdictionInst?.id}" />
 	<fieldset class="form">
 	  <g:render template="form"/>
 	</fieldset>

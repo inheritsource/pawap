@@ -62,11 +62,11 @@
 	    <span class="property-value" aria-labelledby="apiKey-label"><g:fieldValue bean="${o311TenantInst}" field="apiKey"/></span>
 	  </li>
 	</g:if>
-	<g:if test="${o311TenantInst?.jurisdCnx}">
+	<g:if test="${o311TenantInst?.jurisdictions}">
 	  <li class="fieldcontain">
-	    <span id="jurisdCnx-label" class="property-label"><g:message code="o311Tenant.jurisdCnx.label" default="Jurisd Cnx" /></span>
-	    <g:each in="${o311TenantInst.jurisdCnx}" var="j">
-	      <span class="property-value" aria-labelledby="jurisdCnx-label"><g:link controller="o311TenantInJurisd" action="show" id="${j.id}">${j?.encodeAsHTML()}</g:link></span>
+	    <span id="jurisd-label" class="property-label"><g:message code="o311Tenant.admitting.jurisdictions.label" default="Jurisd Cnx" /></span>
+	    <g:each in="${o311TenantInst.jurisdictions}" var="j">
+	      <span class="property-value" aria-labelledby="jurisd-label"><g:link controller="o311Jurisdiction" action="show" id="${j.id}">${j?.encodeAsHTML()}</g:link></span>
 	    </g:each>
 	  </li>
 	</g:if>
@@ -76,6 +76,7 @@
 	  <g:hiddenField name="id" value="${o311TenantInst?.id}" />
 	  <g:link class="edit" action="edit" id="${o311TenantInst?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
 	  <g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+	  <g:link class="show" action="listjurisd" id="${o311TenantInst?.id}"><g:message code="o311Tenant.configure.jurisdictions.label" default="Configure"/></g:link>
 	</fieldset>
       </g:form>
     </div>

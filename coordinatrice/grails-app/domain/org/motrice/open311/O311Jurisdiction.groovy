@@ -53,17 +53,19 @@ class O311Jurisdiction implements Comparable {
    */
   Procdef procdef
 
+  SortedSet serviceGroups
   static hasMany = [serviceCnx: O311ServiceInJurisd, serviceGroups: O311ServiceGroup,
   tenantCnx: O311TenantInJurisd]
-  static transients = ['procdef']
+  static transients = ['procdef', 'tenants']
   static mapping = {
     cache true
+    sort 'fullName'
   }
   static constraints = {
     dateCreated nullable: true
     lastUpdated nullable: true
     jurisdictionId blank: false, size: 3..60, matches: '[A-Za-z0-9][A-Za-z0-9._-]*', unique: true
-    fullName size: 3..160, blank: false
+    fullName size: 3..160, blank: false, unique: true
     enabledFlag nullable: true
     serviceNotice nullable: true, maxSize: 240
     procdefUuid nullable: true, maxSize: 64
@@ -105,6 +107,17 @@ class O311Jurisdiction implements Comparable {
     serviceNotice?.trim() && procdefUuid?.trim()
   }
 
+  List getTenants() {
+    def cr = O311TenantInJurisd.createCriteria()
+    def tenantList = cr.list {
+      jurisdiction {
+	idEq(id)
+      }
+    }
+
+    return tenantList? tenantList.collect{O311Tenant.get(it.tenant.id)}.sort() : []
+  }
+
   String toDebug() {
     "[Jurisdiction(${id}/${jurisdictionId}) ${procdef?:'()'} '${fullName}', '${serviceNotice}']"
   }
@@ -116,16 +129,16 @@ class O311Jurisdiction implements Comparable {
   //-------------------- Comparable --------------------
 
   int hashCode() {
-    jurisdictionId.hashCode()
+    fullName.hashCode()
   }
 
   boolean equals(Object obj) {
-    (obj instanceof O311Jurisdiction) && ((O311Jurisdiction)obj).jurisdictionId == jurisdictionId
+    (obj instanceof O311Jurisdiction) && ((O311Jurisdiction)obj).fullName == fullName
   }
 
   int compareTo(Object obj) {
     def other = (O311Jurisdiction)obj
-    return jurisdictionId.compareTo(obj.jurisdictionId)
+    return fullName.compareTo(obj.fullName)
   }
 
 }

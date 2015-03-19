@@ -51,10 +51,14 @@ class O311Tenant {
   String apiKey
 
   static hasMany = [jurisdCnx: O311TenantInJurisd]
+  static mapping = {
+    sort 'displayName'
+  }
+  static transients = ['jurisdictions']
   static constraints = {
     dateCreated nullable: true
     lastUpdated nullable: true
-    displayName blank: false, size: 3..48
+    displayName blank: false, size: 3..48, unique: true
     organizationName size: 3..120
     firstName nullable: true
     lastName size: 3..120
@@ -78,12 +82,41 @@ class O311Tenant {
     collect { String.format("%02x", it) }.join('').substring(0, 40)
   }
 
+  /**
+   * Get a list of jurisdictions admitting this tenant.
+   */
+  List getJurisdictions() {
+    def cr = O311TenantInJurisd.createCriteria()
+    def jurisdList = cr.list {
+      tenant {
+	idEq(id)
+      }
+    }
+
+    return jurisdList? jurisdList.collect{O311Jurisdiction.get(it.jurisdiction.id)}.sort() : []
+  }
+
   String toDebug() {
     "[Tenant(${id}) '${displayName}']"
   }
 
   String toString() {
     displayName
+  }
+
+  //-------------------- Comparable --------------------
+
+  int hashCode() {
+    displayName.hashCode()
+  }
+
+  boolean equals(Object obj) {
+    (obj instanceof O311Tenant) && ((O311Tenant)obj).displayName == displayName
+  }
+
+  int compareTo(Object obj) {
+    def other = (O311Tenant)obj
+    return displayName.compareTo(obj.displayName)
   }
 
 }
