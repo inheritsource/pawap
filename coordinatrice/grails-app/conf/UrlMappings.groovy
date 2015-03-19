@@ -47,6 +47,9 @@ class UrlMappings {
     "/rest/migration/file/$filepath"(controller: 'RestMigration') {
       action = [PUT: 'installPackageFromFile']
     }
+    "/rest/open311/servicedef"(controller: 'RestOpen311') {
+      action = [GET: 'serviceDefinitionGet', POST: 'serviceDefinitionPut']
+    }
 
     "/"(controller: 'Procdef', action:'/index')
     "500"(controller: 'errors', action: 'internalServerError')

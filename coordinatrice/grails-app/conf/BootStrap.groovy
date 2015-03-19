@@ -26,6 +26,7 @@ import grails.converters.*
 import org.motrice.coordinatrice.CrdProcCategory
 import org.motrice.coordinatrice.CrdProcdefState
 import org.motrice.coordinatrice.TaskType
+import org.motrice.open311.O311Jurisdiction
 
 class BootStrap {
 
@@ -84,7 +85,10 @@ class BootStrap {
     TaskType.createType(TaskType.TYPE_USER_ID,
 			TaskType.TYPE_USER_RES,
 			TaskType.TYPE_USER_DEF)
-    
+
+    // Open311: Make sure the default jurisdiction exists.
+    O311Jurisdiction.create(O311Jurisdiction.DEFAULT_JURISDICTION_ID,
+			    O311Jurisdiction.INITIAL_DEFAULT_JURISDICTION_FULL_NAME)
   }
   def destroy = {
   }

@@ -110,6 +110,14 @@ class ViewUtilsTagLib {
   /**
    * Provide icon file name depending on boolean.
    */
+  def enabled = {attrs, body ->
+    Boolean flag = attrs.flag
+    out << "${flag?YES_ICON:NO_ICON}"
+  }
+
+  /**
+   * Provide icon file name depending on boolean.
+   */
   def disabled = {attrs, body ->
     boolean flag = attrs.flag
     out << "${flag?NO_ICON:YES_ICON}"

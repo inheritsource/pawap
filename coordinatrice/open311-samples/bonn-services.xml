@@ -1,0 +1,98 @@
+<services is_array="true">
+  <service>
+    <service_code>0001</service_code>
+    <service_name>Ampel defekt (Taste/Licht)</service_name>
+    <metadata>false</metadata>
+    <type>realtime</type>
+    <description>
+      Eine einzelne Lampe ist defekt oder die Ampel „springt“ dauerhaft nicht um.  Der Ampeltaste für Fußgänger ist ohne Funktion und offensichtlich defekt.
+    </description>
+    <keywords>Ampel, ampel</keywords>
+  </service>
+  <service>
+    <service_code>0020</service_code>
+    <service_name>Freiwillige/r werden</service_name>
+    <metadata>false</metadata>
+    <type>realtime</type>
+    <description/>
+    <keywords>0020</keywords>
+  </service>
+  <service>
+    <service_code>0002</service_code>
+    <service_name>Glassplitter</service_name>
+    <metadata>false</metadata>
+    <type>realtime</type>
+    <description>
+      Glassscherben auf öffentlichen Flächen und Wegen können Verletzungen oder Reifenbeschädigungen verursachen. Dies wollen wir verhindern und die Gefahrenstelle so schnell wie möglich beseitigen.
+    </description>
+    <keywords>Glas, Glassplitter</keywords>
+  </service>
+  <service>
+    <service_code>0021</service_code>
+    <service_name>Graffiti</service_name>
+    <metadata>false</metadata>
+    <type>realtime</type>
+    <description/>
+    <keywords/>
+  </service>
+  <service>
+    <service_code>0005</service_code>
+    <service_name>Grünpate werden</service_name>
+    <metadata>false</metadata>
+    <type>realtime</type>
+    <description>
+      In Bonn gibt es bereits 630 Patenschaften von Bürgern für Beete im öffentlichen Raum. Dabei handelt es sich um Baumbeete, Pflanzkübel und Grünflächen, die teilweise von Vereinen, Straßengemeinschaften oder Schulen angelegt, bepflanzt, gepflegt und unterhalten werden.
+    </description>
+    <keywords>grünpate, Grünpate</keywords>
+  </service>
+  <service>
+    <service_code>0006</service_code>
+    <service_name>Grünüberwuchs Verkehrsraum</service_name>
+    <metadata>false</metadata>
+    <type>realtime</type>
+    <description>
+      Von öffentlichen Grünflächen wachsen Pflanzen auf Straßen oder Gehwege und führen zu eingeschränkter Sicht oder Nutzung.
+    </description>
+    <keywords>Grünüberwuchs, Grünschnitt</keywords>
+  </service>
+  <service>
+    <service_code>0009</service_code>
+    <service_name>Herrenlose Fahrräder, Fahrzeuge (Schrott)</service_name>
+    <metadata>false</metadata>
+    <type>realtime</type>
+    <description>
+      Auf öffentlichen Flächen abgestellte Fahrräder, die offensichtlich seit längerer Zeit nicht mehr benutzt werden oder benutzt werden können.  Gemeint sind abgemeldete Fahrzeuge ohne Nummernschilder, betriebsunfähige Fahrzeuge oder Fahrzeuge ohne gültige Haftpflichtversicherung, die auf öffentlichen Flächen abgestellt sind.  Wir versuchen, die Fälle innerhalb einer Woche zu bearbeiten.
+    </description>
+    <keywords/>
+  </service>
+  <service>
+    <service_code>0007</service_code>
+    <service_name>Hundekotbeutel: Spender auffüllen / defekt</service_name>
+    <metadata>false</metadata>
+    <type>realtime</type>
+    <description>
+      Wenn dieser Spender defekt ist und nicht mehr genutzt werden kann oder der Beutelvorrat aufgefüllt werden muss.
+    </description>
+    <keywords>Hundekotbeutel, hundekotbeutel</keywords>
+  </service>
+  <service>
+    <service_code>0008</service_code>
+    <service_name>Laterne defekt</service_name>
+    <metadata>false</metadata>
+    <type>realtime</type>
+    <description>
+      Die Stadtwerke Bonn kümmern sich um ausgefallene Lampen an öffentlichen Straßenlaternen.
+    </description>
+    <keywords/>
+  </service>
+  <service>
+    <service_code>0010</service_code>
+    <service_name>Wilde Müllkippe, Sperrmüllreste</service_name>
+    <metadata>false</metadata>
+    <type>realtime</type>
+    <description>
+      Leider kommt es immer häufiger vor, dass Haus- und Sperrmüll und sogar gefährliche Abfälle (Schadstoffe) im Freiland, an Sammelstationen, im öffentlichen Straßenraum oder auf privaten Grundstücken unrechtmäßig abgestellt werden. Hierbei handelt es sich um eine Ordnungswidrigkeit, die mit einem Bußgeld bis zu einer Höhe von 5.100 Euro geahndet werden kann. Benachrichtigen Sie uns über diese Fälle, damit der Stadtordnungsdienst die Verursacher ermitteln und der Abfall entfernt werden kann.  Nach der Sperrmüllabfuhr sind Reste liegen geblieben? Bitte entsorgen Sie eigenen Sperrmüll bei den Abfallsammelstellen. Stammen der Sperrmüll allerdings nicht von Ihnen melden Sie diese Fälle, damit der Stadtordnungsdienst die Verursacher ermitteln und der Abfall entfernt werden kann.  Wir versuchen Ihre Anliegen innerhalb von einer Woche zu beheben.
+    </description>
+    <keywords>garbage, Abfall, abfall, müll, Müll</keywords>
+  </service>
+</services>

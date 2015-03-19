@@ -102,6 +102,12 @@ img {
 	/* color: #CCE1E8;*/
 }
 
+div.metaInfo {
+    display: block;
+    float: right;
+    font-size: 80%;
+}
+
 #motriceLogo a {
 	display: inline-block;
 	margin-left: 0.2em;

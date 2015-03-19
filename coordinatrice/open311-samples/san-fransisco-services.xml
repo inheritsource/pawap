@@ -1,0 +1,128 @@
+<services>
+  <service>
+    <service_code>518d5cc9601827e388000183</service_code>
+    <service_name>Park Requests</service_name>
+    <description>
+      Report an issue or request service inside of a San Francisco park.
+    </description>
+    <metadata>true</metadata>
+    <type>batch</type>
+  </service>
+  <service>
+    <service_code>518d5d52601827e3880001b1</service_code>
+    <service_name>Abandoned Vehicles</service_name>
+    <description>
+      Report a vehicle that is suspected to be abandoned or has been parked in the spot for more than 72 hours.
+    </description>
+    <metadata>true</metadata>
+    <type>batch</type>
+  </service>
+  <service>
+    <service_code>518d5892601827e3880000c5</service_code>
+    <service_name>Street or Sidewalk Cleaning</service_name>
+    <description>
+      Report illegal dumping of garbage and other items or request street and sidewalk cleaning services.
+    </description>
+    <metadata>true</metadata>
+    <type>batch</type>
+  </service>
+  <service>
+    <service_code>50fea92c4aa48a4a9e000099</service_code>
+    <service_name>Graffiti</service_name>
+    <description>
+      Report buildings, public property, and other objects that have been vandalized with graffiti.
+    </description>
+    <metadata>true</metadata>
+    <type>batch</type>
+  </service>
+  <service>
+    <service_code>51424912601827d062000019</service_code>
+    <service_name>Streetlight Repair</service_name>
+    <description>
+      Report a streetlight that is malfunctioning and is need of maintenance or repairs.
+    </description>
+    <metadata>true</metadata>
+    <type>batch</type>
+  </service>
+  <service>
+    <service_code>50feaab84aa48a4a9e0000ee</service_code>
+    <service_name>Sidewalk Defects</service_name>
+    <description>
+      Request repairs to sidewalks that are cracked, raised by tree roots, or have other defects.
+    </description>
+    <metadata>true</metadata>
+    <type>batch</type>
+  </service>
+  <service>
+    <service_code>518d572e601827e388000058</service_code>
+    <service_name>Garbage Containers</service_name>
+    <description>
+      Report an issue related to garbage containers including garbage cans that are left out and overflowing cans.
+    </description>
+    <metadata>true</metadata>
+    <type>batch</type>
+  </service>
+  <service>
+    <service_code>518d595d601827e3880000f3</service_code>
+    <service_name>Tree Maintenance</service_name>
+    <description>
+      Report a city tree that is in need of maintenance or is causing property damage.
+    </description>
+    <metadata>true</metadata>
+    <type>batch</type>
+  </service>
+  <service>
+    <service_code>518d5a5a601827e388000122</service_code>
+    <service_name>Parking and Traffic Sign Repair</service_name>
+    <description>
+      Report a traffic or parking sign that is damaged and is in need of repairs.
+    </description>
+    <metadata>true</metadata>
+    <type>batch</type>
+  </service>
+  <service>
+    <service_code>50fea6d54aa48a4a9e00002e</service_code>
+    <service_name>Illegal Postings</service_name>
+    <description>
+      Report handbills, leaflets, and stickers that are illegally posted on public property.
+    </description>
+    <metadata>true</metadata>
+    <type>batch</type>
+  </service>
+  <service>
+    <service_code>50fea9c24aa48a4a9e0000cd</service_code>
+    <service_name>Potholes and Street Defects</service_name>
+    <description>
+      Report defects in streets around San Francisco including potholes and missing manhole covers.
+    </description>
+    <metadata>true</metadata>
+    <type>batch</type>
+  </service>
+  <service>
+    <service_code>518d564b601827e38800002d</service_code>
+    <service_name>Blocked Sidewalk or Parking Space</service_name>
+    <description>
+      Report a public right of way that is being blocked by a vehicle or other types of obstructions.
+    </description>
+    <metadata>true</metadata>
+    <type>batch</type>
+  </service>
+  <service>
+    <service_code>50fea77a4aa48a4a9e000059</service_code>
+    <service_name>Damaged Public Property</service_name>
+    <description>
+      Report public property that is damaged and is need of maintenance or repairs.
+    </description>
+    <metadata>true</metadata>
+    <type>batch</type>
+  </service>
+  <service>
+    <service_code>518d5c0d601827e388000156</service_code>
+    <service_name>Flooding and Sewer Issues</service_name>
+    <description>
+      Report sewer related issues including flooding and sewage back ups.
+    </description>
+    <metadata>true</metadata>
+    <type>batch</type>
+  </service>
+</services>
