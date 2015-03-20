@@ -134,6 +134,18 @@ class Open311Service {
   }
 
   /**
+   * Make sure all tenant links for a given jurisdiction are in sync
+   * with respect to the enabled flag.
+   */
+  def jurisdictionEnabledSync(O311Jurisdiction jurisdiction) {
+    if (log.debugEnabled) log.debug "jurisdictionEnabledSync << ${jurisdiction}"
+    def q = 'update O311TenantInJurisd x set x.enabledFlag=? where jurisdiction=?'
+    def result = O311TenantInJurisd.executeUpdate(q, [jurisdiction.enabledFlag, jurisdiction])
+    if (log.debugEnabled) log.debug "jurisdictionEnabledSync >> ${result}"
+    return result
+  }
+
+  /**
    * Generate a service selection list to be presented to the user.
    * Each entry corresponds to an Open311 service.
    */

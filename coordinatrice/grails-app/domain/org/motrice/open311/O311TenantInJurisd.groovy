@@ -16,6 +16,13 @@ class O311TenantInJurisd {
    */
   String id
 
+  /**
+   * Is the jurisdiction enabled?
+   * This field must be kept in sync with the jurisdiction domain.
+   * Intentional redundancy for performance.
+   */
+  Boolean enabledFlag
+
   static belongsTo = [tenant: O311Tenant, jurisdiction: O311Jurisdiction]
   static mapping = {
     id generator: 'assigned'
@@ -23,6 +30,7 @@ class O311TenantInJurisd {
   }
   static constraints = {
     id maxSize: 240, blank: false, unique: true
+    enabledFlag nullable: true
   }
 
   static List allByTenant(Long tenantId) {

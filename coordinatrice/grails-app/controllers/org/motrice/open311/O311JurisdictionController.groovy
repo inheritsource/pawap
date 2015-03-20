@@ -144,33 +144,36 @@ class O311JurisdictionController {
 
   def update(Long id, Long version) {
     if (log.debugEnabled) log.debug "UPDATE params=${params}"
-    def o311JurisdictionInst = O311Jurisdiction.get(id)
-    if (!o311JurisdictionInst) {
+    def jurisdictionInst = O311Jurisdiction.get(id)
+    if (!jurisdictionInst) {
       flash.message = message(code: 'default.not.found.message', args: [message(code: 'o311Jurisdiction.label', default: 'O311Jurisdiction'), id])
       redirect(action: "list")
       return
     }
 
     if (version != null) {
-      if (o311JurisdictionInst.version > version) {
-	o311JurisdictionInst.errors.rejectValue("version", "default.optimistic.locking.failure",
+      if (jurisdictionInst.version > version) {
+	jurisdictionInst.errors.rejectValue("version", "default.optimistic.locking.failure",
 						[message(code: 'o311Jurisdiction.label', default: 'O311Jurisdiction')] as Object[],
 						"Another user has updated this O311Jurisdiction while you were editing")
-	render(view: "edit", model: [o311JurisdictionInst: o311JurisdictionInst])
+	render(view: "edit", model: [jurisdictionInst: jurisdictionInst])
 	return
       }
     }
 
-    o311JurisdictionInst.properties = params
-    open311Service.assignBpmnProcess(o311JurisdictionInst, params.procdefId)
+    jurisdictionInst.properties = params
+    open311Service.assignBpmnProcess(jurisdictionInst, params.procdefId)
 
-    if (!o311JurisdictionInst.save(flush: true)) {
-      render(view: "edit", model: [o311JurisdictionInst: o311JurisdictionInst])
+    if (!jurisdictionInst.save(flush: true)) {
+      render(view: "edit", model: [jurisdictionInst: jurisdictionInst])
       return
     }
 
-    flash.message = message(code: 'default.updated.message', args: [message(code: 'o311Jurisdiction.label', default: 'O311Jurisdiction'), o311JurisdictionInst.id])
-    redirect(action: "show", id: o311JurisdictionInst.id)
+    // Make sure the enabled state is mirrored to tenant links.
+    open311Service.jurisdictionEnabledSync(jurisdictionInst)
+
+    flash.message = message(code: 'default.updated.message', args: [message(code: 'o311Jurisdiction.label', default: 'O311Jurisdiction'), jurisdictionInst.id])
+    redirect(action: "show", id: jurisdictionInst.id)
   }
 
   def delete(Long id) {
