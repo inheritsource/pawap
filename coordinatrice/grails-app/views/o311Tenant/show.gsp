@@ -66,7 +66,8 @@
 	  <li class="fieldcontain">
 	    <span id="jurisd-label" class="property-label"><g:message code="o311Tenant.admitting.jurisdictions.label" default="Jurisd Cnx" /></span>
 	    <g:each in="${o311TenantInst.jurisdictions}" var="j">
-	      <span class="property-value" aria-labelledby="jurisd-label"><g:link controller="o311Jurisdiction" action="show" id="${j.id}">${j?.encodeAsHTML()}</g:link></span>
+	      <g:set var="iconimg"><g:enabled flag="${j.enabledFlag}"/></g:set>
+	      <span class="property-value" aria-labelledby="jurisd-label"><g:link controller="o311Jurisdiction" action="show" id="${j.id}">${j?.encodeAsHTML()}</g:link>&nbsp;&nbsp;<g:img dir="images/silk" file="${iconimg}"/></span>
 	    </g:each>
 	  </li>
 	</g:if>
