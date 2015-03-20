@@ -10,6 +10,8 @@ class Open311Service {
   // Also default.
   static transactional = true
 
+  def procdefService
+
   private static final log = LogFactory.getLog(this)
 
   /**
@@ -99,6 +101,7 @@ class Open311Service {
     O311Jurisdiction.list().each {jurisd ->
       def connection = connectMap[jurisd.id]
       boolean allowedFlag = connection != null
+      if (jurisd.procdefUuid) jurisd.procdef = procdefService.findShallowProcdef(jurisd.procdefUuid)
       result << [jurisdiction: jurisd, allowed: allowedFlag]
     }
 
