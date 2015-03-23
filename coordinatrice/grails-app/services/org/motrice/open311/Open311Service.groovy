@@ -1,5 +1,6 @@
 package org.motrice.open311
 
+import grails.converters.*
 import org.apache.commons.logging.LogFactory
 import org.motrice.coordinatrice.ServiceException
 
@@ -13,6 +14,21 @@ class Open311Service {
   def procdefService
 
   private static final log = LogFactory.getLog(this)
+
+  /**
+   * Content-Type header for JSON.
+   */
+  final static String JSON_CONTENT_TYPE = 'application/json; charset=utf-8'
+
+  /**
+   * Content-Type header for XML.
+   */
+  final static String XML_CONTENT_TYPE = 'text/xml; charset=utf-8'
+
+  /**
+   * XML declaration.
+   */
+  final static String XML_DECLARATION = '<?xml version="1.0" encoding="utf-8"?>'
 
   /**
    * Assign a BPMN process to a jurisdiction.
@@ -212,6 +228,157 @@ class Open311Service {
 
     if (log.debugEnabled) log.debug "updateJurisdictionServices >> ${createCount}"
     return createCount
+  }
+
+  /**
+   * Do the heavy lifting of the Open311 "services" method.
+   * Possible entries of the params map (keys and values are String):
+   * format: "xml" (default) or "json",
+   * jurisdictionId: a jurisdiction id or an empty string or null to indicate
+   * the default jurisdiction.
+   * RETURNS a map with the following entries:
+   * contentType: a content type string,
+   * text: the body of the response.
+   */
+  Map serviceList(Map params) {
+    if (log.debugEnabled) log.debug "serviceList << ${params}"
+    def jurisd = findJurisdiction(params.jurisdictionId)
+    // Get a list of pairs [service, serviceInJurisd]
+    def serviceList = O311Service.executeQuery(SERVICE_LIST_Q, jurisd)
+    // We may still need service groups.
+    def groupMap = [:]
+    if (serviceList) {
+      def groupList = O311ServiceGroup.findAllByJurisdiction(jurisd)
+      groupList.each {serviceGroup ->
+	groupMap[serviceGroup.id] = serviceGroup
+      }
+    }
+
+    // Convert to a list more like the final result.
+    def responseList = serviceList.collect {pair ->
+      def service = pair[0]
+      def serviceInJurisd = pair[1]
+      def entry = [service_code: service.code, service_name: service.name,
+      description: service.description, metadata: false, type: 'realtime',
+      keywords: '']
+      if (serviceInJurisd.serviceGroup) {
+	def group = groupMap[serviceInJurisd.serviceGroup.id]
+	entry.group = group.code
+      } else {
+	entry.group = ''
+      }
+
+      return entry
+    }
+
+    // Convert to String in the appropriate format.
+    def result = null
+    if (params.format == 'json') {
+      result = doServiceListAsJson(responseList)
+    } else {
+      result = doServiceListAsXml(responseList)
+    }
+
+    if (log.debugEnabled) log.debug "serviceList >> ${responseList?.size()}"
+    return result
+  }
+
+  final static SERVICE_LIST_Q = 'from O311Service as s, O311ServiceInJurisd as x where x.service = s and x.jurisdiction=?'
+
+  private Map doServiceListAsJson(List list) {
+    def map = [contentType: JSON_CONTENT_TYPE]
+    map.text = list as JSON
+    return map
+  }
+
+  private Map doServiceListAsXml(List list) {
+    def map = [contentType: XML_CONTENT_TYPE]
+    def sw = new StringWriter()
+    def pw = new PrintWriter(sw)
+    pw.println(XML_DECLARATION)
+    pw.flush()
+    def xml = new groovy.xml.MarkupBuilder(sw)
+    xml.services() {
+      list.each {svc ->
+	service() {
+	  service_code(svc.service_code) {}
+	  service_name(svc.service_name) {}
+	  description(svc.description) {}
+	  'group'(svc.group) {}
+	  metadata(false) {}
+	  type('realtime') {}
+	  keywords('') {}
+	}
+      }
+    }
+
+    sw.flush()
+    map.text = sw.toString()
+    return map
+  }
+
+  /**
+   * Retrieve a jurisdiction.
+   * ServiceException if not found
+   */
+  private O311Jurisdiction findJurisdiction(String jurisdictionId) {
+    def key = jurisdictionId ?: O311Jurisdiction.DEFAULT_JURISDICTION_ID
+    def jurisd = O311Jurisdiction.findByJurisdictionId(key)
+    if (!jurisd) {
+      def exc = new ServiceException("Jurisdiction id '${key}'", 'OPEN311.102')
+      exc.httpStatus = 404
+      throw exc
+    }
+
+    if (log.debugEnabled) log.debug "findJurisdiction >> ${jurisd}"
+    return jurisd
+  }
+
+  /**
+   * Pre-process an Open311 "request" call.
+   * Possible entries of the params map (keys and values are String):
+   * format: "xml" (default) or "json",
+   * apiKey: the API key of the calling tenant,
+   * jurisdictionId: a jurisdiction id or an empty string or null to indicate
+   * the default jurisdiction,
+   * serviceCode: a service code intended to identify an Open311 service.
+   * The API key is the only mandatory parameter.
+   */
+  def checkValidity(Map params) {
+    if (log.debugEnabled) log.debug "checkValidity << ${params}"
+    def jurisdictionId = params.jurisdictionId ?: ''
+    def serviceCode = params.serviceCode
+    def idf = O311TenantInJurisd.compoundId(params.apiKey, jurisdictionId)
+    def tenantLink = O311TenantInJurisd.get(idf)
+    if (!tenantLink) {
+      def exc = new ServiceException("Jurisdiction id '${jurisdictionId}'", 'OPEN311.105')
+      exc.httpStatus = 401
+      throw exc
+    } else if (!tenantLink.enabledFlag) {
+      def exc = new ServiceException("Jurisdiction id '${jurisdictionId}'", 'OPEN311.103')
+      exc.httpStatus = 409
+      throw exc
+    }
+    if (log.debugEnabled) log.debug "checkValidity.tenantLink: ${tenantLink?.toDebug()}"
+    // Check the service code, if included.
+    if (serviceCode) {
+      def service = O311Service.findByCode(serviceCode)
+      if (!service) {
+	def exc = new ServiceException("Service code '${serviceCode}'", 'OPEN311.104')
+	exc.httpStatus = 404
+	throw exc
+      }
+
+      def serviceLink = O311ServiceInJurisd.
+      findByJurisdictionAndService(tenantLink.jurisdiction, service)
+      if (log.debugEnabled) log.debug "checkValidity.serviceLink: ${serviceLink?.toDebug()}"
+      if (!serviceLink) {
+	def msg = "Service code '${serviceCode}'. Jurisdiction id '${jurisdictionId}'."
+	def exc = new ServiceException(msg, 'OPEN311.106')
+	exc.httpStatus = 409
+	throw exc
+      }
+    }
   }
 
 }

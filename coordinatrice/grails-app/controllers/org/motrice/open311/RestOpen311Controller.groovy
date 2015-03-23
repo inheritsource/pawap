@@ -21,8 +21,8 @@ class RestOpen311Controller {
       def serviceCount = open311Service.defineServices(serviceXml)
       render(status: 201, contentType: 'text/plain', text: "${serviceCount} services created")
     } catch (ServiceException exc) {
-      def msg = handleServiceException('serviceDefinitionPut', exc)
-      render(status: 409, contentType: 'text/plain', text: msg)
+      def outcome = handleServiceException('serviceDefinitionPut', exc)
+      render(status: 409, contentType: 'text/plain', text: outcome.message)
     }
   }
 
@@ -36,10 +36,58 @@ class RestOpen311Controller {
     render(status: 200, contentType: 'text/xml', encoding: 'utf-8', text: xml)
   }
 
-  private String handleServiceException(String op, ServiceException exc) {
+  /**
+   * Return a list of services on the format of the Open311 specification.
+   */
+  def open311Services() {
+    if (log.debugEnabled) log.debug "SERVICES ${params}"
+    def paramsMap = [format: params.format, jurisdictionId: params.jurisdiction_id]
+    try {
+      def data = open311Service.serviceList(paramsMap)
+      render(status: 200, contentType: data.contentType, encoding: 'utf-8', text: data.text)
+      return
+    } catch (ServiceException exc) {
+      def outcome = handleServiceException('open311Services', exc)
+      render(status: exc.httpStatus, contentType: 'text/plain', text: outcome.message)
+    }
+  }
+
+  /**
+   * Pre-process an Open311 "request" call.
+   * Checks the API key for validity.
+   * Finds the service.
+   * Returns jurisdiction and service data.
+   */
+  def open311Validity() {
+    if (log.debugEnabled) log.debug "VALIDITY ${params}"
+    def paramsMap = [apiKey: params.api_key, jurisdictionId: params.jurisdiction_id,
+    serviceCode: params.service_code]
+    try {
+      open311Service.checkValidity(paramsMap)
+      render(status: 200, contentType: 'text/plain', encoding: 'utf-8', text: 'Ok')
+    } catch (ServiceException exc) {
+      def outcome = handleServiceException('open311Validity', exc)
+      render(status: exc.httpStatus, contentType: 'text/plain', text: outcome.message)
+    }
+  }
+
+  /**
+   * Handle a service exception.
+   * Somewhat different from how service exceptions are handled in other parts of
+   * Coordinatrice.
+   * Return a map containing entries,
+   * status: HTTP status (Integer),
+   * message: exception message (String).
+   */
+  private Map handleServiceException(String op, ServiceException exc) {
     log.error "${op} ${exc?.message}"
-    exc.key? "${exc.key}|${message(code: exc.key, args: exc.args ?: [])}" :
-    "OPEN311.000|${exc?.message}"
+    def sb = new StringBuilder()
+    if (exc.key) {
+      sb.append(exc.key).append('|')
+      sb.append(message(code: exc.key)).append('|')
+    }
+    sb.append(exc.message)
+    return [status: exc.httpStatus, message: sb.toString()]
   }
 
 }

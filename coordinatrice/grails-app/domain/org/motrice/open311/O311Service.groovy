@@ -48,12 +48,6 @@ class O311Service implements Comparable {
     jurisdCnx nullable: true
   }
 
-  static namedQueries = {
-    listAll {
-      
-    }
-  }
-
   String getDescriptionAbbrev() {
     (description?.size() > 44)? description.substring(0, 42) + '...' : description
   }
