@@ -33,6 +33,9 @@ public class ServiceException extends RuntimeException {
     // Localized message key
     private String key;
 
+    // Optional HTTP status code
+    private Integer httpStatus;
+
     // Args for the localized message
     private List<Object> args;
 
@@ -59,4 +62,13 @@ public class ServiceException extends RuntimeException {
     public List<Object> getArgs() {
 	return args;
     }
+
+    public Integer getHttpStatus() {
+	return httpStatus;
+    }
+
+    public void setHttpStatus(Integer httpStatus) {
+	this.httpStatus = httpStatus;
+    }
+
 }

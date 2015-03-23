@@ -50,6 +50,12 @@ class UrlMappings {
     "/rest/open311/servicedef"(controller: 'RestOpen311') {
       action = [GET: 'serviceDefinitionGet', POST: 'serviceDefinitionPut']
     }
+    "/rest/open311/services"(controller: 'RestOpen311') {
+      action = [GET: 'open311Services']
+    }
+    "/rest/open311/validity"(controller: 'RestOpen311') {
+      action = [GET: 'open311Validity']
+    }
 
     "/"(controller: 'Procdef', action:'/index')
     "500"(controller: 'errors', action: 'internalServerError')

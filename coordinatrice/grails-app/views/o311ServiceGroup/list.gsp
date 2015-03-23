@@ -25,8 +25,8 @@
 	  <tr>
 	    <g:sortableColumn property="displayName" title="${message(code: 'o311ServiceGroup.displayName.label', default: 'Display Name')}" />
 	    <g:sortableColumn property="code" title="${message(code: 'o311ServiceGroup.code.label', default: 'Code')}" />
-	    <g:sortableColumn property="dateCreated" title="${message(code: 'o311ServiceGroup.dateCreated.label', default: 'Date Created')}" />
-	    <g:sortableColumn property="lastUpdated" title="${message(code: 'o311ServiceGroup.lastUpdated.label', default: 'Last Updated')}" />
+	    <g:sortableColumn property="dateCreated" title="${message(code: 'o311.dateCreated.label', default: 'Date Created')}" />
+	    <g:sortableColumn property="lastUpdated" title="${message(code: 'o311.lastUpdated.label', default: 'Last Updated')}" />
 	  </tr>
 	</thead>
 	<tbody>

@@ -43,7 +43,7 @@ class O311TenantInJurisd {
   }
 
   static String compoundId(String apiKey, String jurisdictionId) {
-    "${apiKey}|${jurisdictionId}"
+    "${apiKey}|${jurisdictionId?:''}"
   }
 
   static String compoundId(O311Tenant tenant, O311Jurisdiction jurisdiction) {
