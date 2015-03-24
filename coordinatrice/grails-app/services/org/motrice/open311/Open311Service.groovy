@@ -140,7 +140,8 @@ class Open311Service {
     def createCount = 0
     includeList.each {jurisdId ->
       def jurisdiction = O311Jurisdiction.get(jurisdId)
-      def tenantInJurisd = new O311TenantInJurisd()
+      // Remember to propagate the enabled flag.
+      def tenantInJurisd = new O311TenantInJurisd(enabledFlag: jurisdiction.enabledFlag)
       tenantInJurisd.assignId(tenant, jurisdiction)
       ++createCount
       tenant.addToJurisdCnx(tenantInJurisd)
@@ -343,8 +344,9 @@ class Open311Service {
    * the default jurisdiction,
    * serviceCode: a service code intended to identify an Open311 service.
    * The API key is the only mandatory parameter.
+   * RETURN a map containing the requested return data -- as a JSON string.
    */
-  def checkValidity(Map params) {
+  String checkValidity(Map params) {
     if (log.debugEnabled) log.debug "checkValidity << ${params}"
     def jurisdictionId = params.jurisdictionId ?: ''
     def serviceCode = params.serviceCode
@@ -361,15 +363,17 @@ class Open311Service {
     }
     if (log.debugEnabled) log.debug "checkValidity.tenantLink: ${tenantLink?.toDebug()}"
     // Check the service code, if included.
+    def service = null
+    def serviceLink = null
     if (serviceCode) {
-      def service = O311Service.findByCode(serviceCode)
+      service = O311Service.findByCode(serviceCode)
       if (!service) {
 	def exc = new ServiceException("Service code '${serviceCode}'", 'OPEN311.104')
 	exc.httpStatus = 404
 	throw exc
       }
 
-      def serviceLink = O311ServiceInJurisd.
+      serviceLink = O311ServiceInJurisd.
       findByJurisdictionAndService(tenantLink.jurisdiction, service)
       if (log.debugEnabled) log.debug "checkValidity.serviceLink: ${serviceLink?.toDebug()}"
       if (!serviceLink) {
@@ -379,6 +383,64 @@ class Open311Service {
 	throw exc
       }
     }
+
+    // So much for checking. Now the return data.
+    def map = [:]
+    def returnSet = params.return
+    if (returnSet instanceof Set) {
+      returnSet.each {key ->
+	if (checkFor(returnSet, 'jurisdiction')) {
+	  map.jurisdiction = doJurisdictionReturn(tenantLink)
+	}
+	if (checkFor(returnSet, 'tenant')) {
+	  map.tenant = doTenantReturn(tenantLink)
+	}
+	if (checkFor(returnSet, 'service')) {
+	  map.service = doServiceReturn(service, serviceLink)
+	}
+      }
+    }
+
+    if (log.debugEnabled) log.debug "checkValidity << ${map}"
+    return map as JSON
+  }
+
+  /**
+   * Special method to check for the return options.
+   */
+  private boolean checkFor(Set set, String option) {
+    set.contains(option) || set.contains('all')
+  }
+
+  private Map doJurisdictionReturn(O311TenantInJurisd tenantLink) {
+    def jurisd = tenantLink.jurisdiction
+    def map = [jurisdiction_id: jurisd.jurisdictionId, full_name: jurisd.fullName,
+    enabled_flag: jurisd.enabledFlag, service_notice: jurisd.serviceNotice,
+    procdef_id: jurisd.procdefUuid]
+    if (!jurisd.procdef) jurisd.procdef = procdefService.findShallowProcdef(jurisd.procdefUuid)
+    // List of StartFormView (due to unresolved problem with Hibernate)
+    def startForms = jurisd.procdef.startForms
+    map.startForms = startForms.collect {it.formConnectionKey}
+    return map
+  }
+
+  private Map doTenantReturn(O311TenantInJurisd tenantLink) {
+    def tenant = tenantLink.tenant
+    return [display_name: tenant.displayName, organization_name: tenant.organizationName,
+    first_name: tenant.firstName, last_name: tenant.lastName, email: tenant.email,
+    phone: tenant.phone]
+  }
+
+  private Map doServiceReturn(O311Service service, O311ServiceInJurisd serviceLink) {
+    if (!service || !serviceLink) return [:]
+    def map = [code: service.code, name: service.name, description: service.description]
+    if (serviceLink.serviceGroup) {
+      def sg = serviceLink.serviceGroup
+      map.service_group_code = sg.code
+      map.service_group_display_name = sg.displayName
+    }
+
+    return map
   }
 
 }
