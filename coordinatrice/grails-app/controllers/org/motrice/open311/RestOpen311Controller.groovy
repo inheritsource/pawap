@@ -62,9 +62,11 @@ class RestOpen311Controller {
     if (log.debugEnabled) log.debug "VALIDITY ${params}"
     def paramsMap = [apiKey: params.api_key, jurisdictionId: params.jurisdiction_id,
     serviceCode: params.service_code]
+    if (params.return) paramsMap.return = params.return.split('~') as Set
+
     try {
-      open311Service.checkValidity(paramsMap)
-      render(status: 200, contentType: 'text/plain', encoding: 'utf-8', text: 'Ok')
+      def data = open311Service.checkValidity(paramsMap)
+      render(status: 200, contentType: 'application/json; charset=utf-8', encoding: 'utf-8', text: data)
     } catch (ServiceException exc) {
       def outcome = handleServiceException('open311Validity', exc)
       render(status: exc.httpStatus, contentType: 'text/plain', text: outcome.message)
