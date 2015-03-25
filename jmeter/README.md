@@ -25,9 +25,6 @@ The setup is without bankid identification. This is to make the scripts fully
 automatically. A simplistic start form is used, demo-ansokan--v002. If 
 an other form is used the test plan TestPlanCreateCases.jmx needs to be updated. 
 
-The rest call to lookup labels in CoordinatriceFacade.java has been disabled to increase speed. 
-This should probalbly be cached in a future version. 
-
 
 ###Test scenarios 
 * Loading of the inbox :
@@ -74,6 +71,4 @@ python-libxml2  python-matplotlib python-numpy
 * Other orbeon form ? 
 * Other test cases ? 
 * Realistic load 
-* Make tests running the webservice and jmeter on separate machines. 
-* .. 
 

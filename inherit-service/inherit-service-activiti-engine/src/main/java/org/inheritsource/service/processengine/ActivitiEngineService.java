@@ -621,7 +621,7 @@ public class ActivitiEngineService {
 		ActivityInstanceLogItem item = null;
 		if (activity != null) {
 			item = new ActivityInstanceLogItem();
-
+log.error("activity.getActivityType() = {} ", activity.getActivityType() );
 			if ("userTask".equals(activity.getActivityType())) {
 				HistoricTaskInstance historicTaskInstance = engine
 						.getHistoryService().createHistoricTaskInstanceQuery()
@@ -631,6 +631,10 @@ public class ActivitiEngineService {
 						.getHistoricFormInstance(historicTaskInstance, null,
 								item);
 			} else if ("serviceTask".equals(activity.getActivityType())) {
+				item.setSubmitted(activity.getEndTime());
+				item.setSubmittedBy(null);
+			} else if ("receiveTask".equals(activity.getActivityType())) {
+                                // for the remote update of Open 311
 				item.setSubmitted(activity.getEndTime());
 				item.setSubmittedBy(null);
 			}
@@ -880,6 +884,20 @@ public class ActivitiEngineService {
 							historicActivitiy, locale));
 
 		}
+                // for the remote update of Open 311
+		historicActivities = engine
+				.getHistoryService().createHistoricActivityInstanceQuery()
+				.processInstanceId(processInstanceId)
+				.activityType("receiveTask").finished()
+				.orderByHistoricActivityInstanceEndTime().asc().list();
+		for (HistoricActivityInstance historicActivitiy : historicActivities) {
+			processInstanceDetails
+					.addActivityInstanceItem(historicActivitiy2ActivityInstanceLogItem(
+							historicActivitiy, locale));
+
+		}
+
+
 		// append historic tasks (i.e. to timeline)
 		List<HistoricTaskInstance> historicTasks = engine.getHistoryService()
 				.createHistoricTaskInstanceQuery()
@@ -1452,6 +1470,26 @@ public class ActivitiEngineService {
 		return processInstanceId;
 	}
 
+	public String startProcess(String processDefinitionId,
+			Map<String, Object> variables, String userId, String businessKey) {
+		String processInstanceId = null;
+		try {
+			engine.getIdentityService().setAuthenticatedUserId(userId);
+			ProcessInstance processInstance = engine.getRuntimeService()
+					.startProcessInstanceById(processDefinitionId,businessKey,  variables);
+			processInstanceId = processInstance.getId();
+		} catch (Exception e) {
+			log.error("Unable to start process instance with processDefinitionId: "
+					+ processDefinitionId + " exeception: " + e);
+		} finally {
+			engine.getIdentityService().setAuthenticatedUserId(null);
+		}
+
+		return processInstanceId;
+	}
+
+	
+	
 	public boolean executeTask(String taskId, Map<String, Object> variables,
 			String userId) {
 		boolean successful = false;
@@ -1558,7 +1596,7 @@ public class ActivitiEngineService {
 			engine.getIdentityService().setAuthenticatedUserId(userId);
 
 			if (filter.equals("STARTED")) {
-				System.out.println("date started");
+				log.debug("date started");
 				historicProcessInstanceQuery.unfinished();
 
 			} else if (filter.equals("FINISHED")) {
@@ -1569,8 +1607,8 @@ public class ActivitiEngineService {
 				DateTime dtOrg = new DateTime(startDate);
 				Date dateLast = dtOrg.plusDays(tolDays).toDate();
 				Date dateFirst = dtOrg.minusDays(tolDays).toDate();
-				System.out.println("dateLast =" + dateLast.toString());
-				System.out.println("dateFirst =" + dateFirst.toString());
+				log.debug("dateLast =" + dateLast.toString());
+				log.debug("dateFirst =" + dateFirst.toString());
 
 				historicProcessInstanceQuery.startedAfter(dateFirst)
 						.startedBefore(dateLast);
@@ -2540,6 +2578,88 @@ public class ActivitiEngineService {
 			}
 		}
 		return open311v2p1ServiceRequestUpdates;
+	}
+/*
+	public String getProcessInstanceOpen311(String userId, String jurisdiction_id,
+			String service_request_id, String processLike) {
+		HistoricProcessInstanceQuery historicProcessInstanceQuery = engine
+				.getHistoryService().createHistoricProcessInstanceQuery();
+		engine.getIdentityService().setAuthenticatedUserId(userId);
+		historicProcessInstanceQuery.orderByProcessInstanceStartTime().desc();
+		List<HistoricProcessInstance> processes;
+		log.debug("userId = " + userId);
+		log.debug("jurisdiction_id = " + jurisdiction_id);
+		log.debug("service_request_id = " + service_request_id);
+		log.debug("processLike = " + processLike);
+		
+		if (userId != null && !userId.isEmpty()) {
+			historicProcessInstanceQuery.startedBy(userId);
+		}
+		if (jurisdiction_id == null) {
+			return null;
+		} else {
+			processes = historicProcessInstanceQuery
+					.excludeSubprocesses(true)
+					.variableValueEquals("startevent1_jurisdiction_id",
+							jurisdiction_id)
+					.variableValueEquals("motriceStartFormInstanceId",
+							service_request_id)
+					.variableValueLike("motriceStartFormDefinitionKey",
+							processLike).includeProcessVariables()
+					.list();
+		}
+		if (processes == null) {
+			return null;
+		} else {
+			if (processes.size() != 1) {
+				log.error("processes = " + processes);
+				return null;
+			} else {
+				String processId = processes.get(0).getId();
+				log.debug("processes = " + processes);
+				log.debug("processId = " + processId ) ; 
+				log.debug("processes = " + processes);
+				return processId;
+			}
+		}
+	}
+	*/ 
+	public String getProcessInstanceOpen311(String userId, String jurisdiction_id,
+			 String processInstanceBusinessKey) {
+		HistoricProcessInstanceQuery historicProcessInstanceQuery = engine
+				.getHistoryService().createHistoricProcessInstanceQuery();
+		engine.getIdentityService().setAuthenticatedUserId(userId);
+		historicProcessInstanceQuery.orderByProcessInstanceStartTime().desc();
+		List<HistoricProcessInstance> processes;
+		log.debug("userId = " + userId);
+		// log.debug("jurisdiction_id = " + jurisdiction_id);
+		///log.debug("processLike = " + processLike);
+		
+		if (userId != null && !userId.isEmpty()) {
+			historicProcessInstanceQuery.startedBy(userId);
+		}
+		if (jurisdiction_id == null) {
+			return null;
+		} else {
+			processes = historicProcessInstanceQuery
+					.excludeSubprocesses(true)
+					.processInstanceBusinessKey(processInstanceBusinessKey)
+					.list();
+		}
+		if (processes == null) {
+			return null;
+		} else {
+			if (processes.size() != 1) {
+				log.error("processes = " + processes);
+				return null;
+			} else {
+				String processId = processes.get(0).getId();
+				log.debug("processes = " + processes);
+				log.debug("processId = " + processId ) ; 
+				log.debug("processes = " + processes);
+				return processId;
+			}
+		}
 	}
 
 	public static void main(String[] args) {
