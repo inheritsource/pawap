@@ -74,4 +74,14 @@ class PastProcinstController {
     [pastProcInst: pastProcInst]
   }
 
+  /**
+   * Display process variables.
+   * AJAX invocation.
+   */
+  def showProcessVariables(String id) {
+    if (log.debugEnabled) log.debug "SHOW PROCESS VARIABLES ${params}"
+    def procInst = pastProcinstService.findPastProcinstWithVars(id)
+    render(template: "/processVariables", model: [procVarMap: procInst.variables])
+  }
+
 }

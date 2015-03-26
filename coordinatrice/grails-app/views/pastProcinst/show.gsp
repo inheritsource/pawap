@@ -4,14 +4,23 @@
   <head>
     <meta name="layout" content="main"/>
     <g:set var="entityName" value="${message(code: 'pastProcinst.label', default: 'PastProcinst')}" />
-    <title><g:message code="default.show.label" args="[entityName]" /></title>
+    <g:set var="procId" value="${pastProcInst?.uuid}"/>
+    <title><g:message code="default.show.label" args="[entityName]"/></title>
+    <g:javascript library="jquery"/>
+    <g:javascript library="jquery-ui"/>
+    <g:javascript>
+      $("#processVariablesDisplay").dialog({autoOpen: false, width: 790});
+      function processVariableDialog() {
+        $("#processVariablesDisplay").dialog("open").css({height:"380px", overflow:"auto"});
+      }
+    </g:javascript>
   </head>
   <body>
     <a href="#show-pastProcinst" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
     <div id="show-pastProcinst" class="content scaffold-show" role="main">
       <h1><g:message code="pastProcinst.label" default="Past Process Instance"/></h1>
       <g:if test="${flash.message}">
-	<div class="message" role="status">${flash.message}</div>
+	<div id="flashMessage" class="message" role="status">${flash.message}</div>
       </g:if>
       <ol class="property-list pastProcinst">
 	<g:if test="${pastProcInst?.uuid}">
@@ -70,9 +79,13 @@
 	  <span class="property-value" aria-labelledby="startUserId-label"><g:img dir="images/silk" file="${imgfile}"/></span>
 	</li>
       </ol>
+      <div id="processVariablesDisplay" title="${message(code: 'pastProcinst.var.title.label', args: [procId])}">Process Variables</div>
       <g:form>
 	<fieldset class="buttons">
-	  <g:hiddenField name="id" value="${pastProcInst?.uuid}" />
+	  <g:hiddenField name="id" value="${procId}"/>
+	  <g:remoteLink class="show" action="showProcessVariables" id="${procId}"
+			update="[success:'processVariablesDisplay', failure:'flashMessage']"
+			onComplete="processVariableDialog()"><g:message code="pastProcinst.var.button.label"/></g:remoteLink>
 	</fieldset>
       </g:form>
     </div>

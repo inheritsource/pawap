@@ -4,8 +4,17 @@
   <head>
     <meta name="layout" content="main"/>
     <g:set var="entityName" value="${message(code: 'procinst.label', default: 'Procinst')}" />
+    <g:set var="procId" value="${procInst?.uuid}"/>
     <g:javascript library="jquery" plugin="jquery"/>
     <title><g:message code="default.show.label" args="[entityName]" /></title>
+    <g:javascript library="jquery"/>
+    <g:javascript library="jquery-ui"/>
+    <g:javascript>
+      $("#processVariablesDisplay").dialog({autoOpen: false, width: 790});
+      function processVariableDialog() {
+        $("#processVariablesDisplay").dialog("open").css({height:"380px", overflow:"auto"});
+      }
+    </g:javascript>
   </head>
   <body>
     <a href="#show-procinst" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
@@ -56,6 +65,7 @@
 	  <span class="property-value" aria-labelledby="ended-label"><g:img dir="images/silk" file="${imgfile}"/></span>
 	</li>
       </ol>
+      <div id="processVariablesDisplay" title="${message(code: 'procinst.var.title.label', args: [procId])}">Process Variables</div>
       <g:form>
 	<r:script>
 	  function askReason(label, defaultReason) {
@@ -69,6 +79,9 @@
 	  <g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="askReason('${message(code: 'procinst.delete.label')}','');" />
 	  <g:link class="show" controller="bpmnExecution" action="listproc" id="${procInst?.processInstanceId}"><g:message code="procinst.list.executions.label" default="List Executions"/></g:link>
 	  <g:link class="show" controller="bpmnTask" action="listproc" id="${procInst?.processInstanceId}"><g:message code="procinst.list.tasks.label" default="List Tasks"/></g:link>
+	  <g:remoteLink class="show" action="showProcessVariables" id="${procId}"
+			update="[success:'processVariablesDisplay', failure:'flashMessage']"
+			onComplete="processVariableDialog()"><g:message code="procinst.var.button.label"/></g:remoteLink>
 	</fieldset>
       </g:form>
     </div>

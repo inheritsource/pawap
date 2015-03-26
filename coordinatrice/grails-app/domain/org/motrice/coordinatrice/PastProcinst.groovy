@@ -94,6 +94,12 @@ class PastProcinst {
     startActivityId = hpi.startActivityId
     startUserId = hpi.startUserId
     deleteReason = hpi.deleteReason
+    def varMap = hpi.processVariables
+    if (varMap) {
+      variables = new TreeMap(varMap)
+    } else {
+      variables = [:]
+    }
   }
 
   /**
