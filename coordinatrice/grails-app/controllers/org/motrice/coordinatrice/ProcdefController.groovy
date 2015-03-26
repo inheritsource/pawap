@@ -154,7 +154,11 @@ class ProcdefController {
     // key is the process definition key (id without version etc)
     def key = params.id
     params.max = Math.min(max ?: 15, 100)
-    params.offset = params.offset as Integer ?: 0
+    try {
+      params.offset = params.offset as Integer
+    } catch (NumberFormatException exc) {
+      params.offset = 0
+    }
     // TODO: This might not be the exact condition for deletion
     // Other parts of the code use the 'deletable' property.
     def procdefInstList = procdefService.allProcdefsByKeyAndState(key, CrdProcdefState.STATE_EDIT_ID)

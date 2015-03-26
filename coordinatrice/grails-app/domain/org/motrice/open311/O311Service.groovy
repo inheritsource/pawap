@@ -42,9 +42,9 @@ class O311Service implements Comparable {
   static constraints = {
     dateCreated nullable: true
     lastUpdated nullable: true
-    code size: 3..64, blank: false, matches: '[A-Za-z][A-Za-z0-9._-]*', unique: true
+    code size: 3..64, blank: false, matches: '[A-Za-z0-9][A-Za-z0-9._-]*', unique: true
     name size: 3..120, blank: false, unique: true
-    description nullable: true, maxSize: 240
+    description nullable: true, maxSize: 400
     jurisdCnx nullable: true
   }
 

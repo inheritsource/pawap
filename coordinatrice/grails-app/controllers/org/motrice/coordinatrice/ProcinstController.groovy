@@ -175,6 +175,16 @@ class ProcinstController {
     redirect(action: "list")
   }
 
+  /**
+   * Display process variables.
+   * AJAX invocation.
+   */
+  def showProcessVariables(String id) {
+    if (log.debugEnabled) log.debug "SHOW PROCESS VARIABLES ${params}"
+    def procInst = processEngineService.findProcessInstanceWithVars(id)
+    render(template: "/processVariables", model: [procVarMap: procInst.variables])
+  }
+
   private handleServiceException(String op, ServiceException exc) {
     log.error "[${op}] ${exc?.message}"
     if (exc.key) {

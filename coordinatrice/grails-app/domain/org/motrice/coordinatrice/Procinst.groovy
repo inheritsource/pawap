@@ -1,5 +1,6 @@
 package org.motrice.coordinatrice
 
+import org.activiti.engine.runtime.Execution
 import org.activiti.engine.runtime.ProcessInstance
 import org.motrice.coordinatrice.pxd.PxdFormdefVer
 import org.motrice.coordinatrice.pxd.PxdItem
@@ -54,6 +55,17 @@ class Procinst extends BpmnExecution {
   static constraints = {
     procdef nullable: false
     formdef nullable: true
+  }
+
+  def assignFromExecution(Execution ex) {
+    super.assignFromExecution(ex)
+    def procInst = (ProcessInstance)ex
+    def varMap = procInst.processVariables
+    if (varMap) {
+      variables = new TreeMap(varMap)
+    } else {
+      variables = [:]
+    }
   }
 
   String toString() {

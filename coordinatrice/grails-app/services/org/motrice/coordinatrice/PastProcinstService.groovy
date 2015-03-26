@@ -51,6 +51,21 @@ class PastProcinstService {
   }
 
   /**
+   * Retrieve the process variables of a historic process instance.
+   */
+  PastProcinst findPastProcinstWithVars(String id) {
+    if (log.debugEnabled) log.debug "findPastProcinstWithVars << ${id}"
+    def result = null
+    if (id) {
+      def pi = activitiHistoryService.createHistoricProcessInstanceQuery().
+      includeProcessVariables().processInstanceId(id).singleResult()
+      result = pi? createPastProcinst(pi) : null
+    }
+    if (log.debugEnabled) log.debug "findPastProcinstWithVars >> ${result}"
+    return result
+  }
+
+  /**
    * Use action parameters to look up or create a process instance filter.
    */
   @Transactional
