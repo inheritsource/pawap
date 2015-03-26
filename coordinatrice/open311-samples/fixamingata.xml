@@ -1,0 +1,127 @@
+  <services>
+    <service>
+      <description>Avfall och återvinning</description>
+      <service_code>AvfallOchAtervinning</service_code>
+      <service_name>Avfall och återvinning</service_name>
+    </service>
+    <service>
+      <description>Badplatser</description>
+      <service_code>Badplatser</service_code>
+      <service_name>Badplatser</service_name>
+    </service>
+    <service>
+      <description>Cykelställ</description>
+      <service_code>Cykelstall</service_code>
+      <service_name>Cykelställ</service_name>
+    </service>
+    <service>
+      <description>Gator</description>
+      <service_code>Gator</service_code>
+      <service_name>Gator</service_name>
+    </service>
+    <service>
+      <description>Gatubelysning</description>
+      <service_code>Gatubelysning</service_code>
+      <service_name>Gatubelysning</service_name>
+    </service>
+    <service>
+      <description>Gång- och cykelbana</description>
+      <service_code>GangOchCykelbana</service_code>
+      <service_name>Gång- och cykelbana</service_name>
+    </service>
+    <service>
+      <description>Hundrastgårdar</description>
+      <service_code>Hundrastgardar</service_code>
+      <service_name>Hundrastgårdar</service_name>
+    </service>
+    <service>
+      <description>Hållplats</description>
+      <service_code>Hallplats</service_code>
+      <service_name>Hållplats</service_name>
+    </service>
+    <service>
+      <description>Igensatt brunn</description>
+      <service_code>IgensattBrunn</service_code>
+      <service_name>Igensatt brunn</service_name>
+    </service>
+    <service>
+      <description>Klotter</description>
+      <service_code>Klotter</service_code>
+      <service_name>Klotter</service_name>
+    </service>
+    <service>
+      <description>Lekplatser</description>
+      <service_code>Lekplatser</service_code>
+      <service_name>Lekplatser</service_name>
+    </service>
+    <service>
+      <description>Nedskräpning</description>
+      <service_code>Nedskrapning</service_code>
+      <service_name>Nedskräpning</service_name>
+    </service>
+    <service>
+      <description>Nedskräpning gator</description>
+      <service_code>NedskrapningGator</service_code>
+      <service_name>Nedskräpning gator</service_name>
+    </service>
+    <service>
+      <description>Nedskräpning park</description>
+      <service_code>NedskrapningPark</service_code>
+      <service_name>Nedskräpning park</service_name>
+    </service>
+    <service>
+      <description>Offentlig toalett</description>
+      <service_code>OffentligToalett</service_code>
+      <service_name>Offentlig toalett</service_name>
+    </service>
+    <service>
+      <description>Park</description>
+      <service_code>Park</service_code>
+      <service_name>Park</service_name>
+    </service>
+    <service>
+      <description>Park/Grönyta</description>
+      <service_code>ParkGronyta</service_code>
+      <service_name>Park/Grönyta</service_name>
+    </service>
+    <service>
+      <description>Parkering</description>
+      <service_code>Parkering</service_code>
+      <service_name>Parkering</service_name>
+    </service>
+    <service>
+      <description>Trafiksignaler</description>
+      <service_code>Trafiksignaler</service_code>
+      <service_name>Trafiksignaler</service_name>
+    </service>
+    <service>
+      <description>Träd och buskage</description>
+      <service_code>TradOchBuskage</service_code>
+      <service_name>Träd och buskage</service_name>
+    </service>
+    <service>
+      <description>Vatten och avlopp</description>
+      <service_code>VattenOchAvlopp</service_code>
+      <service_name>Vatten och avlopp</service_name>
+    </service>
+    <service>
+      <description>Vinterväghållning</description>
+      <service_code>Vintervaghallning</service_code>
+      <service_name>Vinterväghållning</service_name>
+    </service>
+    <service>
+      <description>Vägar</description>
+      <service_code>Vagar</service_code>
+      <service_name>Vägar</service_name>
+    </service>
+    <service>
+      <description>Vägmärken och skyltar</description>
+      <service_code>VagmarkenOchSkyltar</service_code>
+      <service_name>Vägmärken och skyltar</service_name>
+    </service>
+    <service>
+      <description>Övrigt</description>
+      <service_code>Ovrigt</service_code>
+      <service_name>Övrigt</service_name>
+    </service>
+  </services>
