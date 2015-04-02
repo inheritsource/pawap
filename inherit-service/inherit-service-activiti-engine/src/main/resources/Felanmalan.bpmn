@@ -62,7 +62,6 @@ execution.setVariable("messageSubject" , messageSubject  ) ;
 println("done ...") ; 
 </script>
     </scriptTask>
-    <sequenceFlow id="flow2" sourceRef="handlaggare1" targetRef="scripttask1"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway" default="flow4"></exclusiveGateway>
     <sequenceFlow id="flow3" sourceRef="scripttask1" targetRef="exclusivegateway1"></sequenceFlow>
     <userTask id="usertask2" name="Utförare" activiti:candidateUsers="admin" activiti:candidateGroups="${group}"></userTask>
@@ -102,7 +101,7 @@ println("script2") ;
     <endEvent id="endevent1" name="End"></endEvent>
     <sequenceFlow id="flow9" sourceRef="servicetask1" targetRef="endevent1"></sequenceFlow>
     <scriptTask id="scripttask3" name="Script Task" scriptFormat="groovy" activiti:autoStoreVariables="false">
-<script>
+      <script>
 // read the used variables. Otherwise there will be problems if they are not set.
 execution.setVariable("felanmalan_first_name", execution.getVariable("startevent1_first_name")) 
 execution.setVariable("felanmalan_address_string", execution.getVariable("startevent1_address_string")) 
@@ -110,14 +109,14 @@ execution.setVariable("felanmalan_service_code", execution.getVariable("starteve
 execution.setVariable("felanmalan_email", execution.getVariable("startevent1_email")) 
 execution.setVariable("felanmalan_Handlggare_comment", execution.getVariable("Handlggare_comment")) 
 String manuellt ; 
-if ( felanmalan_service_code.equals("vintervaghallning@motrice.se") || felanmalan_service_code.equals("avfallochatervinning@motrice.se") || felanmalan_service_code.equals("igensattbrunn@motrice.se") || felanmalan_service_code.equals("gatubelysning@motrice.se") ){
+if ( felanmalan_service_code.equals("Vintervaghallning") || felanmalan_service_code.equals("AvfallOchAtervinning") || felanmalan_service_code.equals("IgensattBrunn") || felanmalan_service_code.equals("Gatubelysning") ){
   manuellt="false"   ; 
 } else {
   manuellt="true"   ; 
 } 
 execution.setVariable("manuellt" , manuellt  ) ;
      </script>
-</scriptTask>
+    </scriptTask>
     <sequenceFlow id="flow10" sourceRef="startevent1" targetRef="scripttask3">
       <extensionElements>
         <activiti:executionListener event="take" class="org.inheritsource.service.delegates.CreateVariablesFlowListener"></activiti:executionListener>
@@ -131,15 +130,15 @@ execution.setVariable("manuellt" , manuellt  ) ;
     <scriptTask id="scripttask4" name="Script Task" scriptFormat="groovy" activiti:autoStoreVariables="false">
       <script>
 String Handlggare_group ; 
-if ( (felanmalan_service_code.equals("vintervaghallning@motrice.se")) || (felanmalan_service_code.equals("gatubelysning@motrice.se"))) {
+if ( (felanmalan_service_code.equals("Vintervaghallning")) || (felanmalan_service_code.equals("Gatubelysning"))) {
    Handlggare_group="two" ; 
    // group = "Registrator" ; 
 }
-if (felanmalan_service_code.equals("avfallochatervinning@motrice.se")){
+if (felanmalan_service_code.equals("AvfallOchAtervinning")){
    Handlggare_group="three" ; 
    // group = "Assistent" ; 
 }
-if (felanmalan_service_code.equals("igensattbrunn@motrice.se")){
+if (felanmalan_service_code.equals("IgensattBrunn")){
    Handlggare_group="four" ; 
    // group = "Chef" ; 
 }
@@ -148,12 +147,76 @@ execution.setVariable("felanmalan_Handlggare_comment" , " "  ) ;
     </script>
     </scriptTask>
     <sequenceFlow id="flow13" sourceRef="exclusivegateway3" targetRef="scripttask4"></sequenceFlow>
-    <sequenceFlow id="flow14" sourceRef="scripttask4" targetRef="scripttask1"></sequenceFlow>
+    <receiveTask id="open311update" name="open311update"></receiveTask>
+    <scriptTask id="scriptopen311update" name="Prepare mail for update" scriptFormat="groovy" activiti:autoStoreVariables="false">
+      <script>
+//
+// prepare mail to handläggare 
+// and utförare if this is assigned TODO 
+// 
+//
+// use variables from receive task  
+//
+println("Hello scriptopen311update!"); 
+String recipientEmailOpen311Update= felanmalan_email   ; //TODO
+String fromOpen311Update = "noreply@motrice.se" ; 
+String messageSubjectOpen311Update = "Ditt Ärende är uppdaterat på fixamingata. " ; 
+String mystatus = motriceOpen311UpdateStatus
+execution.setVariable("mystatus" , mystatus ) 
+println("mystatus = " + mystatus ) 
+// String messageTextOpen311Update = "Uppdatering från fixamingata status="+motriceOpen311UpdateStatus+", description = "+motriceOpen311Updatedescription+",  email= "+motriceOpen311UpdateEmail+",  last_name= "+motriceOpen311UpdateLast_name+",  first_name= "+motriceOpen311UpdateFirst_name+",  title= "+motriceOpen311UpdateTitle+",  media_url= "+motriceOpen311UpdateMedia_url+",  account_id= "+motriceOpen311UpdateAccount_id
+String messageTextOpen311Update = "Uppdatering från fixamingata status="+motriceOpen311UpdateStatus
+execution.setVariable("fromOpen311Update" , fromOpen311Update  ) ; 
+execution.setVariable("recipientEmailOpen311Update" , recipientEmailOpen311Update  ) ; 
+execution.setVariable("messageTextOpen311Update" , messageTextOpen311Update  ) ; 
+execution.setVariable("messageSubjectOpen311Update" , messageSubjectOpen311Update  ) ; 
+println("scriptopen311update done ...") ; 
+    </script>
+    </scriptTask>
+    <sequenceFlow id="flow16" sourceRef="open311update" targetRef="scriptopen311update"></sequenceFlow>
+    <serviceTask id="mailupdate" name="Mail Update" activiti:class="org.inheritsource.service.delegates.GenericServiceMessageDelegate">
+      <extensionElements>
+        <activiti:field name="recipientEmail">
+          <activiti:expression>${recipientEmailOpen311Update}</activiti:expression>
+        </activiti:field>
+        <activiti:field name="from">
+          <activiti:expression>${fromOpen311Update}</activiti:expression>
+        </activiti:field>
+        <activiti:field name="messageText">
+          <activiti:expression>${messageTextOpen311Update}</activiti:expression>
+        </activiti:field>
+        <activiti:field name="messageSubject">
+          <activiti:expression>${messageSubjectOpen311Update}</activiti:expression>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow17" sourceRef="scriptopen311update" targetRef="mailupdate"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway4" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow18" sourceRef="mailupdate" targetRef="exclusivegateway4"></sequenceFlow>
+    <scriptTask id="scripttask5" name="Script Task" scriptFormat="groovy" activiti:autoStoreVariables="false">
+      <script>println("closed from open311 update ") ;  </script>
+    </scriptTask>
+    <sequenceFlow id="flow21" sourceRef="exclusivegateway4" targetRef="scripttask5">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${mystatus == 'CLOSED'}]]></conditionExpression>
+    </sequenceFlow>
+    <endEvent id="endevent2" name="End"></endEvent>
+    <sequenceFlow id="flow22" sourceRef="scripttask5" targetRef="endevent2"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway5" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow23" sourceRef="scripttask3" targetRef="exclusivegateway5"></sequenceFlow>
+    <sequenceFlow id="flow24" sourceRef="exclusivegateway5" targetRef="open311update"></sequenceFlow>
+    <sequenceFlow id="flow25" sourceRef="exclusivegateway4" targetRef="exclusivegateway5"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway6" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow26" sourceRef="scripttask4" targetRef="exclusivegateway6"></sequenceFlow>
+    <sequenceFlow id="flow27" sourceRef="handlaggare1" targetRef="exclusivegateway6"></sequenceFlow>
+    <sequenceFlow id="flow28" sourceRef="exclusivegateway6" targetRef="scripttask1"></sequenceFlow>
     <textAnnotation id="textannotation1">
       <text>Automatiskhandläggning av vissa ärenden</text>
     </textAnnotation>
     <textAnnotation id="textannotation2">
       <text>Ärendekaraktär</text>
+    </textAnnotation>
+    <textAnnotation id="textannotation3">
+      <text>Still open?</text>
     </textAnnotation>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_felanmalan">
@@ -162,13 +225,13 @@ execution.setVariable("felanmalan_Handlggare_comment" , " "  ) ;
         <omgdc:Bounds height="35.0" width="35.0" x="-40.0" y="120.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="handlaggare1" id="BPMNShape_handlaggare1">
-        <omgdc:Bounds height="55.0" width="105.0" x="320.0" y="210.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="296.0" y="209.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask1" id="BPMNShape_scripttask1">
-        <omgdc:Bounds height="55.0" width="105.0" x="470.0" y="108.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="500.0" y="108.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
-        <omgdc:Bounds height="40.0" width="40.0" x="598.0" y="115.0"></omgdc:Bounds>
+        <omgdc:Bounds height="40.0" width="40.0" x="629.0" y="115.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="usertask2" id="BPMNShape_usertask2">
         <omgdc:Bounds height="55.0" width="105.0" x="688.0" y="108.0"></omgdc:Bounds>
@@ -192,7 +255,31 @@ execution.setVariable("felanmalan_Handlggare_comment" , " "  ) ;
         <omgdc:Bounds height="40.0" width="40.0" x="230.0" y="118.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask4" id="BPMNShape_scripttask4">
-        <omgdc:Bounds height="55.0" width="105.0" x="315.0" y="111.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="296.0" y="111.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="open311update" id="BPMNShape_open311update">
+        <omgdc:Bounds height="55.0" width="105.0" x="250.0" y="340.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="scriptopen311update" id="BPMNShape_scriptopen311update">
+        <omgdc:Bounds height="55.0" width="105.0" x="400.0" y="340.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="mailupdate" id="BPMNShape_mailupdate">
+        <omgdc:Bounds height="55.0" width="105.0" x="550.0" y="340.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway4" id="BPMNShape_exclusivegateway4">
+        <omgdc:Bounds height="40.0" width="40.0" x="700.0" y="348.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="scripttask5" id="BPMNShape_scripttask5">
+        <omgdc:Bounds height="55.0" width="105.0" x="785.0" y="341.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent2" id="BPMNShape_endevent2">
+        <omgdc:Bounds height="35.0" width="35.0" x="935.0" y="351.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway5" id="BPMNShape_exclusivegateway5">
+        <omgdc:Bounds height="40.0" width="40.0" x="112.0" y="350.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway6" id="BPMNShape_exclusivegateway6">
+        <omgdc:Bounds height="40.0" width="40.0" x="432.0" y="118.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="textannotation1" id="BPMNShape_textannotation1">
         <omgdc:Bounds height="50.0" width="100.0" x="323.0" y="59.0"></omgdc:Bounds>
@@ -200,23 +287,20 @@ execution.setVariable("felanmalan_Handlggare_comment" , " "  ) ;
       <bpmndi:BPMNShape bpmnElement="textannotation2" id="BPMNShape_textannotation2">
         <omgdc:Bounds height="50.0" width="100.0" x="80.0" y="50.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
-        <omgdi:waypoint x="425.0" y="237.0"></omgdi:waypoint>
-        <omgdi:waypoint x="439.0" y="236.0"></omgdi:waypoint>
-        <omgdi:waypoint x="439.0" y="153.0"></omgdi:waypoint>
-        <omgdi:waypoint x="470.0" y="135.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape bpmnElement="textannotation3" id="BPMNShape_textannotation3">
+        <omgdc:Bounds height="50.0" width="100.0" x="705.0" y="291.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
-        <omgdi:waypoint x="575.0" y="135.0"></omgdi:waypoint>
-        <omgdi:waypoint x="598.0" y="135.0"></omgdi:waypoint>
+        <omgdi:waypoint x="605.0" y="135.0"></omgdi:waypoint>
+        <omgdi:waypoint x="629.0" y="135.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
-        <omgdi:waypoint x="638.0" y="135.0"></omgdi:waypoint>
+        <omgdi:waypoint x="669.0" y="135.0"></omgdi:waypoint>
         <omgdi:waypoint x="688.0" y="135.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
-        <omgdi:waypoint x="618.0" y="155.0"></omgdi:waypoint>
-        <omgdi:waypoint x="619.0" y="246.0"></omgdi:waypoint>
+        <omgdi:waypoint x="649.0" y="155.0"></omgdi:waypoint>
+        <omgdi:waypoint x="648.0" y="245.0"></omgdi:waypoint>
         <omgdi:waypoint x="688.0" y="245.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
@@ -247,15 +331,59 @@ execution.setVariable("felanmalan_Handlggare_comment" , " "  ) ;
       <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12">
         <omgdi:waypoint x="250.0" y="158.0"></omgdi:waypoint>
         <omgdi:waypoint x="250.0" y="237.0"></omgdi:waypoint>
-        <omgdi:waypoint x="320.0" y="237.0"></omgdi:waypoint>
+        <omgdi:waypoint x="296.0" y="236.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow13" id="BPMNEdge_flow13">
         <omgdi:waypoint x="270.0" y="138.0"></omgdi:waypoint>
-        <omgdi:waypoint x="315.0" y="138.0"></omgdi:waypoint>
+        <omgdi:waypoint x="296.0" y="138.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow14" id="BPMNEdge_flow14">
-        <omgdi:waypoint x="420.0" y="138.0"></omgdi:waypoint>
-        <omgdi:waypoint x="470.0" y="135.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="flow16" id="BPMNEdge_flow16">
+        <omgdi:waypoint x="355.0" y="367.0"></omgdi:waypoint>
+        <omgdi:waypoint x="400.0" y="367.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow17" id="BPMNEdge_flow17">
+        <omgdi:waypoint x="505.0" y="367.0"></omgdi:waypoint>
+        <omgdi:waypoint x="550.0" y="367.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow18" id="BPMNEdge_flow18">
+        <omgdi:waypoint x="655.0" y="367.0"></omgdi:waypoint>
+        <omgdi:waypoint x="700.0" y="368.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow21" id="BPMNEdge_flow21">
+        <omgdi:waypoint x="740.0" y="368.0"></omgdi:waypoint>
+        <omgdi:waypoint x="785.0" y="368.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow22" id="BPMNEdge_flow22">
+        <omgdi:waypoint x="890.0" y="368.0"></omgdi:waypoint>
+        <omgdi:waypoint x="935.0" y="368.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow23" id="BPMNEdge_flow23">
+        <omgdi:waypoint x="132.0" y="165.0"></omgdi:waypoint>
+        <omgdi:waypoint x="132.0" y="350.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow24" id="BPMNEdge_flow24">
+        <omgdi:waypoint x="152.0" y="370.0"></omgdi:waypoint>
+        <omgdi:waypoint x="250.0" y="367.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow25" id="BPMNEdge_flow25">
+        <omgdi:waypoint x="720.0" y="388.0"></omgdi:waypoint>
+        <omgdi:waypoint x="719.0" y="460.0"></omgdi:waypoint>
+        <omgdi:waypoint x="432.0" y="460.0"></omgdi:waypoint>
+        <omgdi:waypoint x="132.0" y="460.0"></omgdi:waypoint>
+        <omgdi:waypoint x="132.0" y="390.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow26" id="BPMNEdge_flow26">
+        <omgdi:waypoint x="401.0" y="138.0"></omgdi:waypoint>
+        <omgdi:waypoint x="432.0" y="138.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow27" id="BPMNEdge_flow27">
+        <omgdi:waypoint x="401.0" y="236.0"></omgdi:waypoint>
+        <omgdi:waypoint x="452.0" y="236.0"></omgdi:waypoint>
+        <omgdi:waypoint x="452.0" y="158.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow28" id="BPMNEdge_flow28">
+        <omgdi:waypoint x="472.0" y="138.0"></omgdi:waypoint>
+        <omgdi:waypoint x="500.0" y="135.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
