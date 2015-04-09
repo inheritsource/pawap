@@ -24,16 +24,35 @@
 class UrlMappings {
 
   static mappings = {
-    "/rest/db/orbeon-pe/fr/$app/$form/form/$resource"(controller: 'RestFormdef') {
-      action = [GET: 'getop', PUT: 'putop', DELETE: 'delete']
+    // Introduced in Orbeon 4.8. Precedes many other operations.
+    "/rest/db/orbeon-pe/fr"(controller: 'RestFormdata') {
+      action = [POST: 'collectionQuery']
     }
-    "/rest/db/orbeon-pe/fr/orbeon/builder/data/$uuid/$resource"(controller: 'RestResource') {
+    "/rest/db/orbeon-pe/fr/orbeon/builder/data"(controller: 'RestFormdef', action: 'list')
+    "/rest/db/orbeon-pe/fr/$app/$form/form/$resource"(controller: 'RestFormdef') {
       action = [GET: 'getop', PUT: 'putop', DELETE: 'delete']
     }
     "/rest/db/orbeon-pe/fr/$app/$form/data/$uuid/$resource"(controller: 'RestFormdata') {
       action = [GET: 'getop', PUT: 'putop', DELETE: 'delete']
     }
-    "/rest/db/orbeon-pe/fr/orbeon/builder/data"(controller: 'RestFormdef', action: 'list')
+    "/rest/db/orbeon-pe/fr/orbeon/builder/data/$uuid/$resource"(controller: 'RestResource') {
+      action = [GET: 'getop', PUT: 'putop', DELETE: 'delete']
+    }
+    //----- Patterns for buggy Orbeon 4.8 -----
+    "/rest/db/orbeon-48/fr//$app/$form/form/$resource"(controller: 'RestFormdef') {
+      action = [GET: 'getop', PUT: 'putop', DELETE: 'delete']
+    }
+    "/rest/db/orbeon-48/fr//$app/$form/data/$uuid/$resource"(controller: 'RestFormdata') {
+      action = [GET: 'getop', PUT: 'putop', DELETE: 'delete']
+    }
+    "/rest/db/orbeon-48/fr//orbeon/builder/data/$uuid/$resource"(controller: 'RestResource') {
+      action = [GET: 'getop', PUT: 'putop', DELETE: 'delete']
+    }
+    "/rest/db/orbeon-48/fr"(controller: 'RestFormdata') {
+      action = [POST: 'collectionQuery']
+    }
+    "/rest/db/orbeon-48/fr/orbeon/builder/data"(controller: 'RestFormdef', action: 'list')
+    //----- Here are the Postxdb (non-Orbeon) methods -----
     "/postxdb/formdef/$id?"(controller: 'RestPostxdb') {
       action = [GET: 'formdefget']
     }
