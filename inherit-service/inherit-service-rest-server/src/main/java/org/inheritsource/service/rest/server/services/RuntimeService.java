@@ -417,30 +417,60 @@ public class RuntimeService {
 					.type("text/plain").entity("Missing jurisdiction_id")
 					.build();
 		}
-		log.debug("api_key = {}", api_key);
-		String correct_api_key = "xyz"; // TODO make key configurable
-		log.debug("format = {}", format);
-		if (api_key.equals(correct_api_key)) {
-			log.debug("correct api_key ");
-		} else {
-			return Response.status(Response.Status.BAD_REQUEST)
-					.type("text/plain").entity("Bad format").build();
+		
+		
+		
+		System.out.println("api_key = {}"+ api_key);
+		// Check the api key and get
+		// information on what process and form to use
+		ClientConfig configvalidate = new DefaultClientConfig();
+		configvalidate.getFeatures().put(
+				JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		Client clientvalidate = Client.create(configvalidate);
+
+		Open311Validity open311Validity = null;
+		try {
+			WebResource service = clientvalidate
+					.resource(
+							"http://localhost:8080/coordinatrice/rest/open311/validity")
+					.queryParam("jurisdiction_id", jurisdiction_id)
+					.queryParam("api_key", api_key)
+					.queryParam("return", "jurisdiction");
+
+			open311Validity = service.type(MediaType.APPLICATION_JSON)
+					.accept(MediaType.APPLICATION_JSON)
+					.get(Open311Validity.class);
+
+			System.out.println("open311Validity = {} " + open311Validity);
+		} catch (Exception e) {
+			System.out.println("open311Validity = {} " + open311Validity);
+			System.out.println("Exception e =  {}"+ e); // TODO
+
+			return Response.status(Response.Status.NOT_FOUND)
+					.type("text/plain")
+					.entity("jurisdiction_id or service_request_id not found.")
+					.build();
+
 		}
+		
+		
+		
+		System.out.println("format = {}"+ format);
 		SimpleDateFormat dateformat = new SimpleDateFormat(
 				"yyyy-MM-dd'T'hh:mm:ss");
 		dateformat.setTimeZone(TimeZone.getTimeZone("UTC"));
-		log.debug("updated_datetime_string = {}", updated_datetime_string);
+		System.out.println("updated_datetime_string = {}"+ updated_datetime_string);
 		Date updated_datetime = null;
 		try {
 			updated_datetime = dateformat.parse(updated_datetime_string);
 		} catch (Exception ex) {
-			log.error("updated_datetime_string");
-			log.error("Exception : " + ex);
+			System.out.println("updated_datetime_string");
+			System.out.println("Exception : " + ex);
 			return Response.status(Response.Status.BAD_REQUEST)
 					.type("text/plain").entity("Bad date format").build();
 		}
 
-		log.debug("updated_datetime = {}", updated_datetime);
+		System.out.println("updated_datetime = {}"+ updated_datetime);
 		if ((!(format.equals("json"))) && (!(format.equals("xml")))) {
 			return Response.status(Response.Status.BAD_REQUEST)
 					.type("text/plain").entity("Bad format").build();
@@ -486,14 +516,14 @@ public class RuntimeService {
 				System.out.println("media_url =   " + media_url);
 				System.out.println("account_id =   " + account_id);
 
-				log.debug("status = {}  ", status);
-				log.debug("description= {}  ", description);
-				log.debug("email = {}  ", email);
-				log.debug("last_name = {}  ", last_name);
-				log.debug("first_name = {}  ", first_name);
-				log.debug("title = {}  ", title);
-				log.debug("media_url = {}  ", media_url);
-				log.debug("account_id = {}  ", account_id);
+			//	System.out.println("status = {}  ", status);
+		//		System.out.println("description= {}  ", description);
+		//		System.out.println("email = {}  ", email);
+		//		System.out.println("last_name = {}  ", last_name);
+		//		System.out.println("first_name = {}  ", first_name);
+		//		System.out.println("title = {}  ", title);
+		//		System.out.println("media_url = {}  ", media_url);
+		//		System.out.println("account_id = {}  ", account_id);
 
 				variableMap.put("motriceOpen311UpdateStatus", status);
 
@@ -520,6 +550,11 @@ public class RuntimeService {
 				if (status.equals("CLOSED")) {
 					System.out.println("Status is CLOSED");
 				}
+				if (status.equals("FIXED")) {
+					System.out.println("Status is FIXED");
+				}
+				
+				
 				// fill in orbeon form with update TODO
 				// Might be tricky since the form is not related to user task ??
 				ClientConfig config = new DefaultClientConfig();
@@ -532,10 +567,10 @@ public class RuntimeService {
 							.accept(MediaType.APPLICATION_JSON)
 							.post(String.class,
 									open311v2p1ServiceRequestUpdateMessage);
-					log.debug(" motriceFormInstanceId= {}",
+					System.out.println(" motriceFormInstanceId= {}"+
 							motriceFormInstanceId);
 					System.out.println(" motriceFormInstanceId= "
-							+ motriceFormInstanceId);
+						+ motriceFormInstanceId);
 					variableMap.put("motriceFormInstanceId",
 							motriceFormInstanceId);
 					variableMap.put("motriceFormTypeId", new Long(1)); // Orbeon
@@ -543,7 +578,7 @@ public class RuntimeService {
 				}
 
 				catch (Exception ex) {
-					log.error("Exception : " + ex);
+					System.out.println("Exception : " + ex);
 					return null;
 				}
 
@@ -555,8 +590,8 @@ public class RuntimeService {
 				// .getRuntimeService().signal(execution.getId());
 
 			} else {
-				log.debug("Problem finding executions.");
-				log.debug("execution = " + execution);
+				System.out.println("Problem finding executions.");
+				System.out.println("execution = " + execution);
 				return Response.status(Response.Status.NOT_FOUND)
 						.type("text/plain")
 						.entity("service_request_id not found.").build();
@@ -572,7 +607,7 @@ public class RuntimeService {
 		open311v2p1ServiceRequestUpdates
 				.addOpen311v2p1ServiceRequestUpdate(open311v2p1ServiceRequestUpdate);
 
-		log.debug("open311v2p1ServiceRequestUpdates = {} ",
+		System.out.println("open311v2p1ServiceRequestUpdates = {} "+
 				open311v2p1ServiceRequestUpdates);
 		if (format.equals("json")) {
 			return Response.ok(open311v2p1ServiceRequestUpdates,
