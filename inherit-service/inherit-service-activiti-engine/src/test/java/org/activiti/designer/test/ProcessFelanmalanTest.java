@@ -30,7 +30,7 @@ public class ProcessFelanmalanTest {
 	public ActivitiRule activitiRule = new ActivitiRule();
 	private TaskService taskService;
 	private String userAssignee = "admin";
-
+	
 	@Ignore
 	@Test
 	// close from open311 update
@@ -197,13 +197,15 @@ public class ProcessFelanmalanTest {
 
 				Task usertask = taskService.createTaskQuery()
 						.taskDefinitionKey("handlaggare1").singleResult();
+				if (usertask != null) {
 				taskService.createAttachment("application/pdf",
 						usertask.getId(), null, "attachmentName" + iter,
 						"attachmentDescription", "http://motrice.se");
-
+				}
 			}
 			Task usertask = taskService.createTaskQuery()
 					.taskDefinitionKey("handlaggare1").singleResult();
+			if (usertask != null) {
 			List<Attachment> attachmentList = taskService
 					.getTaskAttachments(usertask.getId());
 			for (Attachment attachment : attachmentList) {
@@ -211,6 +213,7 @@ public class ProcessFelanmalanTest {
 				System.out.println(attachment.getDescription());
 				System.out.println(attachment.getUrl());
 
+			}
 			}
 
 		}

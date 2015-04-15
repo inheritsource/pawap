@@ -2550,6 +2550,9 @@ log.error("activity.getActivityType() = {} ", activity.getActivityType() );
 				Map<String, Object> variableMap = proc.getProcessVariables();
 				String Handlggare_comment = (String) variableMap
 						.get("Handlggare_comment");
+				if (Handlggare_comment == null || Handlggare_comment.equals("") ){
+					Handlggare_comment = "Kommentar saknas." ; 
+				}
 				String motriceStartFormInstanceId = (String) variableMap
 						.get("motriceStartFormInstanceId");
 
@@ -2558,7 +2561,8 @@ log.error("activity.getActivityType() = {} ", activity.getActivityType() );
 				Open311v2p1ServiceRequestUpdate open311v2p1ServiceRequestUpdate = new Open311v2p1ServiceRequestUpdate();
 				String description = Handlggare_comment;
 				String media_url = "";
-				String service_request_id = motriceStartFormInstanceId;
+				// String service_request_id = motriceStartFormInstanceId;
+				String service_request_id = proc.getBusinessKey() ;
 				String status = "CLOSED"; // Possible values: OPEN, CLOSED
 											// //TODO
 				String update_id = motriceStartFormInstanceId; // TODO

@@ -67,6 +67,7 @@ public class GenericServiceMessageDelegate implements JavaDelegate {
 	private Expression from;
 	private Expression messageText;
 	private Expression messageSubject;
+	private Expression includeLinkToInbox ; 
 
 	public void execute(DelegateExecution execution) throws Exception {
 		try {
@@ -110,7 +111,15 @@ public class GenericServiceMessageDelegate implements JavaDelegate {
 					+ " messageSubjectString = " + messageSubjectString);
 			return;
 		}
-
+		boolean includeLinkToInboxBool= true ;
+		if (includeLinkToInbox != null) {
+			String includeLinkToInboxString = includeLinkToInbox.getValue(execution)
+					.toString();
+			includeLinkToInboxBool = !(includeLinkToInboxString.equals("no") )  ; 
+		}
+		
+		
+		
 		Properties props = ConfigUtil.getConfigProperties();
 
 		String siteUri = (String) props.get("site.base.uri");
@@ -139,7 +148,7 @@ public class GenericServiceMessageDelegate implements JavaDelegate {
 			authMecanisms = null;
 		}
 
-		if ((siteUri != null) && (inbox != null)) {
+		if ((siteUri != null) && (inbox != null) && includeLinkToInboxBool) {
 			messageTextString = messageTextString + " " + siteUri.trim() + "/"
 					+ inbox;
 		}
