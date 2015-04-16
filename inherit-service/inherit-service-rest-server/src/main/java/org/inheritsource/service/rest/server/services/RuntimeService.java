@@ -308,6 +308,7 @@ public class RuntimeService {
 		variableMap.put("motriceStartFormDefinitionKey", startform);
 		variableMap.put("felanmalan_service_code", service_code);
 		variableMap.put("felanmalan_email", email);
+		variableMap.put("felanmalan_jurisdiction_id", jurisdiction_id);
 		// motriceStartFormTypeId
 
 		open311v2ServiceRequest.setDescription(description);

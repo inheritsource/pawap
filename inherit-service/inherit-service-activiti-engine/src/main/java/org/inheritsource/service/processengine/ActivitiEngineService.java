@@ -621,7 +621,6 @@ public class ActivitiEngineService {
 		ActivityInstanceLogItem item = null;
 		if (activity != null) {
 			item = new ActivityInstanceLogItem();
-log.error("activity.getActivityType() = {} ", activity.getActivityType() );
 			if ("userTask".equals(activity.getActivityType())) {
 				HistoricTaskInstance historicTaskInstance = engine
 						.getHistoryService().createHistoricTaskInstanceQuery()
@@ -2533,7 +2532,7 @@ log.error("activity.getActivityType() = {} ", activity.getActivityType() );
 		} else {
 			processes = historicProcessInstanceQuery
 					.excludeSubprocesses(true)
-					.variableValueEquals("startevent1_jurisdiction_id",
+					.variableValueEquals("felanmalan_jurisdiction_id",
 							jurisdiction_id)
 					.variableValueLike("motriceStartFormDefinitionKey",
 							processLike).includeProcessVariables().list();
