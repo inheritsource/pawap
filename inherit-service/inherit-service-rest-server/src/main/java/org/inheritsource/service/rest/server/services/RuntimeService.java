@@ -47,8 +47,7 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.activiti.engine.runtime.Execution;
-import org.activiti.engine.runtime.ExecutionQuery;
+import org.activiti.engine.task.Task;
 import org.inheritsource.service.common.domain.ActivityInstanceItem;
 import org.inheritsource.service.common.domain.Open311Validity;
 //import org.inheritsource.service.common.domain.Open311v2Service;
@@ -180,7 +179,7 @@ public class RuntimeService {
 					.accept(MediaType.APPLICATION_JSON)
 					.get(Open311v2Services.class);
 		} catch (Exception e) {
-			log.info("Exception e =  {}", e); // TODO
+			log.error("Exception e =  {}", e); // TODO
 		}
 
 		if (format.equals("json")) {
@@ -245,8 +244,8 @@ public class RuntimeService {
 			return Response.status(Response.Status.BAD_REQUEST)
 					.type("text/plain").entity("Bad format").build();
 		}
-
-		log.debug("api_key = {}", api_key);
+		
+ 		log.debug("api_key = {}", api_key);
 		log.debug("format = {}", format);
 
 		// Check the api key and get
@@ -270,7 +269,7 @@ public class RuntimeService {
 					.accept(MediaType.APPLICATION_JSON)
 					.get(Open311Validity.class);
 
-			log.debug("open311Validity = {} " + open311Validity);
+			log.debug("open311Validity = {} ", open311Validity);
 		} catch (Exception e) {
 			log.error("open311Validity = {} " + open311Validity);
 			log.error("Exception e =  {}", e); // TODO
@@ -299,7 +298,7 @@ public class RuntimeService {
 
 		}
 
-		log.error("open311Validity = {} " + open311Validity);
+		log.debug("open311Validity = {} ", open311Validity);
 		Map<String, Object> variableMap = new HashMap<String, Object>();
 		Open311v2ServiceRequest open311v2ServiceRequest = new Open311v2ServiceRequest();
 
@@ -307,7 +306,8 @@ public class RuntimeService {
 		variableMap.put("motriceStartFormLat", lat);
 		variableMap.put("motriceStartFormLon", lon);
 		variableMap.put("motriceStartFormDefinitionKey", startform);
-
+		variableMap.put("felanmalan_service_code", service_code);
+		variableMap.put("felanmalan_email", email);
 		// motriceStartFormTypeId
 
 		open311v2ServiceRequest.setDescription(description);
@@ -417,10 +417,8 @@ public class RuntimeService {
 					.type("text/plain").entity("Missing jurisdiction_id")
 					.build();
 		}
-		
-		
-		
-		System.out.println("api_key = {}"+ api_key);
+
+		log.debug("api_key = {}", api_key);
 		// Check the api key and get
 		// information on what process and form to use
 		ClientConfig configvalidate = new DefaultClientConfig();
@@ -441,10 +439,10 @@ public class RuntimeService {
 					.accept(MediaType.APPLICATION_JSON)
 					.get(Open311Validity.class);
 
-			System.out.println("open311Validity = {} " + open311Validity);
+			log.debug("open311Validity = {} ", open311Validity);
 		} catch (Exception e) {
-			System.out.println("open311Validity = {} " + open311Validity);
-			System.out.println("Exception e =  {}"+ e); // TODO
+			log.error("open311Validity = {} ", open311Validity);
+			log.error("Exception e =  {}", e); // TODO
 
 			return Response.status(Response.Status.NOT_FOUND)
 					.type("text/plain")
@@ -452,25 +450,23 @@ public class RuntimeService {
 					.build();
 
 		}
-		
-		
-		
-		System.out.println("format = {}"+ format);
+
+		log.debug("format = {}", format);
 		SimpleDateFormat dateformat = new SimpleDateFormat(
 				"yyyy-MM-dd'T'hh:mm:ss");
 		dateformat.setTimeZone(TimeZone.getTimeZone("UTC"));
-		System.out.println("updated_datetime_string = {}"+ updated_datetime_string);
+		log.debug("updated_datetime_string = {}", updated_datetime_string);
 		Date updated_datetime = null;
 		try {
 			updated_datetime = dateformat.parse(updated_datetime_string);
 		} catch (Exception ex) {
-			System.out.println("updated_datetime_string");
-			System.out.println("Exception : " + ex);
+			log.error("updated_datetime_string");
+			log.error("Exception : {}", ex);
 			return Response.status(Response.Status.BAD_REQUEST)
 					.type("text/plain").entity("Bad date format").build();
 		}
 
-		System.out.println("updated_datetime = {}"+ updated_datetime);
+		log.debug("updated_datetime = {}", updated_datetime);
 		if ((!(format.equals("json"))) && (!(format.equals("xml")))) {
 			return Response.status(Response.Status.BAD_REQUEST)
 					.type("text/plain").entity("Bad format").build();
@@ -495,37 +491,23 @@ public class RuntimeService {
 					.entity("jurisdiction_id or service_request_id not found.")
 					.build();
 		} else {
+			Task usertask = engine.getActivitiEngineService().getEngine()
+					.getTaskService().createTaskQuery()
+					.processInstanceId(processId)
+					.taskDefinitionKey("open311update").singleResult();
 
-			ExecutionQuery executionQuery = engine.getActivitiEngineService()
-					.getEngine().getRuntimeService().createExecutionQuery();
-			String activityId = "open311update";
-			executionQuery.processInstanceId(processId).activityId(activityId);
-
-			Execution execution = executionQuery.singleResult();
-			if (execution != null) {
+			if (usertask != null) {
 
 				// update process
-				Map<String, Object> variableMap = new HashMap<String, Object>();
 
-				System.out.println("status =   " + status);
-				System.out.println("description=   " + description);
-				System.out.println("email =  " + email);
-				System.out.println("last_name =  " + last_name);
-				System.out.println("first_name =   " + first_name);
-				System.out.println("title =   " + title);
-				System.out.println("media_url =   " + media_url);
-				System.out.println("account_id =   " + account_id);
-
-			//	System.out.println("status = {}  ", status);
-		//		System.out.println("description= {}  ", description);
-		//		System.out.println("email = {}  ", email);
-		//		System.out.println("last_name = {}  ", last_name);
-		//		System.out.println("first_name = {}  ", first_name);
-		//		System.out.println("title = {}  ", title);
-		//		System.out.println("media_url = {}  ", media_url);
-		//		System.out.println("account_id = {}  ", account_id);
-
-				variableMap.put("motriceOpen311UpdateStatus", status);
+				log.debug("status =   {}", status);
+				log.debug("description=   {}", description);
+				log.debug("email =  {}", email);
+				log.debug("last_name =  {}", last_name);
+				log.debug("first_name =   {}", first_name);
+				log.debug("title =   {}", title);
+				log.debug("media_url =   {}", media_url);
+				log.debug("account_id =   {}", account_id);
 
 				Open311v2p1ServiceRequestUpdateMessage open311v2p1ServiceRequestUpdateMessage = new Open311v2p1ServiceRequestUpdateMessage();
 				open311v2p1ServiceRequestUpdateMessage
@@ -548,13 +530,12 @@ public class RuntimeService {
 						.setUpdated_datetime(updated_datetime_string);
 
 				if (status.equals("CLOSED")) {
-					System.out.println("Status is CLOSED");
+					log.debug("Status is CLOSED");
 				}
 				if (status.equals("FIXED")) {
-					System.out.println("Status is FIXED");
+					log.debug("Status is FIXED");
 				}
-				
-				
+
 				// fill in orbeon form with update TODO
 				// Might be tricky since the form is not related to user task ??
 				ClientConfig config = new DefaultClientConfig();
@@ -567,31 +548,46 @@ public class RuntimeService {
 							.accept(MediaType.APPLICATION_JSON)
 							.post(String.class,
 									open311v2p1ServiceRequestUpdateMessage);
-					System.out.println(" motriceFormInstanceId= {}"+
+					log.debug(" motriceFormInstanceId= {}",
 							motriceFormInstanceId);
-					System.out.println(" motriceFormInstanceId= "
-						+ motriceFormInstanceId);
-					variableMap.put("motriceFormInstanceId",
-							motriceFormInstanceId);
-					variableMap.put("motriceFormTypeId", new Long(1)); // Orbeon
+					// set localvaribles to get the update in the timeline
+					engine.getActivitiEngineService()
+							.getEngine()
+							.getTaskService()
+							.setVariableLocal(usertask.getId(),
+									"motriceFormInstanceId",
+									motriceFormInstanceId);
+					engine.getActivitiEngineService()
+							.getEngine()
+							.getTaskService()
+							.setVariableLocal(usertask.getId(),
+									"motriceFormTypeId", new Long(1)); // Orbeon
+					engine.getActivitiEngineService()
+							.getEngine()
+							.getTaskService()
+							.setVariableLocal(usertask.getId(),
+									"motriceFormDefinitionKey",
+									"felanmalan/uppdatering--v001");
+					// processvariable for the controlflow in the process
+					engine.getActivitiEngineService()
+							.getEngine()
+							.getTaskService()
+							.setVariable(usertask.getId(),
+									"motriceOpen311UpdateStatus", status);
 
 				}
 
 				catch (Exception ex) {
-					System.out.println("Exception : " + ex);
+					log.error("Exception : {}", ex);
 					return null;
 				}
 
-				// send the signal to the process
-				engine.getActivitiEngineService().getEngine()
-						.getRuntimeService()
-						.signal(execution.getId(), variableMap);
-				// engine.getActivitiEngineService().getEngine()
-				// .getRuntimeService().signal(execution.getId());
+				engine.getActivitiEngineService().getEngine().getTaskService()
+						.complete(usertask.getId());
 
 			} else {
-				System.out.println("Problem finding executions.");
-				System.out.println("execution = " + execution);
+				log.debug("Problem finding executions.");
+				log.debug("task = {}", usertask);
 				return Response.status(Response.Status.NOT_FOUND)
 						.type("text/plain")
 						.entity("service_request_id not found.").build();
@@ -607,7 +603,7 @@ public class RuntimeService {
 		open311v2p1ServiceRequestUpdates
 				.addOpen311v2p1ServiceRequestUpdate(open311v2p1ServiceRequestUpdate);
 
-		System.out.println("open311v2p1ServiceRequestUpdates = {} "+
+		log.debug("open311v2p1ServiceRequestUpdates = {} ",
 				open311v2p1ServiceRequestUpdates);
 		if (format.equals("json")) {
 			return Response.ok(open311v2p1ServiceRequestUpdates,
@@ -701,18 +697,18 @@ public class RuntimeService {
 	public static void main(String[] args) {
 		// Some example of date conversions used by the Open311 API
 		String start_date_string = "2015-03-03T14:13:09Z";
-		System.out.println("start_date_string = " + start_date_string);
+		log.debug("start_date_string = {}", start_date_string);
 		SimpleDateFormat dateformat = new SimpleDateFormat(
 				"yyyy-MM-dd'T'hh:mm:ss");
 		dateformat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		Date start_date = null;
 		try {
 			start_date = dateformat.parse(start_date_string);
-			System.out.println("start_date =" + start_date);
+			log.debug("start_date ={}", start_date);
 			String W3CDTFDate = ActivitiEngineService.getW3CDTFDate(start_date);
-			System.out.println("W3CDTFDate =" + W3CDTFDate);
+			log.debug("W3CDTFDate ={}", W3CDTFDate);
 		} catch (Exception e) {
-			System.out.println("Exception:" + e);
+			log.error("Exception:{}", e);
 		}
 		System.exit(0);
 

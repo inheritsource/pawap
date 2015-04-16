@@ -3,23 +3,11 @@
   <process id="felanmalan" name="felanmalan" isExecutable="true">
     <startEvent id="startevent1" name="Start">
       <extensionElements>
-        <activiti:formProperty id="startevent1_first_name" type="string" default="John"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_last_name" type="string" default="Doe"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_phone" type="string" default="12345678"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_email" type="string" default="email2@se.se"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_address_string" type="string" default="Gnuvägen 1"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_address_id" type="string" default="Gnuvägen 1"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_jurisdiction_id" type="string" default="Nacka"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_description" type="string" default="description"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_device_id" type="string" default="device_id"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_account_id" type="string" default="account_id"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_media_url" type="string" default="http://motrice.se"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_service_code" type="string" default="service_code"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_lat" type="string" default="0.0"></activiti:formProperty>
-        <activiti:formProperty id="startevent1_lon" type="string" default="0.0"></activiti:formProperty>
+        <activiti:formProperty id="felanmalan_email" type="string" default="email2@se.se"></activiti:formProperty>
+        <activiti:formProperty id="felanmalan_service_code" type="string" default="service_code"></activiti:formProperty>
       </extensionElements>
     </startEvent>
-    <userTask id="handlaggare1" name="Handläggare" activiti:candidateUsers="admin" activiti:candidateGroups="Handlaggare">
+    <userTask id="handlaggare" name="Handläggare" activiti:candidateUsers="admin" activiti:candidateGroups="Handlaggare">
       <extensionElements>
         <activiti:taskListener event="complete" class="org.inheritsource.service.delegates.CreateVariablesTaskListener"></activiti:taskListener>
       </extensionElements>
@@ -60,8 +48,8 @@ println("done ...") ;
     </scriptTask>
     <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway" default="flow4"></exclusiveGateway>
     <sequenceFlow id="flow3" sourceRef="scripttask1" targetRef="exclusivegateway1"></sequenceFlow>
-    <userTask id="usertask2" name="Utförare" activiti:candidateUsers="admin" activiti:candidateGroups="${group}"></userTask>
-    <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="usertask2"></sequenceFlow>
+    <userTask id="utforare" name="Utförare" activiti:candidateUsers="admin" activiti:candidateGroups="${group}"></userTask>
+    <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="utforare"></sequenceFlow>
     <scriptTask id="scripttask2" name="Prepare email for rejection" scriptFormat="groovy" activiti:autoStoreVariables="false">
       <script>String messageText2 = "Ditt Ärende på fixamingata (service_code=" + felanmalan_service_code + "  kommer inte att åtgärdas."+felanmalan_Handlggare_comment ; 
                messageSubject = "Ärende " ; 
@@ -75,7 +63,7 @@ println("script2") ;
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${Handlggare_group== 'one'}]]></conditionExpression>
     </sequenceFlow>
     <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
-    <sequenceFlow id="flow6" sourceRef="usertask2" targetRef="exclusivegateway2"></sequenceFlow>
+    <sequenceFlow id="flow6" sourceRef="utforare" targetRef="exclusivegateway2"></sequenceFlow>
     <sequenceFlow id="flow7" sourceRef="scripttask2" targetRef="exclusivegateway2"></sequenceFlow>
     <serviceTask id="servicetask1" name="Email " activiti:class="org.inheritsource.service.delegates.GenericServiceMessageDelegate">
       <extensionElements>
@@ -100,10 +88,6 @@ println("script2") ;
     <scriptTask id="scripttask3" name="Script Task" scriptFormat="groovy" activiti:autoStoreVariables="false">
       <script>
 // read the used variables. Otherwise there will be problems if they are not set.
-execution.setVariable("felanmalan_first_name", execution.getVariable("startevent1_first_name")) 
-execution.setVariable("felanmalan_address_string", execution.getVariable("startevent1_address_string")) 
-execution.setVariable("felanmalan_service_code", execution.getVariable("startevent1_service_code")) 
-execution.setVariable("felanmalan_email", execution.getVariable("startevent1_email")) 
 execution.setVariable("felanmalan_Handlggare_comment", execution.getVariable("Handlggare_comment")) 
 String manuellt ; 
 if ( felanmalan_service_code.equals("Vintervaghallning") || felanmalan_service_code.equals("AvfallOchAtervinning") || felanmalan_service_code.equals("IgensattBrunn") || felanmalan_service_code.equals("Gatubelysning") ){
@@ -112,15 +96,13 @@ if ( felanmalan_service_code.equals("Vintervaghallning") || felanmalan_service_c
   manuellt="true"   ; 
 } 
 execution.setVariable("manuellt" , manuellt  ) ;
+execution.setVariable("motriceOpen311UpdateStatus", "OPEN") ; 
      </script>
     </scriptTask>
     <sequenceFlow id="flow10" sourceRef="startevent1" targetRef="scripttask3">
-      <extensionElements>
-        <activiti:executionListener event="take" class="org.inheritsource.service.delegates.CreateVariablesFlowListener"></activiti:executionListener>
-      </extensionElements>
     </sequenceFlow>
     <exclusiveGateway id="exclusivegateway3" name="Exclusive Gateway"></exclusiveGateway>
-    <sequenceFlow id="flow12" sourceRef="exclusivegateway3" targetRef="handlaggare1">
+    <sequenceFlow id="flow12" sourceRef="exclusivegateway3" targetRef="handlaggare">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${manuellt==true}]]></conditionExpression>
     </sequenceFlow>
     <scriptTask id="scripttask4" name="Script Task" scriptFormat="groovy" activiti:autoStoreVariables="false">
@@ -159,7 +141,7 @@ String messageSubjectOpen311Update = "Ditt Ärende är uppdaterat på fixamingat
 String mystatus = motriceOpen311UpdateStatus
 execution.setVariable("mystatus" , mystatus ) 
 println("mystatus = " + mystatus ) 
-// String messageTextOpen311Update = "Uppdatering från fixamingata status="+motriceOpen311UpdateStatus+", description = "+motriceOpen311Updatedescription+",  email= "+motriceOpen311UpdateEmail+",  last_name= "+motriceOpen311UpdateLast_name+",  first_name= "+motriceOpen311UpdateFirst_name+",  title= "+motriceOpen311UpdateTitle+",  media_url= "+motriceOpen311UpdateMedia_url+",  account_id= "+motriceOpen311UpdateAccount_id
+// String messageTextOpen311Update = "Uppdatering från fixamingata status="+motriceOpen311UpdateStatus+", description = "+motriceOpen311Updatedescription+",  email= "+motriceOpen311UpdateEmail+",  last_name= "+motriceOpen311UpdateLast_name+",   title= "+motriceOpen311UpdateTitle+",  media_url= "+motriceOpen311UpdateMedia_url+",  account_id= "+motriceOpen311UpdateAccount_id
 String messageTextOpen311Update = "Uppdatering från fixamingata status="+motriceOpen311UpdateStatus
 execution.setVariable("fromOpen311Update" , fromOpen311Update  ) ; 
 execution.setVariable("recipientEmailOpen311Update" , recipientEmailOpen311Update  ) ; 
@@ -202,7 +184,7 @@ println("scriptopen311update done ...") ;
     <sequenceFlow id="flow25" sourceRef="exclusivegateway4" targetRef="exclusivegateway5"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway6" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow26" sourceRef="scripttask4" targetRef="exclusivegateway6"></sequenceFlow>
-    <sequenceFlow id="flow27" sourceRef="handlaggare1" targetRef="exclusivegateway6"></sequenceFlow>
+    <sequenceFlow id="flow27" sourceRef="handlaggare" targetRef="exclusivegateway6"></sequenceFlow>
     <sequenceFlow id="flow28" sourceRef="exclusivegateway6" targetRef="scripttask1"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway7" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow29" sourceRef="scripttask5" targetRef="exclusivegateway7"></sequenceFlow>
@@ -211,11 +193,11 @@ println("scriptopen311update done ...") ;
     <sequenceFlow id="flow33" sourceRef="scripttask3" targetRef="parallelgateway2"></sequenceFlow>
     <sequenceFlow id="flow34" sourceRef="parallelgateway2" targetRef="exclusivegateway3"></sequenceFlow>
     <sequenceFlow id="flow35" sourceRef="parallelgateway2" targetRef="exclusivegateway5"></sequenceFlow>
-    <receiveTask id="open311update" name="open311update"></receiveTask>
     <endEvent id="terminateendevent1" name="TerminateEndEvent">
       <terminateEventDefinition></terminateEventDefinition>
     </endEvent>
     <sequenceFlow id="flow36" sourceRef="exclusivegateway7" targetRef="terminateendevent1"></sequenceFlow>
+    <userTask id="open311update" name="open311update"></userTask>
     <textAnnotation id="textannotation1">
       <text>Automatiskhandläggning av vissa ärenden</text>
     </textAnnotation>
@@ -231,7 +213,7 @@ println("scriptopen311update done ...") ;
       <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
         <omgdc:Bounds height="35.0" width="35.0" x="-29.0" y="120.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="handlaggare1" id="BPMNShape_handlaggare1">
+      <bpmndi:BPMNShape bpmnElement="handlaggare" id="BPMNShape_handlaggare">
         <omgdc:Bounds height="55.0" width="105.0" x="296.0" y="209.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask1" id="BPMNShape_scripttask1">
@@ -240,7 +222,7 @@ println("scriptopen311update done ...") ;
       <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
         <omgdc:Bounds height="40.0" width="40.0" x="629.0" y="115.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask2" id="BPMNShape_usertask2">
+      <bpmndi:BPMNShape bpmnElement="utforare" id="BPMNShape_utforare">
         <omgdc:Bounds height="55.0" width="105.0" x="688.0" y="108.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask2" id="BPMNShape_scripttask2">
@@ -285,11 +267,11 @@ println("scriptopen311update done ...") ;
       <bpmndi:BPMNShape bpmnElement="parallelgateway2" id="BPMNShape_parallelgateway2">
         <omgdc:Bounds height="40.0" width="40.0" x="167.0" y="118.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="open311update" id="BPMNShape_open311update">
-        <omgdc:Bounds height="55.0" width="105.0" x="250.0" y="340.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="terminateendevent1" id="BPMNShape_terminateendevent1">
         <omgdc:Bounds height="35.0" width="35.0" x="1150.0" y="350.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="open311update" id="BPMNShape_open311update">
+        <omgdc:Bounds height="55.0" width="105.0" x="250.0" y="340.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="textannotation1" id="BPMNShape_textannotation1">
         <omgdc:Bounds height="50.0" width="100.0" x="323.0" y="59.0"></omgdc:Bounds>
