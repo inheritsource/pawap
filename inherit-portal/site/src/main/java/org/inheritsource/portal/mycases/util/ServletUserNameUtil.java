@@ -68,10 +68,10 @@ public class ServletUserNameUtil {
 		// / trying shibboleth
 		String Shib_Identity_Provider = (String) request
 				.getAttribute("Shib-Identity-Provider");
-		log.info("request.getAttribute(Shib-Identity-Provider) = "
+		log.debug("request.getAttribute(Shib-Identity-Provider) = "
 				+ Shib_Identity_Provider);
                 String Shib_Application_ID =  (String) request.getAttribute("Shib-Application-ID")  ; 
-		log.info("request.getAttribute(Shib-Application-ID) = "
+		log.debug("request.getAttribute(Shib-Application-ID) = "
 				+ Shib_Application_ID);
 		// log.info("request.getHeader(Shib-Identity-Provider)  = "
 		// + request.getHeader("Shib-Identity-Provider"));
@@ -89,7 +89,7 @@ public class ServletUserNameUtil {
 			//String sn_id = (String) request.getAttribute("sn_id");
 			String sn_id = null ; 
 			String cn =  getAttributeShibboleth("Subject_CommonName" , request) ;  
-			log.info("Subject_SerialNumber = " + Subject_SerialNumber + " gn = "
+			log.debug("Subject_SerialNumber = " + Subject_SerialNumber + " gn = "
 					+ gn + " sn = " + sn + " cn = " + cn);
 			result = engine.getUserBySerial(Subject_SerialNumber, gn, sn,
 					sn_id, cn);
@@ -102,12 +102,12 @@ public class ServletUserNameUtil {
 			// makes sence
 			// to make the mapping in the attribute-*.xml to the same attribute name for the different IdPs.
 			String cn =  getAttributeShibboleth("Subject_CommonName" , request) ;  
-			log.info(" cn = " + cn);
+			log.debug(" cn = " + cn);
 		        String userBaseDn 	  = ConfigUtil.getConfigProperties().getProperty("userDirectoryService.userBaseDn");
 		        String baseDn      	  = ConfigUtil.getConfigProperties().getProperty("userDirectoryService.baseDn");
                         // String dn ="cn="+cn+",ou=Personal,ou=Organisation,ou=Malmo,dc=adm,dc=malmo,dc=se" ; // NOTE  
                         String dn ="cn="+cn+","+userBaseDn+","+ baseDn ; // 
-			log.info(" dn = " + dn);
+			log.debug(" dn = " + dn);
 			// log.info("Subject_SerialNumber = " + Subject_SerialNumber + " gn = "
 		// 			+ gn + " sn = " + sn + " cn = " + cn);
 			result = engine.getUserByDn( dn);
@@ -119,7 +119,7 @@ public class ServletUserNameUtil {
 
 		if (result == null) {
 
-			log.info("Trying openAM");
+			log.debug("Trying openAM");
 			// OPEN AM
 			String dn = request.getHeader("x-ipl-dn");
 			String ser = request.getHeader("x-ipl-ser");
@@ -153,11 +153,11 @@ public class ServletUserNameUtil {
 
 			if (result == null) {
 
-				log.info("userName header not found, get user principal instead");
-				log.info("Only one of header x-ipl-dn and x-ipl-ser should be used");
-				log.info("x-ipl-dn=[{} ]", dn);
-				log.info("x-ipl-ser=[{}  ]", ser);
-				log.info("x-ipl-cer-sub=[{}]", certificateSubject);
+				log.debug("userName header not found, get user principal instead");
+				log.debug("Only one of header x-ipl-dn and x-ipl-ser should be used");
+				log.debug("x-ipl-dn=[{} ]", dn);
+				log.debug("x-ipl-ser=[{}  ]", ser);
+				log.debug("x-ipl-cer-sub=[{}]", certificateSubject);
 
 				Principal principal = request.getUserPrincipal();
 				if (principal != null) {
@@ -171,61 +171,61 @@ public class ServletUserNameUtil {
 
 			}
 
-			log.info("Render page with userInfo=[ {} ]", result);
+			log.debug("Render page with userInfo=[ {} ]", result);
 
 			Enumeration attributes = request.getAttributeNames();
 			while (attributes.hasMoreElements()) {
 				String attr_name = (String) attributes.nextElement();
 				Object attr_val = request.getAttribute(attr_name);
-				log.info(attr_name + " = " + attr_val);
+				log.debug(attr_name + " = " + attr_val);
 
 			}
 		}
-			log.info("request.getAttribute(GivenName) = {} "
+			log.debug("request.getAttribute(GivenName) = {} "
 					, getAttributeShibboleth("GivenName", request));
-			log.info("request.getAttribute(sn_id) = {} "
+			log.debug("request.getAttribute(sn_id) = {} "
 					, getAttributeShibboleth("sn_id", request));
-			log.info("request.getAttribute(SecurityLevelDescription) = {} "
+			log.debug("request.getAttribute(SecurityLevelDescription) = {} "
 					, getAttributeShibboleth("SecurityLevelDescription", request));
-			log.info("request.getAttribute(Subject_CountryName) = {} ", 
+			log.debug("request.getAttribute(Subject_CountryName) = {} ", 
 					getAttributeShibboleth("Subject_CountryName", request));
-			log.info("request.getAttribute(Subject_CommonName) = {} "
+			log.debug("request.getAttribute(Subject_CommonName) = {} "
 					, getAttributeShibboleth("Subject_CommonName", request));
-			log.info("request.getAttribute(CertificateSerialNumber) = {} "
+			log.debug("request.getAttribute(CertificateSerialNumber) = {} "
 					, getAttributeShibboleth("CertificateSerialNumber", request));
-			log.info("request.getAttribute(dateOfBirth) = {} "
+			log.debug("request.getAttribute(dateOfBirth) = {} "
 					, getAttributeShibboleth("dateOfBirth", request));
-			log.info("request.getAttribute(Subject_OrganisationName) = {} "
+			log.debug("request.getAttribute(Subject_OrganisationName) = {} "
 					, getAttributeShibboleth("Subject_OrganisationName", request));
-			log.info("request.getAttribute(Issuer_OrganizationName) = {} "
+			log.debug("request.getAttribute(Issuer_OrganizationName) = {} "
 					, getAttributeShibboleth("Issuer_OrganizationName", request));
-			log.info("request.getAttribute(sn_type) = {} "
+			log.debug("request.getAttribute(sn_type) = {} "
 					, getAttributeShibboleth("sn_type", request));
-			log.info("request.getAttribute(Subject_Surname) = {} "
+			log.debug("request.getAttribute(Subject_Surname) = {} "
 					, getAttributeShibboleth("Subject_Surname", request));
-			log.info("request.getAttribute(Subject_SerialNumber) = {} "
+			log.debug("request.getAttribute(Subject_SerialNumber) = {} "
 					, getAttributeShibboleth("Subject_SerialNumber", request));
-			log.info("request.getAttribute(Gender) = "
+			log.debug("request.getAttribute(Gender) = "
 					, getAttributeShibboleth("Gender", request));
-			log.info("request.getAttribute(ValidationOcspResponse, request) = {} "
+			log.debug("request.getAttribute(ValidationOcspResponse, request) = {} "
 					, getAttributeShibboleth("ValidationOcspResponse", request));
-			log.info("request.getAttribute(SecurityLevel) = {} "
+			log.debug("request.getAttribute(SecurityLevel) = {} "
 					, getAttributeShibboleth("SecurityLevel", request));
-			log.info("request.getAttribute(Issuer_CommonName) = {} "
+			log.debug("request.getAttribute(Issuer_CommonName) = {} "
 					, getAttributeShibboleth("Issuer_CommonName", request));
-			log.info("request.getAttribute(age) = {} "
+			log.debug("request.getAttribute(age) = {} "
 					, getAttributeShibboleth("age", request));
-			log.info("request.getAttribute(affiliation) = {} "
+			log.debug("request.getAttribute(affiliation) = {} "
 					, getAttributeShibboleth("affiliation", request));
-			log.info("request.getAttribute(entitlement) = {} "
+			log.debug("request.getAttribute(entitlement) = {} "
 					, getAttributeShibboleth("entitlement", request));
-			log.info("request.getAttribute(eppn) = {} "
+			log.debug("request.getAttribute(eppn) = {} "
 					, getAttributeShibboleth("eppn", request));
-			log.info("request.getAttribute(persistent-id) = {} "
+			log.debug("request.getAttribute(persistent-id) = {} "
 					, getAttributeShibboleth("persistent-id", request));
-			log.info("request.getAttribute(telephoneNumber) = {} "
+			log.debug("request.getAttribute(telephoneNumber) = {} "
 					, getAttributeShibboleth("telephoneNumber", request));
-			log.info("request.getAttribute(unscoped-affiliation) = {} "
+			log.debug("request.getAttribute(unscoped-affiliation) = {} "
 					, getAttributeShibboleth("unscoped-affiliation", request));
 			return result;
 	}
