@@ -621,7 +621,6 @@ public class ActivitiEngineService {
 		ActivityInstanceLogItem item = null;
 		if (activity != null) {
 			item = new ActivityInstanceLogItem();
-log.error("activity.getActivityType() = {} ", activity.getActivityType() );
 			if ("userTask".equals(activity.getActivityType())) {
 				HistoricTaskInstance historicTaskInstance = engine
 						.getHistoryService().createHistoricTaskInstanceQuery()
@@ -2533,7 +2532,7 @@ log.error("activity.getActivityType() = {} ", activity.getActivityType() );
 		} else {
 			processes = historicProcessInstanceQuery
 					.excludeSubprocesses(true)
-					.variableValueEquals("startevent1_jurisdiction_id",
+					.variableValueEquals("felanmalan_jurisdiction_id",
 							jurisdiction_id)
 					.variableValueLike("motriceStartFormDefinitionKey",
 							processLike).includeProcessVariables().list();
@@ -2550,6 +2549,9 @@ log.error("activity.getActivityType() = {} ", activity.getActivityType() );
 				Map<String, Object> variableMap = proc.getProcessVariables();
 				String Handlggare_comment = (String) variableMap
 						.get("Handlggare_comment");
+				if (Handlggare_comment == null || Handlggare_comment.equals("") ){
+					Handlggare_comment = "Kommentar saknas." ; 
+				}
 				String motriceStartFormInstanceId = (String) variableMap
 						.get("motriceStartFormInstanceId");
 
@@ -2558,7 +2560,8 @@ log.error("activity.getActivityType() = {} ", activity.getActivityType() );
 				Open311v2p1ServiceRequestUpdate open311v2p1ServiceRequestUpdate = new Open311v2p1ServiceRequestUpdate();
 				String description = Handlggare_comment;
 				String media_url = "";
-				String service_request_id = motriceStartFormInstanceId;
+				// String service_request_id = motriceStartFormInstanceId;
+				String service_request_id = proc.getBusinessKey() ;
 				String status = "CLOSED"; // Possible values: OPEN, CLOSED
 											// //TODO
 				String update_id = motriceStartFormInstanceId; // TODO

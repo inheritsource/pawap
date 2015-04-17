@@ -8,7 +8,7 @@
       Circulation,Feu de circulation,Feux,Lumières,Synchronisation
     </keywords>
     <metadata>false</metadata>
-    <service_code>10</service_code>
+    <service_code>code10</service_code>
     <service_name>Feu de circulation mal synchronisé</service_name>
     <type>blackbox</type>
   </service>
@@ -21,20 +21,20 @@
       Ampoules,Bollards lumineux,Bruler,Éteint,Lampadaires,Lumières,Luminaire,Poteaux,Ruelles,Rues
     </keywords>
     <metadata>false</metadata>
-    <service_code>9</service_code>
+    <service_code>code9</service_code>
     <service_name>Lumière de rue / ruelle éteinte</service_name>
     <type>blackbox</type>
   </service>
   <service>
     <description>
-      Si la situation représente un danger potentiel, appelez à votre <a href="/nous_joindre/index.aspx">bureau d'arrondissement</a>. Saviez-vous que l'entretien des <strong>autoroutes et de leurs bretelles</strong> relève du ministère des Transports du Québec? Pour lui signaler un nid-de-poule sur son réseau routier, utilisez la ligne téléphonique <strong>Québec 511<strong>, en composant simplement 511 sur n'importe quel appareil téléphonique.
+      Si la situation représente un danger potentiel, appelez à votre <a href="/nous_joindre/index.aspx">bureau d'arrondissement</a>. Saviez-vous que l'entretien des <strong>autoroutes et de leurs bretelles</strong> relève du ministère des Transports du Québec?
     </description>
     <group>Chaussée pavée</group>
     <keywords>
       Avenue,Boulevard,Chaussée,Chemins,Cratères,Crevasses,Nid-de-poule,Ruelles,Rues,Trou dangereux,Trous
     </keywords>
     <metadata>false</metadata>
-    <service_code>1</service_code>
+    <service_code>code1</service_code>
     <service_name>Nid-de-poule</service_name>
     <type>blackbox</type>
   </service>
@@ -47,7 +47,7 @@
       Avenue,Chaussée,Chemins,Déneigement,Neige,Roulières,Ruelles,Rues
     </keywords>
     <metadata>true</metadata>
-    <service_code>3</service_code>
+    <service_code>code3</service_code>
     <service_name>Rue mal déneigée</service_name>
     <type>blackbox</type>
   </service>
@@ -60,7 +60,7 @@
       Craques,Fissures,Renflement,Réparer,Trottoirs,Trous
     </keywords>
     <metadata>true</metadata>
-    <service_code>6</service_code>
+    <service_code>code6</service_code>
     <service_name>Trottoir brisé</service_name>
     <type>blackbox</type>
   </service>

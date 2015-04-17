@@ -305,6 +305,18 @@ class ProcessEngineService {
     return result
   }
 
+  Procinst findProcessInstanceWithVars(String id) {
+    if (log.debugEnabled) log.debug "findProcessInstanceWithVars << ${id}"
+    def result = null
+    if (id) {
+      def pi = activitiRuntimeService.createProcessInstanceQuery().
+      includeProcessVariables().processInstanceId(id).singleResult()
+      result = pi? createProcinst(pi) : null
+    }
+    if (log.debugEnabled) log.debug "findProcessInstanceWithVars >> ${result}"
+    return result
+  }
+
   List listProcessInstances(String processDefinitionId) {
     if (log.debugEnabled) log.debug "listProcessInstances <<"
     def query = activitiRuntimeService.createProcessInstanceQuery()

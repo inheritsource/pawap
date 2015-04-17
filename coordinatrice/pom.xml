@@ -6,7 +6,7 @@
   <groupId>org.motrice</groupId>
   <artifactId>coordinatrice</artifactId>
   <packaging>grails-app</packaging>
-  <version>1.0.14</version>
+  <version>1.0.16</version>
   <name>coordinatrice</name>
   <description>coordinatrice</description>
 
@@ -92,6 +92,14 @@
       <version>${grails.version}</version>
       <scope>provided</scope>
       <type>zip</type>
+    </dependency>
+        
+    <dependency>
+        <groupId>org.grails.plugins</groupId>
+        <artifactId>jquery-ui</artifactId>
+        <version>1.10.4</version>
+        <scope>compile</scope>
+        <type>zip</type>
     </dependency>
     
     <dependency>
