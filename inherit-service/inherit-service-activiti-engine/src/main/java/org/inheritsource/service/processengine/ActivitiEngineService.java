@@ -345,22 +345,18 @@ public class ActivitiEngineService {
 	public Set<InboxTaskItem> getHistoricUserInboxByProcessInstanceId(
 			String processInstanceId, Locale locale) {
 		Set<InboxTaskItem> result = new LinkedHashSet<InboxTaskItem>();
-
 		List<HistoricTaskInstance> tasks = engine.getHistoryService()
 				.createHistoricTaskInstanceQuery()
 				.processInstanceId(processInstanceId).finished()
 				.orderByHistoricTaskInstanceStartTime().asc()
 				.includeTaskLocalVariables().list();
-
 		List<InboxTaskItem> inboxTaskItemList = historicTaskList2InboxTaskItemList(
 				tasks, locale);
-
 		if (inboxTaskItemList != null) {
 			for (InboxTaskItem inboxTaskItem : inboxTaskItemList) {
 				result.add(inboxTaskItem);
 			}
 		}
-
 		return result;
 	}
 
@@ -384,7 +380,12 @@ public class ActivitiEngineService {
 
 			item = (InboxTaskItem) formEngine.getHistoricFormInstance(task,
 					null, item);
-
+			// TODO Why may item be null and what is the proper way of handling it ?? 
+			if (item == null)
+			{
+				log.error("item is null");
+				return null ;}
+			
 			item.setActivityCreated(task.getStartTime());
 			item.setActivityDefinitionUuid(task.getTaskDefinitionKey());
 			// item.setActivityLabel(coordinatriceFacade.getLabel(
@@ -397,10 +398,8 @@ public class ActivitiEngineService {
 			item.setProcessInstanceUuid(task.getProcessInstanceId());
 			item.setProcessLabel(coordinatriceFacade.getStartFormLabel(
 					task.getProcessInstanceId(), locale));
-
 			HistoricProcessInstance pI = getHistoricMainProcessInstanceByProcessInstanceId(task
 					.getProcessInstanceId());
-
 			if (pI != null) {
 				// Note: id is always the same as processInstanceId in this case
 				item.setRootProcessInstanceUuid(pI.getId());
@@ -1586,7 +1585,10 @@ public class ActivitiEngineService {
 			String startedByUserId, String involvedUserId, int fromIndex,
 			int pageSize, String sortBy, String sortOrder, String filter,
 			Locale locale, String userId, Date startDate, int tolDays) {
-
+log.debug("getProcessInstancesAdvanced: startedByUserId "+ startedByUserId+  
+		"involvedUserId = "+involvedUserId+ "fromIndex = " +fromIndex+
+		"pageSize = " 	 +pageSize+ "sortBy = " +sortBy+ "sortOrder = " +sortOrder+ "filter  = "  +filter+
+			"locale = "  +locale+ "userId = "  +userId+ "startDate = "  +startDate+ "tolDays = "  +tolDays );
 		List<HistoricProcessInstance> processes;
 		HistoricProcessInstanceQuery historicProcessInstanceQuery = engine
 				.getHistoryService().createHistoricProcessInstanceQuery();
@@ -1862,6 +1864,7 @@ public class ActivitiEngineService {
 			String searchForUserId, int fromIndex, int pageSize, String sortBy,
 			String sortOrder, Locale locale, String userId) {
 		// NOTE List<HistoricProcessInstance> processInstances = null;
+		log.debug("getHistoricPagedProcessInstanceSearchResult " ) ; 
 		PagedProcessInstanceSearchResult pagedProcessInstanceSearchResult = new PagedProcessInstanceSearchResult();
 
 		if (fromIndex < 0) {
@@ -1886,12 +1889,9 @@ public class ActivitiEngineService {
 				// included.
 				List<HistoricProcessInstance> pageProcessInstances = pageHistoricList(
 						processInstances, fromIndex, pageSize);
-
 				pagedProcessInstanceSearchResult
 						.setNumberOfHits(processInstances.size());
-
 				List<ProcessInstanceListItem> processInstanceListItems = new ArrayList<ProcessInstanceListItem>();
-
 				for (HistoricProcessInstance processInstance : pageProcessInstances) {
 					ProcessInstanceListItem processInstanceListItem = new ProcessInstanceListItem();
 					processInstanceListItem
@@ -1917,15 +1917,13 @@ public class ActivitiEngineService {
 					processInstanceListItem
 							.setActivities(getHistoricUserInboxByProcessInstanceId(
 									processInstance.getId(), locale));
-
 					processInstanceListItems.add(processInstanceListItem);
 				}
-
 				pagedProcessInstanceSearchResult
 						.setHits(processInstanceListItems);
 			}
 		} catch (Exception e) {
-			log.error("Unable to getHistoricPagedProcessInstanceSearchResult with searchForUserId: "
+			log.error("getHistoricPagedProcessInstanceSearchResult() : Unable to getHistoricPagedProcessInstanceSearchResult with searchForUserId: "
 					+ searchForUserId
 					+ " by userId: "
 					+ userId
