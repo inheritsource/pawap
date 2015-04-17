@@ -175,7 +175,7 @@ public class OrbeonService {
 		String uri = persistenceApiBaseUrl + formPath + "/data/" + dataUuid
 				+ "/data.xml";
 		String response = parseUniqueXPathExpr(uri, uniqueXPathExpr);
-		System.out.println("response: " + response);
+		log.info("response: " + response);
 
 		return response;
 	}
@@ -186,7 +186,7 @@ public class OrbeonService {
 		// get form data except for pawap-activities element
 		String response = parseXPathExpr(uri,
 				"//form/*[not(self::pawap-activities)]");
-		System.out.println("response: " + response);
+		log.info("response: " + response);
 
 		return response;
 	}
@@ -196,7 +196,7 @@ public class OrbeonService {
 		// get form data except for pawap-activities element
 		String response = parseXPathExpr(uri,
 				"//form/*[not(self::pawap-activities)]");
-		System.out.println("response: " + response);
+		log.info("response: " + response);
 
 		return response;
 	}
@@ -210,7 +210,7 @@ public class OrbeonService {
                 // TODO : check why  
 		String response = parseXPathExpr(uri,
 				"//*");
-		System.out.println("response: " + response);
+		log.info("response: " + response);
 
 		return response;
 	}
@@ -240,7 +240,7 @@ public class OrbeonService {
 			result = (String) cr.get(String.class);
 
 		} catch (ResourceException e) {
-			System.out.println("call ResourceException: " + e);
+			log.error("call ResourceException: " + e);
 		}
 
 		return result;
@@ -278,7 +278,7 @@ public class OrbeonService {
 
 				if (streamReader.getEventType() == XMLStreamReader.START_ELEMENT) {
 					String elementName = streamReader.getLocalName();
-					System.out.println("xmlLevel= " + xmlLevel + " elementName = " + elementName ) ; 
+					log.info("xmlLevel= " + xmlLevel + " elementName = " + elementName ) ; 
 					xmlLevel++;
 					
 					if (variableName.size() >= xmlLevel) {
