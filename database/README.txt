@@ -21,9 +21,6 @@ sudo sh -c "./delete_user.sh <user>"
 Create motrice tables:
 sudo sh -c "./create_tables.sh"
 
-Insert required base data to motricedb:
-sudo sh -c "./execute_file.sh motricedb ../create/motrice.postgres.basedata.sql"
-
 #### OBSOLETE, this is done with Coordinatrice ########
 # Insert base demo data to motricedb:
 # sudo sh -c "./execute_file.sh motricedb ../create/motrice.postgres.demodata.sql"
