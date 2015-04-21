@@ -1,4 +1,9 @@
 #!/bin/bash
+if [ `whoami` != postgres ]
+  then
+     echo "To be run as postgres"
+  exit
+fi
 
 if [ -z "$1" ]
   then
@@ -7,12 +12,10 @@ if [ -z "$1" ]
     USER=$1
 fi
 
-su -c 'sh -s' postgres  << EOF
 
 # -U : User used for creating the new user
 
 dropdb -U postgres ${USER}
 
-EOF
 exit
 

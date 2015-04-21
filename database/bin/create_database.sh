@@ -1,4 +1,9 @@
 #!/bin/bash
+if [ `whoami` != postgres ]
+  then
+     echo "To be run as postgres"
+  exit
+fi
 
 if [ $# != 0 ] && [ $# != 2 ] ; then
   echo 'Input database name and user or leave them blank!'
@@ -15,7 +20,6 @@ if [ -z "$1" ]
     DB_OWNER=$2
 fi
 
-su -c 'sh -s' postgres  << EOF
 
 # -U : User used for creating the new data
 # -O : Owner
@@ -25,6 +29,5 @@ su -c 'sh -s' postgres  << EOF
 
 createdb -U postgres -O ${DB_OWNER} -T template0 -E 'UTF8' -D pg_default -l 'sv_SE.UTF-8' ${DB_NAME}
 
-EOF
 exit
 

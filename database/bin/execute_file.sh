@@ -1,4 +1,9 @@
 #!/bin/bash
+if [ `whoami` != postgres ]
+  then
+     echo "To be run as postgres"
+  exit
+fi
 
 echo "database: $1"
 echo "file: $2"
@@ -12,14 +17,11 @@ fi
 DB_NAME=$1
 FILE=$2
 
-su -c 'sh -s' postgres  << EOF
-
 psql --set ON_ERROR_STOP=on -U postgres -d ${DB_NAME} -f ${FILE}
 
 if [ $? != 0 ]; then
     echo "Unable to execute SQL commands"
 fi
 
-EOF
 exit
 
