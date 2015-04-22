@@ -1,4 +1,5 @@
 #!/bin/bash
+DIRNAME=`dirname $0`
 
 ################################################################
 # The great create deploy server config                        #
@@ -12,7 +13,7 @@
 
 ###### current_config.sh  #####
 # symlink to actual config of current installation
-. current_config.sh
+. ${DIRNAME}/current_config.sh
 ################################################################
 # END OF CONFIG                                                #
 ################################################################
@@ -33,7 +34,7 @@ fi
 
 ################################################################
 # Check some dependencies 
-DEPENDENCYPACKAGE="postgresql apache2 git git-man openjdk-7-jre openjdk-7-jdk maven apache2 openssl ntp apache2 libapache2-mod-shib2 slapd ldap-utils docbook-xml xsltproc fop libxml2-utils xmlstarlet fonts-liberation fonts-opensymbol docbook-xsl curl"
+DEPENDENCYPACKAGE=`cat ${DIRNAME}/dependencies.txt `
 for PACKAGE in ${DEPENDENCYPACKAGE}
 do 
   checkPackage

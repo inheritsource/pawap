@@ -8,7 +8,7 @@
 # Short-Description: Start motrice services
 # Description: Starts the containers for eservice
 ### END INIT INFO
-
+DIRNAME=`dirname $0`
 # Source function library.
 . /lib/lsb/init-functions
 
@@ -18,7 +18,7 @@
 
 ###### current_config.sh  #####
 # symlink to actual config of current installation
-. current_config.sh
+. ${DIRNAME}/current_config.sh
 
 ################################################################
 # END OF CONFIG                                                #

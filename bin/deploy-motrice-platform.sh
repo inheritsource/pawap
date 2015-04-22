@@ -1,12 +1,12 @@
 #!/bin/bash
-
+DIRNAME=`dirname $0`
 ################################################################
 # CONFIG                                                #
 ################################################################
 
 ###### current_config.sh  #####
 # symlink to actual config of current installation
-. current_config.sh
+.  ${DIRNAME}/current_config.sh
 
 ################################################################
 # END OF CONFIG                                                #

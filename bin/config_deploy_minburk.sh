@@ -1,5 +1,6 @@
 #!/bin/bash
 # Setting of maven test flag
+DIRNAME=`dirname $0`
 MVN_SKIP_TEST=true
 MVN_SKIP_TEST=false
 
@@ -8,13 +9,13 @@ MVN_SKIP_TEST=false
 BUILD_DIR=${HOME}/workspaces/inheritsource-develop/pawap
 
 # ROOT of directory holding the j2ee containers
-. MOTRICE_REVISION
+.  ${DIRNAME}/MOTRICE_REVISION
 CONTAINER_ROOT=${HOME}/${MOTRICE_REVISION}
 
 # ROOT of Hippo jcr content repository
 CONTENT_ROOT=${CONTAINER_ROOT}/jcr-inherit-portal
-CARGO_TOMCAT_FULL_VERSION=`grep cargo.tomcat.full.version ../inherit-portal/pom.xml | cut -d ">" -f 2 | cut -d  "<" -f 1`
-CARGO_TOMCAT_MAJOR_VERSION=`grep cargo.tomcat.major ../inherit-portal/pom.xml | cut -d ">" -f 2 | cut -d  "<" -f 1`
+CARGO_TOMCAT_FULL_VERSION=`grep cargo.tomcat.full.version ${DIRNAME}/../inherit-portal/pom.xml | cut -d ">" -f 2 | cut -d  "<" -f 1`
+CARGO_TOMCAT_MAJOR_VERSION=`grep cargo.tomcat.major ${DIRNAME}/../inherit-portal/pom.xml | cut -d ">" -f 2 | cut -d  "<" -f 1`
 TOMCAT_DIR=apache-tomcat-${CARGO_TOMCAT_FULL_VERSION}
 TOMCAT_TGZ=${TOMCAT_DIR}.tar.gz
 TOMCAT_DOWNLOAD_URL=http://apache.mirrors.spacedump.net/tomcat/tomcat-${CARGO_TOMCAT_MAJOR_VERSION}/v${CARGO_TOMCAT_FULL_VERSION}/bin/${TOMCAT_TGZ}

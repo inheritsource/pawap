@@ -1,0 +1,1 @@
+postgresql apache2 git git-man openjdk-7-jre openjdk-7-jdk maven apache2 openssl ntp apache2 libapache2-mod-shib2 slapd ldap-utils docbook-xml xsltproc fop libxml2-utils xmlstarlet fonts-liberation fonts-opensymbol docbook-xsl curl
