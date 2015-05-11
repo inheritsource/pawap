@@ -28,15 +28,14 @@ package org.inheritsource.taskform.engine.persistence;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import java.util.Properties;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+//import java.io.File;
+//import java.io.FileReader;
+//import java.io.IOException;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AnnotationConfiguration;
+//import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
 import org.inheritsource.service.common.util.ConfigUtil;
 
@@ -55,7 +54,7 @@ public class HibernateUtil {
 		// A SessionFactory is set up once for an application
 		log.info("Init hibernate");
 		try {
-			Configuration cfg = new AnnotationConfiguration()
+			Configuration cfg = new Configuration()
 					.addAnnotatedClass(
 							org.inheritsource.taskform.engine.persistence.entity.StartFormDefinition.class)
 					.addAnnotatedClass(

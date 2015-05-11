@@ -25,7 +25,6 @@
  
 package org.inheritsource.service.common.domain;
 
-import java.util.Date;
 import java.util.Set;
 
 

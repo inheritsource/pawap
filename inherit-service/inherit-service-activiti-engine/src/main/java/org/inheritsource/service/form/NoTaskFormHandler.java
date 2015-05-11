@@ -29,7 +29,7 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.task.Task;
 import org.inheritsource.service.common.domain.FormInstance;
-import org.inheritsource.service.common.util.ConfigUtil;
+// import org.inheritsource.service.common.util.ConfigUtil;
 import org.inheritsource.taskform.engine.persistence.entity.ActivityFormDefinition;
 
 public class NoTaskFormHandler extends TaskFormHandler {

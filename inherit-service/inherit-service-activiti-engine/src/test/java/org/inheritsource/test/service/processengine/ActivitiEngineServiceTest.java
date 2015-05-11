@@ -172,8 +172,6 @@ public class ActivitiEngineServiceTest {
 		
 		filter = "ALL";
 		filter = "STARTED";
-		// String processName = "felanmalan";
-		String processDefinitionId = "felanmalan:13:8004";
 		int mycase = 4;
 		PagedProcessInstanceSearchResult result = null;
 		Open311v2p1ServiceRequestUpdates open311v2p1ServiceRequestUpdates = null ; 
@@ -548,6 +546,7 @@ public class ActivitiEngineServiceTest {
 	 * Assert.assertEquals( "assignedUserId should be same as candidateForTask",
 	 * assignedUserId, ""); }
 	 */
+	@SuppressWarnings("unused")
 	private void clearDatabase() {
 
 		// Clear the deployment, processdefinitions, processinstances, task and

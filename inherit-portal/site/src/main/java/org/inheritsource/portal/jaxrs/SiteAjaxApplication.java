@@ -26,7 +26,7 @@
  
 package org.inheritsource.portal.jaxrs;
 
-import java.security.Principal;
+//import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -42,7 +42,7 @@ import javax.ws.rs.core.Context;
 
 import org.hippoecm.hst.jaxrs.services.AbstractResource;
 import org.inheritsource.portal.mycases.util.ServletUserNameUtil;
-import org.inheritsource.service.common.domain.ActivityInstanceItem;
+//import org.inheritsource.service.common.domain.ActivityInstanceItem;
 import org.inheritsource.service.common.domain.ActivityWorkflowInfo;
 import org.inheritsource.service.common.domain.CommentFeedItem;
 import org.inheritsource.service.common.domain.Tag;

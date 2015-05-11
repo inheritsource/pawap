@@ -57,7 +57,7 @@ public class Form extends MyCasesBaseComponent {
         
         String instanceId = getPublicRequestParameter(request, "instanceId");
         String actinstId = getPublicRequestParameter(request, "actinstId");
-        String startforminstId = getPublicRequestParameter(request, "startforminstId");
+//        String startforminstId = getPublicRequestParameter(request, "startforminstId");
         String startformkey = getPublicRequestParameter(request, "startformkey");
         
         if (doc == null) {

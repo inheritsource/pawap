@@ -26,7 +26,6 @@
 package org.inheritsource.service.common.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

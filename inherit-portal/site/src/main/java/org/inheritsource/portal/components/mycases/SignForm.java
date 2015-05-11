@@ -131,7 +131,7 @@ public class SignForm extends Form  {
 					
 					String docNo = docBoxFormData.getDocNo();
 					String pdfChecksum = docBoxFormData.getCheckSum();
-					String docboxRef = docBoxFormData.getDocboxRef();
+//					String docboxRef = docBoxFormData.getDocboxRef();
 					String signText = docBoxFormData.getSignText();
 				
 					if (text!=null && text.trim().length()>0) {
