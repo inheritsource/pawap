@@ -32,7 +32,7 @@ import org.hippoecm.hst.content.beans.standard.HippoBean;
 import org.hippoecm.hst.core.component.HstComponentException;
 import org.hippoecm.hst.core.component.HstRequest;
 import org.hippoecm.hst.core.component.HstResponse;
-import org.inheritsource.portal.beans.EServiceDocument;
+// import org.inheritsource.portal.beans.EServiceDocument;
 import org.inheritsource.service.common.domain.FormInstance;
 import org.inheritsource.service.common.domain.InboxTaskItem;
 import org.inheritsource.service.common.domain.UserInfo;

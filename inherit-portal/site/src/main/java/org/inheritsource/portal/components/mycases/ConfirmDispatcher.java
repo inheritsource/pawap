@@ -27,10 +27,9 @@
 package org.inheritsource.portal.components.mycases;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.hippoecm.hst.util.HstResponseUtils;
+
+//import org.hippoecm.hst.util.HstResponseUtils;
 
 import org.hippoecm.hst.core.component.HstComponentException;
 import org.hippoecm.hst.core.component.HstRequest;

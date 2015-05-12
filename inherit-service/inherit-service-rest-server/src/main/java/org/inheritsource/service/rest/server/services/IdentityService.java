@@ -27,8 +27,7 @@ package org.inheritsource.service.rest.server.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;

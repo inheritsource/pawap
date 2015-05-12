@@ -26,27 +26,26 @@
  
 package org.inheritsource.test.taskform.engine;
 
-import java.util.List;
 
-import junit.framework.TestCase;
+//import junit.framework.TestCase;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AnnotationConfiguration;
+//import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
-import org.inheritsource.service.common.domain.ActivityInstanceItem;
-import org.inheritsource.service.common.domain.ProcessInstanceListItem;
-import org.inheritsource.service.common.domain.Tag;
-import org.inheritsource.service.common.domain.UserInfo;
+//import org.inheritsource.service.common.domain.ActivityInstanceItem;
+//import org.inheritsource.service.common.domain.ProcessInstanceListItem;
+//import org.inheritsource.service.common.domain.Tag;
+//import org.inheritsource.service.common.domain.UserInfo;
 import org.inheritsource.taskform.engine.persistence.HibernateUtil;
 import org.inheritsource.taskform.engine.persistence.TaskFormDb;
 import org.inheritsource.taskform.engine.persistence.entity.ProcessActivityFormInstance;
 import org.inheritsource.taskform.engine.persistence.entity.TagType;
-import org.inheritsource.taskform.engine.persistence.entity.UserEntity;
+//import org.inheritsource.taskform.engine.persistence.entity.UserEntity;
 import org.junit.After;
-import org.junit.Assert;
+//import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
+//import org.junit.Test;
 
 public class TaskFormDbTestCase {
 
@@ -65,7 +64,7 @@ public class TaskFormDbTestCase {
 
 	@Before
 	public void before() {
-		Configuration cfg = new AnnotationConfiguration()
+		Configuration cfg = new Configuration()
 	    .addAnnotatedClass(org.inheritsource.taskform.engine.persistence.entity.StartFormDefinition.class)
 	    .addAnnotatedClass(org.inheritsource.taskform.engine.persistence.entity.ActivityFormDefinition.class)
 	    .addAnnotatedClass(org.inheritsource.taskform.engine.persistence.entity.ProcessActivityFormInstance.class)

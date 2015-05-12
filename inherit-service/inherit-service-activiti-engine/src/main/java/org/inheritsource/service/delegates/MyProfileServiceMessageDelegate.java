@@ -38,7 +38,7 @@ import org.activiti.engine.impl.el.Expression;
 import org.inheritsource.service.common.util.ConfigUtil;
 import org.inheritsource.taskform.engine.TaskFormService;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+//import org.springframework.context.ApplicationContextAware;
 
 /** MyProfileServiceMessageDelegate
  * Class for sending emails from a Service Task

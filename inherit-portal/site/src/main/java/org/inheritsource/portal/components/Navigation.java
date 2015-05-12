@@ -30,7 +30,7 @@ import org.hippoecm.hst.component.support.bean.BaseHstComponent;
 import org.hippoecm.hst.core.component.HstComponentException;
 import org.hippoecm.hst.core.component.HstRequest;
 import org.hippoecm.hst.core.component.HstResponse;
-import org.hippoecm.hst.core.linking.HstLink;
+//import org.hippoecm.hst.core.linking.HstLink;
 import org.hippoecm.hst.core.sitemenu.HstSiteMenu;
 import org.hippoecm.hst.core.sitemenu.HstSiteMenuItem;
 import org.inheritsource.portal.domain.NavigationItem;

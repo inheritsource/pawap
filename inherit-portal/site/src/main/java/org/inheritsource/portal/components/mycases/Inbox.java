@@ -34,12 +34,12 @@ import org.hippoecm.hst.core.component.HstRequest;
 import org.hippoecm.hst.core.component.HstResponse;
 import org.inheritsource.service.common.domain.InboxTaskItem;
 import org.inheritsource.service.common.domain.UserInfo;
-import org.inheritsource.taskform.engine.TaskFormService;
+//import org.inheritsource.taskform.engine.TaskFormService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.ContextLoader;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.context.ApplicationContext;
+//import org.springframework.web.context.ContextLoader;
 
 public class Inbox extends MyCasesBaseComponent {
 

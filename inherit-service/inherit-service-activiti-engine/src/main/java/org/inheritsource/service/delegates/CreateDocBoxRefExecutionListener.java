@@ -26,13 +26,12 @@
 package org.inheritsource.service.delegates;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.ExecutionListener;
-import org.activiti.engine.history.HistoricTaskInstance;
+//import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.task.Task;
 import org.inheritsource.service.common.domain.DocBoxFormData;
 import org.inheritsource.service.docbox.DocBoxFacade;

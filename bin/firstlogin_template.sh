@@ -29,7 +29,8 @@ else
   echo ${MKDIR}
 fi
 
-GIT_CLONE="git clone git@github.com:inheritsource/${GIT_PROJECT}.git"
+#GIT_CLONE="git clone git@github.com:inheritsource/${GIT_PROJECT}.git"
+GIT_CLONE="git clone https://github.com/inheritsource/${GIT_PROJECT}" 
 GIT_CHECKOUT="git checkout @MYRELEASE@"
 #
 if [ "${SCRIPTMODE}" != "test"  ]
@@ -37,8 +38,14 @@ then
   echo "not test.." 
   cd ${PAWAP_DIR}
   ${GIT_CLONE}
-  cd ${GIT_PROJECT} 
-  ${GIT_CHECKOUT}
+  if [ -d ${GIT_PROJECT} ];
+  then
+    cd ${GIT_PROJECT} 
+    ${GIT_CHECKOUT}
+  else 
+    echo "git clone seems to have failed " 
+    exit 1 
+  fi 
 else 
   echo  ${GIT_CLONE}
   echo  ${GIT_CHECKOUT}
@@ -46,8 +53,8 @@ fi
 #
 ## create database 
 ## get databasename and user from properties file 
-DATABASEUSERNAME=`grep "dataSource.username.=" ${MOTRICE_PROPERTIES} | cut -d = -f 2  | tr -d [:blank:]`
-DATABASENAME=`grep "dataSource.url.=" ${MOTRICE_PROPERTIES}  | cut -d \/ -f 4  | tr -d [:blank:]`
+DATABASEUSERNAME=`grep "^dataSource.username.=" ${MOTRICE_PROPERTIES} | cut -d = -f 2  | tr -d [:blank:]`
+DATABASENAME=`grep "^dataSource.url.=" ${MOTRICE_PROPERTIES}  | cut -d \/ -f 4  | tr -d [:blank:]`
 # cd ${PAWAP_DIR}/database/bin
 CREATE_USER="sudo  su postgres ./create_user.sh ${DATABASEUSERNAME}"
 CREATE_DATABASE="sudo  su postgres ./create_database.sh ${DATABASENAME} ${DATABASEUSERNAME}"
@@ -69,7 +76,7 @@ fi
 
 ## compile and deploy 
 ## get hostname from  properties file 
-HOSTNAME=`grep "site.base.uri=.*/site" /usr/local/etc/motrice/motrice.properties| cut -d / -f 3` 
+HOSTNAME=`grep "^site.base.uri=.*/site" /usr/local/etc/motrice/motrice.properties| cut -d / -f 3` 
 
 APPEND1='echo "ESERVICE_HOST=${HOSTNAME} " >> bin/config_deploy_minburk.sh'
 APPEND2='echo "MVN_SKIP_TEST=true" >> bin/config_deploy_minburk.sh' 

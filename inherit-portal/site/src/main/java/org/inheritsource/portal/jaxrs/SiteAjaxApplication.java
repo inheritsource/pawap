@@ -26,7 +26,7 @@
  
 package org.inheritsource.portal.jaxrs;
 
-import java.security.Principal;
+//import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -42,7 +42,7 @@ import javax.ws.rs.core.Context;
 
 import org.hippoecm.hst.jaxrs.services.AbstractResource;
 import org.inheritsource.portal.mycases.util.ServletUserNameUtil;
-import org.inheritsource.service.common.domain.ActivityInstanceItem;
+//import org.inheritsource.service.common.domain.ActivityInstanceItem;
 import org.inheritsource.service.common.domain.ActivityWorkflowInfo;
 import org.inheritsource.service.common.domain.CommentFeedItem;
 import org.inheritsource.service.common.domain.Tag;
@@ -184,7 +184,7 @@ public class SiteAjaxApplication extends AbstractResource {
 			@FormParam("priority") int priority) {
 		
 		ActivityWorkflowInfo result = null;
-		
+		@SuppressWarnings("unused")
 		String userId = getUserUuid(servletRequest);
 		
 		log.debug("activityInstanceUuid: {}",  activityInstanceUuid);
@@ -274,6 +274,7 @@ public class SiteAjaxApplication extends AbstractResource {
 			@FormParam ("cnList") List<String> cnList ) {
 		List<UserDirectoryEntry> result = new ArrayList<UserDirectoryEntry>();
 		
+		@SuppressWarnings("unused")
 		String userId = getUserUuid(servletRequest);
 		
 		//log.debug("userId: " + userId);
@@ -308,7 +309,7 @@ public class SiteAjaxApplication extends AbstractResource {
 			@FormParam("company") String company) {
 		
 		List<UserDirectoryEntry> result = new ArrayList<UserDirectoryEntry>();
-		
+		@SuppressWarnings("unused")
 		String userId = getUserUuid(servletRequest);
 		
 		//log.debug("userId: " + userId);

@@ -29,13 +29,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+//import javax.ws.rs.core.Response;
 
 import org.inheritsource.service.common.domain.DocBoxFormData;
-import org.inheritsource.service.common.util.ParameterEncoder;
+//import org.inheritsource.service.common.util.ParameterEncoder;
 
 import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
+//import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
