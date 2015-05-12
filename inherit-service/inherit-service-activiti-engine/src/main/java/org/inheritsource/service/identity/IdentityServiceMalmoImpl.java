@@ -1,28 +1,28 @@
-/* == Motrice Copyright Notice == 
- * 
- * Motrice Service Platform 
- * 
- * Copyright (C) 2011-2014 Motrice AB 
- * 
- * This program is free software: you can redistribute it and/or modify 
- * it under the terms of the GNU Affero General Public License as published by 
- * the Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU Affero General Public License for more details. 
- * 
- * You should have received a copy of the GNU Affero General Public License 
- * along with this program. If not, see <http://www.gnu.org/licenses/>. 
- * 
- * e-mail: info _at_ motrice.se 
- * mail: Motrice AB, Långsjövägen 8, SE-131 33 NACKA, SWEDEN 
- * phone: +46 8 641 64 14 
- 
- */ 
- 
+/* == Motrice Copyright Notice ==
+ *
+ * Motrice Service Platform
+ *
+ * Copyright (C) 2011-2014 Motrice AB
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * e-mail: info _at_ motrice.se
+ * mail: Motrice AB, Långsjövägen 8, SE-131 33 NACKA, SWEDEN
+ * phone: +46 8 641 64 14
+
+ */
+
 package org.inheritsource.service.identity;
 
 import java.util.Set;
@@ -36,9 +36,9 @@ import org.inheritsource.taskform.engine.persistence.TaskFormDb;
 import org.inheritsource.taskform.engine.persistence.entity.UserEntity;
 
 public class IdentityServiceMalmoImpl implements IdentityService {
-	
+
 	public static final Logger log = LoggerFactory.getLogger(IdentityServiceMalmoImpl.class.getName());
-			
+
 	ActorSelectorDirUtils aSelectorDirUtils;
 	TaskFormDb taskFormDb;
 	UserDirectoryService userDirectoryService;
@@ -81,8 +81,8 @@ public class IdentityServiceMalmoImpl implements IdentityService {
 			result = aSelectorDirUtils.getUsersByDepartmentAndRole(
 					"Miljöförvaltningen", roleName);
 		} catch (Exception e) {
-			log.error("getUsersByRoleAndActivity roleName" + 	roleName + 
-					" activityInstanceUuid=" + activityInstanceUuid + 
+			log.error("getUsersByRoleAndActivity roleName" + 	roleName +
+					" activityInstanceUuid=" + activityInstanceUuid +
 					"Exception: " + e.toString());
 		}
 
@@ -107,13 +107,15 @@ public class IdentityServiceMalmoImpl implements IdentityService {
 			userInfo.setUuid(UserInfo.ANONYMOUS_UUID);
 			userInfo.setLabel(UserInfo.ANONYMOUS_UUID);
 			userInfo.setLabelShort(UserInfo.ANONYMOUS_UUID);
-			
-		}		
+
+		}
 		return userInfo;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.inheritsource.service.identity.Tmp#getUserByDn(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.inheritsource.service.identity.IdentityService#getUserByDn(java.lang.String)
+	 * if non null cn attribute found, then use it as "uuid", else generate uuid
 	 */
 	@Override
 	public UserInfo getUserByDn(String dn) {
@@ -123,12 +125,12 @@ public class IdentityServiceMalmoImpl implements IdentityService {
 			// new user in system
 
 			String gn = null, sn = null, cn = null;
-			String uuid = java.util.UUID.randomUUID().toString();
-			String serial = null;
+			String uuid = null;
+			Boolean cnFound = false;
 
 			// try to parse CN
 			StringTokenizer st = new StringTokenizer(dn, ",");
-			while (st.hasMoreTokens()) {
+			while (st.hasMoreTokens() && !cnFound) {
 				String s = st.nextToken();
 
 				StringTokenizer valuePairToken = new StringTokenizer(s, "=");
@@ -136,27 +138,27 @@ public class IdentityServiceMalmoImpl implements IdentityService {
 				String value = null;
 				if (valuePairToken.hasMoreTokens()) {
 					key = valuePairToken.nextToken().trim();
-				}
-				if (valuePairToken.hasMoreTokens()) {
-					value = valuePairToken.nextToken().trim();
-				}
-				if (!valuePairToken.hasMoreTokens()) {
+					if (valuePairToken.hasMoreTokens()) {
+						value = valuePairToken.nextToken().trim();
+					} else {
+						value = "";
+					}
 					if ("CN".equalsIgnoreCase(key)) {
+						cnFound = true;
 						cn = value;
+					    if (cn.trim().length() > 0 ) {
+					    	uuid=cn;
+					    } else {
+					    	uuid = java.util.UUID.randomUUID().toString();
+					    }
 					}
 				}
-
-			}
-
-			if (cn != null && cn.trim().length() > 0) {
-				// use cn as uuid...
-				uuid = cn;
 			}
 
 			// store user
 			UserEntity user = new UserEntity();
 			user.setCategory(UserInfo.CATEGORY_INTERNAL);
-			user.setSerial(serial);
+			user.setSerial(null);
 			user.setCn(cn);
 			user.setGn(gn);
 			user.setSn(sn);
