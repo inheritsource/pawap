@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.inheritsource.service.common.domain.FormInstance;
+//import org.inheritsource.service.common.domain.FormInstance;
 import org.inheritsource.service.common.domain.StartForm;
 import org.inheritsource.service.common.domain.Tag;
 import org.inheritsource.service.common.domain.UserInfo;
@@ -78,6 +78,7 @@ public class TaskFormDb {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		
 		try {
+			@SuppressWarnings("unchecked")
 			List<StartFormDefinition> startForms = (List<StartFormDefinition>) session.createCriteria(StartFormDefinition.class)
 				    .list();
 			
@@ -99,6 +100,7 @@ public class TaskFormDb {
 
 	
 	public StartFormDefinition getStartFormDefinitionByFormPath(Session session, String formPath) {
+		@SuppressWarnings("unchecked")
 		List<StartFormDefinition> result =  (List<StartFormDefinition>)session.createCriteria(StartFormDefinition.class).add(Restrictions.eq("formConnectionKey", formPath)).add(Restrictions.eq("formTypeId", new Long(1))).list();
 		
 		return this.filterUniqueStartFormDefinitionFromList(result);
@@ -119,13 +121,15 @@ public class TaskFormDb {
 		}
 		return result;
 	}	
-	
+	@SuppressWarnings("unchecked")
 	public ProcessActivityFormInstance getStartProcessActivityFormInstanceByFormPathAndUser(String formPath, String userId) {
+		
 		List<ProcessActivityFormInstance> result = null;
 		
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		
 		try {
+			
 			result = (List<ProcessActivityFormInstance>) session.createCriteria(ProcessActivityFormInstance.class)
 					.add(Restrictions.eq("formConnectionKey", formPath))// identifies the start form
 					.add(Restrictions.eq("formTypeId", new Long(1))) // orbeon
@@ -142,7 +146,7 @@ public class TaskFormDb {
 		}
 		return filterUniqueProcessActivityFormInstanceFromList(result);
 	}
-	
+	@SuppressWarnings("unchecked")
 	public ProcessActivityFormInstance getProcessStartFormInstanceById(Session session, String processInstanceUuid) {
 		List<ProcessActivityFormInstance> result = null;
 				
@@ -395,6 +399,7 @@ public class TaskFormDb {
 		
 		try {
 			session.beginTransaction();
+			@SuppressWarnings("unchecked")
 			List<ProcessActivityTag> tags = (List<ProcessActivityTag>) session.createCriteria(ProcessActivityTag.class)
 					.add( Restrictions.eq("procinstId", procinstId) )
 					.add( Restrictions.eq("value", value) )
@@ -423,6 +428,7 @@ public class TaskFormDb {
 		if (procinstId != null && procinstId.length()>0) {
 			Session session = HibernateUtil.getSessionFactory().openSession();
 			try {
+				@SuppressWarnings("unchecked")
 				List<ProcessActivityTag> result = (List<ProcessActivityTag>) session.createCriteria(ProcessActivityTag.class)
 						.add( Restrictions.eq("procinstId", procinstId) ) 
 					    .list();
@@ -447,6 +453,7 @@ public class TaskFormDb {
 		
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		try {
+			@SuppressWarnings("unchecked")
 			List<ProcessActivityTag> hitItems = (List<ProcessActivityTag>) session.createCriteria(ProcessActivityTag.class)
 					.add( Restrictions.eq("value", tagValue) ) 
 				    .list();
@@ -573,6 +580,7 @@ public class TaskFormDb {
 	private UserEntity getUserByDn(Session session, String dn) throws Exception {
 		UserEntity user = null;
 		try {
+			@SuppressWarnings("unchecked")
 			List<UserEntity> users = (List<UserEntity>) session.createCriteria(UserEntity.class)
 					.add( Restrictions.eq("dn", dn) ) 
 				    .list();
@@ -597,6 +605,7 @@ public class TaskFormDb {
 	private UserEntity getUserBySerial(Session session, String serial) throws Exception {
 		UserEntity user = null;
 		try {
+			@SuppressWarnings("unchecked")
 			List<UserEntity> users = (List<UserEntity>) session.createCriteria(UserEntity.class)
 					.add( Restrictions.eq("serial", serial) ) 
 				    .list();

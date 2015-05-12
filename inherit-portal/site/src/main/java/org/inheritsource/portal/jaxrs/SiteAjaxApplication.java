@@ -184,7 +184,7 @@ public class SiteAjaxApplication extends AbstractResource {
 			@FormParam("priority") int priority) {
 		
 		ActivityWorkflowInfo result = null;
-		
+		@SuppressWarnings("unused")
 		String userId = getUserUuid(servletRequest);
 		
 		log.debug("activityInstanceUuid: {}",  activityInstanceUuid);
@@ -274,6 +274,7 @@ public class SiteAjaxApplication extends AbstractResource {
 			@FormParam ("cnList") List<String> cnList ) {
 		List<UserDirectoryEntry> result = new ArrayList<UserDirectoryEntry>();
 		
+		@SuppressWarnings("unused")
 		String userId = getUserUuid(servletRequest);
 		
 		//log.debug("userId: " + userId);
@@ -308,7 +309,7 @@ public class SiteAjaxApplication extends AbstractResource {
 			@FormParam("company") String company) {
 		
 		List<UserDirectoryEntry> result = new ArrayList<UserDirectoryEntry>();
-		
+		@SuppressWarnings("unused")
 		String userId = getUserUuid(servletRequest);
 		
 		//log.debug("userId: " + userId);

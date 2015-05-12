@@ -87,7 +87,7 @@ import org.inheritsource.service.common.domain.ProcessInstanceDetails;
 import org.inheritsource.service.common.domain.ProcessInstanceListItem;
 import org.inheritsource.service.common.domain.StartLogItem;
 import org.inheritsource.service.common.domain.Tag;
-import org.inheritsource.service.common.domain.Timeline;
+//import org.inheritsource.service.common.domain.Timeline;
 import org.inheritsource.service.common.domain.TimelineItem;
 import org.inheritsource.service.common.domain.UserInfo;
 import org.inheritsource.service.common.util.ConfigUtil;
@@ -2951,7 +2951,10 @@ log.debug("getProcessInstancesAdvanced: startedByUserId "+ startedByUserId+
 	}
 
 	public DocBoxFormData getDocBoxFormData(String docBoxRef, Locale locale) {
+		
+		@SuppressWarnings("unused")
 		DocBoxFacade docBox = new DocBoxFacade();
+		@SuppressWarnings("unused")
 		DocBoxFormData docBoxFormData = null;
 
 		return null; // TODO

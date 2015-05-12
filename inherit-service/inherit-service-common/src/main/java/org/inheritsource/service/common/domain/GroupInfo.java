@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement(name="groupInfo")
 @XmlType(namespace="http://www.motrice.org/namespace")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class GroupInfo implements CandidateInfo, Serializable, Comparable {
+public class GroupInfo implements CandidateInfo, Serializable, Comparable<GroupInfo> {
 
 	private static final long serialVersionUID = -4478283095497351127L;
 
@@ -137,7 +137,7 @@ public class GroupInfo implements CandidateInfo, Serializable, Comparable {
 	}
 
 	@Override
-	public int compareTo(Object o) {
+	public int compareTo(GroupInfo o) {
 		String ostr = (o==null ? "null" : o.toString());
 		return this.toString().compareTo(ostr);
 	}
