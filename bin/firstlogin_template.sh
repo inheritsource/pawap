@@ -29,7 +29,8 @@ else
   echo ${MKDIR}
 fi
 
-GIT_CLONE="git clone git@github.com:inheritsource/${GIT_PROJECT}.git"
+#GIT_CLONE="git clone git@github.com:inheritsource/${GIT_PROJECT}.git"
+GIT_CLONE="git clone https://github.com/inheritsource/${GIT_PROJECT}" 
 GIT_CHECKOUT="git checkout @MYRELEASE@"
 #
 if [ "${SCRIPTMODE}" != "test"  ]
@@ -37,8 +38,14 @@ then
   echo "not test.." 
   cd ${PAWAP_DIR}
   ${GIT_CLONE}
-  cd ${GIT_PROJECT} 
-  ${GIT_CHECKOUT}
+  if [ -d ${GIT_PROJECT} ];
+  then
+    cd ${GIT_PROJECT} 
+    ${GIT_CHECKOUT}
+  else 
+    echo "git clone seems to have failed " 
+    exit 1 
+  fi 
 else 
   echo  ${GIT_CLONE}
   echo  ${GIT_CHECKOUT}
