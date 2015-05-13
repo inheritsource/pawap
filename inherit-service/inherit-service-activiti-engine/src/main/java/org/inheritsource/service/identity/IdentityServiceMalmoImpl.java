@@ -88,7 +88,7 @@ public class IdentityServiceMalmoImpl implements IdentityService {
 
 		return result;
 	}
-*/ 
+*/
 	@Override
 	public UserInfo getUserByUuid(String uuid) {
 		UserInfo userInfo = taskFormDb.getUserByUuid(uuid);
@@ -116,7 +116,6 @@ public class IdentityServiceMalmoImpl implements IdentityService {
 	 * (non-Javadoc)
 	 * @see org.inheritsource.service.identity.IdentityService#getUserByDn(java.lang.String)
 	 * if non null cn attribute found, then use it as "uuid", else generate uuid
-	 */
 	@Override
 	public UserInfo getUserByDn(String dn) {
 		UserInfo userInfo = taskFormDb.getUserByDn(dn);
@@ -169,6 +168,7 @@ public class IdentityServiceMalmoImpl implements IdentityService {
 
 		return userInfo;
 	}
+	 */
 
 	/* (non-Javadoc)
 	 * @see org.inheritsource.service.identity.Tmp#getUserBySerial(java.lang.String, java.lang.String)
