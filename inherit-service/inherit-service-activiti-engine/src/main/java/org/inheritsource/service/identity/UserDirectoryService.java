@@ -27,6 +27,7 @@ package org.inheritsource.service.identity;
 
 import java.util.Hashtable;
 import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,7 +147,9 @@ public class UserDirectoryService {
 		result = (result.isEmpty() ? result: prefix+result+postfix );
 		return result;
 	}
+
 	
+	@SuppressWarnings("unused")
 	private void printAttrs(Attributes attrs) {
 		if (attrs != null) {
 			/* Print each attribute */
@@ -224,6 +227,7 @@ public class UserDirectoryService {
 		return result;
 	}
 
+	@SuppressWarnings("unused")
 	private Attribute getAttributeForCnByAttributeName(String cn, String attributeName) {
 		Attribute result = null;
 		try {

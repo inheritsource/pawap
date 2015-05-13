@@ -32,11 +32,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.inheritsource.service.common.util.ConfigUtil;
+//import org.inheritsource.service.common.util.ConfigUtil;
 import org.inheritsource.service.common.domain.ActivityInstanceItem;
 import org.inheritsource.service.common.domain.ActivityInstanceLogItem;
 import org.inheritsource.service.common.domain.ActivityInstancePendingItem;
@@ -48,25 +48,25 @@ import org.inheritsource.service.common.domain.FormInstance;
 import org.inheritsource.service.common.domain.InboxTaskItem;
 import org.inheritsource.service.common.domain.PagedProcessInstanceSearchResult;
 import org.inheritsource.service.common.domain.ProcessInstanceDetails;
-import org.inheritsource.service.common.domain.ProcessInstanceListItem;
+//import org.inheritsource.service.common.domain.ProcessInstanceListItem;
 import org.inheritsource.service.common.domain.StartForm;
 import org.inheritsource.service.common.domain.StartLogItem;
 import org.inheritsource.service.common.domain.Tag;
-import org.inheritsource.service.common.domain.TimelineItem;
+//import org.inheritsource.service.common.domain.TimelineItem;
 import org.inheritsource.service.common.domain.UserDirectoryEntry;
 import org.inheritsource.service.common.domain.UserInfo;
 import org.inheritsource.service.common.domain.MyProfile;
-import org.inheritsource.service.delegates.DelegateUtil;
-import org.inheritsource.service.docbox.DocBoxFacade;
+//import org.inheritsource.service.delegates.DelegateUtil;
+//import org.inheritsource.service.docbox.DocBoxFacade;
 import org.inheritsource.service.form.FormEngine;
-import org.inheritsource.service.identity.ActorSelectorDirUtils;
+//import org.inheritsource.service.identity.ActorSelectorDirUtils;
 import org.inheritsource.service.identity.UserDirectoryService;
 import org.inheritsource.service.orbeon.OrbeonService;
 import org.inheritsource.service.processengine.ActivitiEngineService;
 import org.inheritsource.taskform.engine.persistence.TaskFormDb;
-import org.inheritsource.taskform.engine.persistence.entity.ActivityFormDefinition;
+//import org.inheritsource.taskform.engine.persistence.entity.ActivityFormDefinition;
 import org.inheritsource.taskform.engine.persistence.entity.ProcessActivityFormInstance;
-import org.inheritsource.taskform.engine.persistence.entity.StartFormDefinition;
+//import org.inheritsource.taskform.engine.persistence.entity.StartFormDefinition;
 import org.inheritsource.taskform.engine.persistence.entity.UserEntity;
 
 /**
@@ -107,7 +107,7 @@ public class TaskFormService {
 
 	TaskFormDb taskFormDb;
 	ActivitiEngineService activitiEngineService;
-	ActorSelectorDirUtils aSelectorDirUtils;
+//	ActorSelectorDirUtils aSelectorDirUtils;
     OrbeonService orbeonService;
     UserDirectoryService userDirectoryService;
     
@@ -117,12 +117,7 @@ public class TaskFormService {
 		userDirectoryService = new UserDirectoryService();
 		//activitiEngineService = new ActivitiEngineService();
 		
-		// TODO base DN should be resolved from configuration
-                String host = ConfigUtil.getConfigProperties().getProperty("userDirectoryService.host");
-                String port = ConfigUtil.getConfigProperties().getProperty("userDirectoryService.port"); 
-		aSelectorDirUtils = new ActorSelectorDirUtils(host , port,
-				"ou=IDMGroups,OU=Organisation,OU=Malmo,DC=adm,DC=malmo,DC=se"); // Base
-																				// DN
+	
 	}
 	
 	public ActivitiEngineService getActivitiEngineService() {
@@ -173,6 +168,7 @@ public class TaskFormService {
 		return inbox;
 	}
 	
+	@SuppressWarnings("unused")
 	private String calcExternalUrl(String formPath, Long processActivityFormInstanceId, String taskUuid) {
 		String externalUrl = null;
 		
@@ -626,7 +622,7 @@ public class TaskFormService {
 	public List<Tag> getTagsByProcessInstance(String processInstanceUuid) {
 		return taskFormDb.getTagsByProcessInstance(processInstanceUuid);
 	}
-
+/*
 	public Set<String> getUsersByRoleAndActivity(String roleName,
 			String activityInstanceUuid) {
 		// TODO implement getDepartmentByactivityInstanceUuid, for now just
@@ -643,7 +639,7 @@ public class TaskFormService {
 
 		return result;
 	}
-
+*/ 
 	public UserInfo getUserByUuid(String uuid) {
 		UserInfo userInfo = taskFormDb.getUserByUuid(uuid);
 		return userInfo;

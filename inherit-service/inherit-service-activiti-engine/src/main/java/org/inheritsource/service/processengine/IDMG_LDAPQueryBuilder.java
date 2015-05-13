@@ -16,21 +16,20 @@ package org.inheritsource.service.processengine;
 
 import java.text.MessageFormat;
 
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.InitialDirContext;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
+//import javax.naming.NamingEnumeration;
+//import javax.naming.NamingException;
+//import javax.naming.directory.InitialDirContext;
+//import javax.naming.directory.SearchControls;
+//import javax.naming.directory.SearchResult;
 
-import org.activiti.engine.ActivitiIllegalArgumentException;
-import org.activiti.ldap.LDAPCallBack;
+//import org.activiti.engine.ActivitiIllegalArgumentException;
+//import org.activiti.ldap.LDAPCallBack;
 import org.activiti.ldap.LDAPConfigurator;
-import org.activiti.ldap.LDAPQueryBuilder;
-import org.activiti.ldap.LDAPTemplate;
+//import org.activiti.ldap.LDAPQueryBuilder;
+//import org.activiti.ldap.LDAPTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 
 /**

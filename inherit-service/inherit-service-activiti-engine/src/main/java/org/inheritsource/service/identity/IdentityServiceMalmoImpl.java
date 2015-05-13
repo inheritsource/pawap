@@ -25,7 +25,6 @@
 
 package org.inheritsource.service.identity;
 
-import java.util.Set;
 import java.util.StringTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +38,7 @@ public class IdentityServiceMalmoImpl implements IdentityService {
 
 	public static final Logger log = LoggerFactory.getLogger(IdentityServiceMalmoImpl.class.getName());
 
-	ActorSelectorDirUtils aSelectorDirUtils;
+	// ActorSelectorDirUtils aSelectorDirUtils;
 	TaskFormDb taskFormDb;
 	UserDirectoryService userDirectoryService;
 
@@ -52,13 +51,13 @@ public class IdentityServiceMalmoImpl implements IdentityService {
 	}
 
 
-	public ActorSelectorDirUtils getaSelectorDirUtils() {
-		return aSelectorDirUtils;
-	}
+// 	public ActorSelectorDirUtils getaSelectorDirUtils() {
+// 		return aSelectorDirUtils;
+// 	}
 
-	public void setaSelectorDirUtils(ActorSelectorDirUtils aSelectorDirUtils) {
-		this.aSelectorDirUtils = aSelectorDirUtils;
-	}
+// 	public void setaSelectorDirUtils(ActorSelectorDirUtils aSelectorDirUtils) {
+// 		this.aSelectorDirUtils = aSelectorDirUtils;
+// 	}
 
 	public TaskFormDb getTaskFormDb() {
 		return taskFormDb;
@@ -71,6 +70,7 @@ public class IdentityServiceMalmoImpl implements IdentityService {
 	/* (non-Javadoc)
 	 * @see org.inheritsource.service.identity.Tmp#getUsersByRoleAndActivity(java.lang.String, java.lang.String)
 	 */
+/*
 	@Override
 	public Set<String> getUsersByRoleAndActivity(String roleName,
 			String activityInstanceUuid) {
@@ -88,7 +88,7 @@ public class IdentityServiceMalmoImpl implements IdentityService {
 
 		return result;
 	}
-
+*/ 
 	@Override
 	public UserInfo getUserByUuid(String uuid) {
 		UserInfo userInfo = taskFormDb.getUserByUuid(uuid);
