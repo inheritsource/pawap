@@ -28,6 +28,11 @@ fi
 # -l : locale
 
 createdb -U postgres -O ${DB_OWNER} -T template0 -E 'UTF8' -D pg_default -l 'sv_SE.UTF-8' ${DB_NAME}
+#
+# Create a separate test database used by some components during build.
+# Don't create tables in the test database.
+# Tables will be created and dropped as part of the tests.
+#
+createdb -U postgres -O ${DB_OWNER} -T template0 -E 'UTF8' -D pg_default -l 'sv_SE.UTF-8' ${DB_NAME}-test
 
 exit
-
