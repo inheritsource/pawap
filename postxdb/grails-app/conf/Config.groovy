@@ -34,34 +34,56 @@
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
 
-// Custom logic to control config file from command line or environment
-def ENV_VAR1 = 'POSTXDB_CONF'
-def ENV_VAR2 = 'MOTRICE_CONF'
-def FILENAME = '/usr/local/etc/motrice/motrice.properties'
-def CONFPROP1 = System.getProperty(ENV_VAR1)
-def CONFENV1 = System.getenv(ENV_VAR1)
-def CONFPROP2 = System.getProperty(ENV_VAR2)
-def CONFENV2 = System.getenv(ENV_VAR2)
+String generateConfigDefaultPath() {
+  def ENV_VAR1 = 'POSTXDB_CONF'
+  def ENV_VAR2 = 'MOTRICE_CONF'
+  def FILENAME = '/usr/local/etc/motrice/motrice.properties'
+  def CONFPROP1 = System.getProperty(ENV_VAR1)
+  def CONFENV1 = System.getenv(ENV_VAR1)
+  def CONFPROP2 = System.getProperty(ENV_VAR2)
+  def CONFENV2 = System.getenv(ENV_VAR2)
 
-if (!grails.config.locations || !(grails.config.locations instanceof List)) grails.config.locations = []
+  if (CONFPROP1) {
+    println "--- Postxdb CONFIG: Command line specified ${CONFPROP1}"
+    FILENAME = CONFPROP1
+  } else if (CONFENV1) {
+    println "--- Postxdb CONFIG: Environment specified ${CONFENV1}"
+    FILENAME = CONFENV1
+  } else if (CONFPROP2) {
+    println "--- Postxdb CONFIG: Command line specified ${CONFPROP2}"
+    FILENAME = CONFPROP2
+  } else if (CONFENV2) {
+    println "--- Postxdb CONFIG: Environment specified ${CONFENV2}"
+    FILENAME = CONFENV2
+  } else {
+    println "--- Postxdb CONFIG: Default ${FILENAME}"
+  }
 
-if (CONFPROP1) {
-  println "--- Postxdb CONFIG: Command line specified ${CONFPROP1}"
-  FILENAME = CONFPROP1
-} else if (CONFENV1) {
-  println "--- Postxdb CONFIG: Environment specified ${CONFENV1}"
-  FILENAME = CONFENV1
-} else if (CONFPROP2) {
-  println "--- Postxdb CONFIG: Command line specified ${CONFPROP2}"
-  FILENAME = CONFPROP2
-} else if (CONFENV2) {
-  println "--- Postxdb CONFIG: Environment specified ${CONFENV2}"
-  FILENAME = CONFENV2
-} else {
-  println "--- Postxdb CONFIG: Default ${FILENAME}"
+  return FILENAME
 }
 
-grails.config.locations << "file:${FILENAME}"
+String generateConfigEnvironmentPath(String defaultPath) {
+  def GRAILSENV = grails.util.Environment.current.name
+  def defaultConfig = new File(defaultPath)
+  def envPath = "${defaultConfig.parent}/${GRAILSENV}-${defaultConfig.name}"
+  def envConfig = new File(envPath)
+  def result = null
+
+  if (envConfig?.canRead()) {
+    result = envPath
+    println "--- Postxdb OVERRIDES in ${envPath}"
+  } else {
+    println "--- Postxdb: No [${GRAILSENV}] overrides"
+  }
+
+  return result
+}
+
+if (!grails.config.locations || !(grails.config.locations instanceof List)) grails.config.locations = []
+def configDefaultPath = generateConfigDefaultPath()
+grails.config.locations << "file:${configDefaultPath}"
+def configEnvironmentPath = generateConfigEnvironmentPath(configDefaultPath)
+if (configEnvironmentPath) grails.config.locations << "file:${configEnvironmentPath}"
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
@@ -138,8 +160,8 @@ log4j = {
            'org.codehaus.groovy.grails.plugins',            // plugins
            'org.codehaus.groovy.grails.orm.hibernate',      // hibernate integration
            'org.springframework',
-           'org.hibernate',
-           'net.sf.ehcache.hibernate'
+           'net.sf.ehcache.hibernate',
+           'org.hibernate'
 
     error 'org.motrice.postxdb', 'grails.app.controllers', 'org.motrice.postxdb.RestService' , 'org.motrice.postxdb.PostxdbService', 'org.motrice.postxdb.ItemService'
 }
@@ -148,3 +170,5 @@ log4j = {
 postxdb.tstamp.fmt = "yyyy-MM-dd'T'HH:mm:ss.SSS"
 // Timestamp format in postxdb methods
 postxdb.regular.fmt = "yyyy-MM-dd_HH:mm:ss"
+// Header used to return item paths
+postxdb.itempath.header = "X-Postxdb-Itempath"
