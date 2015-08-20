@@ -37,9 +37,9 @@ import groovy.text.GStringTemplateEngine
 // The JSP comments must be inserted by substitution because JSP interferes with
 // GString template placeholders.
 THISYEAR = new Date().format('yyyy')
-BINDINGS = [PRODUCT: 'Motrice Service Platform', YRFIRST: '2011', YRLAST: THISYEAR,
+BINDINGS = [PRODUCT: 'Motrice BPM', YRFIRST: '2011', YRLAST: THISYEAR,
 COMPANY: 'Motrice AB', EMAIL: 'info _at_ motrice.se',
-POSTAL: 'Motrice AB, Långsjövägen 8, SE-131 33 NACKA, SWEDEN', PHONE: '+46 8 641 64 14',
+POSTAL: 'Motrice AB, Halmstadsvägen 16, SE-121 51 JOHANNESHOV, SWEDEN', PHONE: '+46 73 341 4983',
 JSPOPEN: '<%--', JSPCLOSE: '--%>']
 
 // Copyright notice files to use depending on file name extension.
