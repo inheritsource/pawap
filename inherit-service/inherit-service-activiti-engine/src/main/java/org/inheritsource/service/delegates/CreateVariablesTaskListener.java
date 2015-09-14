@@ -52,7 +52,7 @@ public class CreateVariablesTaskListener implements TaskListener {
 
 		log.warn("activityId = null     ");
 
-		String persistenceApiBaseUrl = "http://localhost:8080/exist/rest/db/orbeon-pe/fr/";
+		String persistenceApiBaseUrl = "http://localhost:8080/postxdb/rest/db/orbeon-pe/fr/";
 
 		Map<String, Object> localVariables = delegateTask.getVariablesLocal();
 

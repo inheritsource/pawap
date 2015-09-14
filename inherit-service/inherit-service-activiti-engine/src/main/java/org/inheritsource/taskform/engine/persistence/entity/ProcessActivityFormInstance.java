@@ -136,7 +136,7 @@ public class ProcessActivityFormInstance {
 		this.formDocId = formDocId;
 	}
 	/** {@link ProcessActivityFormInstance#formDataUri}
-	 * Example: http://orbeon:orb@eminburk.malmo.se:8080/exist/rest/db/orbeon-pe/fr/start/demo-ansokan--v003/data/a4926f37-e2d9-4bc1-ad48-a0b7798098bb/data.xml
+	 * Example: http://orbeon:orb@eminburk.malmo.se:8080/postxdb/rest/db/orbeon-pe/fr/start/demo-ansokan--v003/data/a4926f37-e2d9-4bc1-ad48-a0b7798098bb/data.xml
 	 * 
 	 */
 	public String getFormDataUri() {
