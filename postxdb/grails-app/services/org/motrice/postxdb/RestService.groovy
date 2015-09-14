@@ -1,8 +1,8 @@
 /* == Motrice Copyright Notice ==
  *
- * Motrice Service Platform
+ * Motrice BPM
  *
- * Copyright (C) 2011-2014 Motrice AB
+ * Copyright (C) 2011-2015 Motrice AB
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * e-mail: info _at_ motrice.se
- * mail: Motrice AB, Långsjövägen 8, SE-131 33 NACKA, SWEDEN
- * phone: +46 8 641 64 14
+ * mail: Motrice AB, Halmstadsvägen 16, SE-121 51 JOHANNESHOV, SWEDEN
+ * phone: +46 73 341 4983
  */
 package org.motrice.postxdb
 
@@ -49,6 +49,10 @@ import org.motrice.postxdb.MetaExtractor;
  * version number.
  */
 class RestService {
+  // Config access
+  def grailsApplication
+  def callbackManager
+
   private static final log = LogFactory.getLog(this)
 
   private static final XML_PROLOG = '<?xml version="1.0" encoding="UTF-8"?>'
@@ -82,6 +86,17 @@ class RestService {
     def tgtItem = createDraftItem(form.formdef.uuid, 'form.xml', tgtXml)
     if (log.debugEnabled) log.debug "addLanguage >> ${tgtItem} ${result}"
     return result
+  }
+
+  /**
+   * Add a custom header to the response, if configured.
+   */
+  def addPathHeader(PxdItem item, response) {
+    def pathHeader = grailsApplication.config.postxdb.itempath.header
+    if (pathHeader && item) {
+      response.addHeader(pathHeader, item.path)
+      if (log.debugEnabled) log.debug "addPathHeader '${item.path}'"
+    }
   }
 
   /**
@@ -213,6 +228,7 @@ class RestService {
     editor.edit()
     item.assignText(editor.formdefOut)
     if (!item.save()) log.error "Item save: ${item.errors.allErrors.join(',')}"
+    callbackManager.draftFormdefItem(formdef, formdefVer, item)
     return item
   }
 
@@ -342,7 +358,7 @@ class RestService {
     meta = editor.metadata
 
     // Create a form definition version for the new item
-    doCreateFormdefVer(formdef, publishedPath, meta)
+    def publishedFormdefVer = doCreateFormdefVer(formdef, publishedPath, meta)
 
     // Create the published item
     def publishedItem = doCreatePublishedItem(formdef, publishedPath, editor)
@@ -377,6 +393,7 @@ class RestService {
     // Create a new form definition version for the new current draft
     doCreateFormdefVer(formdef, currentDraftVersion, meta)
 
+    callbackManager.publishedFormdefItem(formdef, publishedFormdefVer, publishedItem)
     return publishedItem
   }
 
@@ -453,6 +470,8 @@ class RestService {
   /**
    * Publish a resource for a form definition.
    * New behaviour Orbeon Forms 4, never called in Orbeon 3.
+   * A resource is given a name by Orbeon: ${uuid}.bin
+   * It is unique in itself, so we omit the uuid of the form definition.
    * The url used in this op contains the draft version for which the Publish
    * action was invoked.
    * In the normal case the resource already exists and nothing needs to be done
@@ -465,7 +484,7 @@ class RestService {
     }
     def item = null
     item = PxdItem.findByPath(resource)
-    if (log.debugEnabled) log.debug "createPublishedResource.item ${item}"
+    if (log.debugEnabled) log.debug "createPublishedResource EXISTING ${item}"
 
     if (!item) {
       String formDef = "${appName}/${formName}"
@@ -502,7 +521,38 @@ class RestService {
     // If the item was created now or existed previously, update the xml
     item.assignText(xml)
     if (!item.save()) log.error "createInstanceItem save: ${item.errors.allErrors.join(',')}"
+    callbackManager.saveInstanceItem(item)
     if (log.debugEnabled) log.debug "createInstanceItem >> ${item}"
+    return item
+  }
+
+  /**
+   * Check that the form definition exists, then create an empty item.
+   * Among other things, we generate the instance uuid.
+   */
+  PxdItem createEmptyInstanceItem(String appName, String formName) {
+    if (log.debugEnabled) log.debug "createEmptyInstanceItem << ${appName}/${formName}"
+    def path = null
+    try {
+      path = new FormdefPath("${appName}/${formName}")
+    } catch (IllegalArgumentException exc) {
+      // This is almost impossible to provoke
+      throw new PostxdbException('POSTXDB.117', "Syntax error: '${appName}/${formName}'")
+    }
+
+    def formdefVer = PxdFormdefVer.findByPath(path.toString())
+    if (!formdefVer) {
+      def exc = new PostxdbException('POSTXDB.118',
+				     "Form definition not found '${path.toString()}'")
+      exc.http = 404
+      throw exc
+    }
+
+    def bigInt = new java.math.BigInteger(160, new java.security.SecureRandom())
+    def uuid = bigInt.toString(16).padLeft(20, '0')
+    def item = createInstanceItem(appName, formName, uuid, 'data.xml', '')
+    callbackManager.emptyInstanceItem(item)
+    if (log.debugEnabled) log.debug "createEmptyInstanceItem >> ${item}"
     return item
   }
 

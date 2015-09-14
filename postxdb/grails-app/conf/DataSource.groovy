@@ -1,8 +1,8 @@
 /* == Motrice Copyright Notice ==
  *
- * Motrice Service Platform
+ * Motrice BPM
  *
- * Copyright (C) 2011-2014 Motrice AB
+ * Copyright (C) 2011-2015 Motrice AB
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,43 +18,47 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * e-mail: info _at_ motrice.se
- * mail: Motrice AB, Långsjövägen 8, SE-131 33 NACKA, SWEDEN
- * phone: +46 8 641 64 14
+ * mail: Motrice AB, Halmstadsvägen 16, SE-121 51 JOHANNESHOV, SWEDEN
+ * phone: +46 73 341 4983
  */
 dataSource {
-    pooled = true
+  pooled = true
+  url = "jdbc:h2:work/postxdb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
+  driverClassName = "org.h2.Driver"
+  username = "sa"
+  password = ""
 }
 hibernate {
-    cache.use_second_level_cache = true
-    cache.use_query_cache = false
-    cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory'
+  cache.use_second_level_cache = true
+  cache.use_query_cache = false
+  cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory'
 }
 // environment specific settings
 environments {
-    development {
-        dataSource {
-            dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
-        }
+  development {
+    dataSource {
+      dbCreate = "update" // one of 'create', 'create-drop', 'update', 'validate', ''
     }
-    test {
-        dataSource {
-            dbCreate = "update"
-        }
+  }
+  test {
+    dataSource {
+      dbCreate = "create-drop"
     }
-    production {
-        dataSource {
-            dbCreate = "update"
-            pooled = true
-            properties {
-               maxActive = -1
-               minEvictableIdleTimeMillis=1800000
-               timeBetweenEvictionRunsMillis=1800000
-               numTestsPerEvictionRun=3
-               testOnBorrow=true
-               testWhileIdle=true
-               testOnReturn=true
-               validationQuery="SELECT 1"
-            }
-        }
+  }
+  production {
+    dataSource {
+      dbCreate = "update"
+      pooled = true
+      properties {
+	maxActive = -1
+	minEvictableIdleTimeMillis=1800000
+	timeBetweenEvictionRunsMillis=1800000
+	numTestsPerEvictionRun=3
+	testOnBorrow=true
+	testWhileIdle=true
+	testOnReturn=true
+	validationQuery="SELECT 1"
+      }
     }
+  }
 }

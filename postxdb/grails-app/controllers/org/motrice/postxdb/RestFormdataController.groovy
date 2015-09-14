@@ -1,8 +1,8 @@
 /* == Motrice Copyright Notice ==
  *
- * Motrice Service Platform
+ * Motrice BPM
  *
- * Copyright (C) 2011-2014 Motrice AB
+ * Copyright (C) 2011-2015 Motrice AB
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * e-mail: info _at_ motrice.se
- * mail: Motrice AB, Långsjövägen 8, SE-131 33 NACKA, SWEDEN
- * phone: +46 8 641 64 14
+ * mail: Motrice AB, Halmstadsvägen 16, SE-121 51 JOHANNESHOV, SWEDEN
+ * phone: +46 73 341 4983
  */
 package org.motrice.postxdb
 
@@ -106,7 +106,8 @@ class RestFormdataController {
     if (status) {
       render(status: status)
     } else if (itemObj) {
-      // The response must be empty.
+      restService.addPathHeader(itemObj, response)
+      // The response must be empty, or Orbeon chokes
       render(status: 201)
     } else {
       String msg = 'CONFLICT PxdItem not found'
@@ -116,9 +117,35 @@ class RestFormdataController {
   }
 
   /**
+   * Create a new, empty instance for the given form.
+   * Checks that the form definition exists, then creates a new item.
+   * RETURNS the uuid of the new item.
+   * NOTE: This is a non-Orbeon operation so we return some text in case of conflict.
+   */
+  def newop() {
+    if (log.debugEnabled) log.debug "NEWOP << ${Util.clean(params)}, ${request.forwardURI}"
+    def itemObj = null
+    def status = 201
+    def text = ''
+
+    try {
+      itemObj = restService.createEmptyInstanceItem(params.app, params.form)
+      text = itemObj.uuid
+      restService.addPathHeader(itemObj, response)
+    } catch (PostxdbException exc) {
+      status = exc.http
+      text = "${exc.code}|${message(code: exc.code)}"
+    }
+
+    if (log.debugEnabled) log.debug "NEWOP >> (${status}) '${text}'"
+    render(status: status, contentType: 'text/plain', text: text)
+  }
+
+  /**
    * Delete a form definition resource.
    */
   def delete() {
     if (log.debugEnabled) log.debug "DELETE (no-op): ${params}, ${request.forwardURI}"
   }
+
 }

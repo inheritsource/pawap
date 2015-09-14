@@ -1,8 +1,8 @@
 /* == Motrice Copyright Notice ==
  *
- * Motrice Service Platform
+ * Motrice BPM
  *
- * Copyright (C) 2011-2014 Motrice AB
+ * Copyright (C) 2011-2015 Motrice AB
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,12 +18,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * e-mail: info _at_ motrice.se
- * mail: Motrice AB, Långsjövägen 8, SE-131 33 NACKA, SWEDEN
- * phone: +46 8 641 64 14
+ * mail: Motrice AB, Halmstadsvägen 16, SE-121 51 JOHANNESHOV, SWEDEN
+ * phone: +46 73 341 4983
  */
 package org.motrice.postxdb
 
 import grails.test.mixin.*
+import grails.test.mixin.support.GrailsUnitTestMixin
 
 import org.junit.*
 import org.motrice.postxdb.FormdefPath;
@@ -31,8 +32,8 @@ import org.motrice.postxdb.FormdefPath;
 /**
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
+@TestMixin(GrailsUnitTestMixin)
 class FormdefPathTests {
-  final shouldFail = new GroovyTestCase().&shouldFail
 
   void testPathConstruct() {
     def fdp = new FormdefPath('alpha/beta')

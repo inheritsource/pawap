@@ -1,8 +1,8 @@
 <%-- == Motrice Copyright Notice ==
 
-  Motrice Service Platform
+  Motrice BPM
 
-  Copyright (C) 2011-2014 Motrice AB
+  Copyright (C) 2011-2015 Motrice AB
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,8 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
   e-mail: info _at_ motrice.se
-  mail: Motrice AB, Långsjövägen 8, SE-131 33 NACKA, SWEDEN
-  phone: +46 8 641 64 14
+  mail: Motrice AB, Halmstadsvägen 16, SE-121 51 JOHANNESHOV, SWEDEN
+  phone: +46 73 341 4983
 
 --%>
 <%@ page import="org.motrice.postxdb.PxdItem" %>
@@ -32,12 +32,6 @@
   </head>
   <body>
     <a href="#edit-pxdItem" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-    <div class="nav" role="navigation">
-      <ul>
-	<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-	<li><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-      </ul>
-    </div>
     <div id="edit-pxdItem" class="content scaffold-edit" role="main">
       <h1><g:message code="pxdItem.edit.label"/></h1>
       <g:if test="${flash.message}">

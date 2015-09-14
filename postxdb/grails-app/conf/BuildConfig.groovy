@@ -1,8 +1,8 @@
 /* == Motrice Copyright Notice ==
  *
- * Motrice Service Platform
+ * Motrice BPM
  *
- * Copyright (C) 2011-2014 Motrice AB
+ * Copyright (C) 2011-2015 Motrice AB
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * e-mail: info _at_ motrice.se
- * mail: Motrice AB, Långsjövägen 8, SE-131 33 NACKA, SWEDEN
- * phone: +46 8 641 64 14
+ * mail: Motrice AB, Halmstadsvägen 16, SE-121 51 JOHANNESHOV, SWEDEN
+ * phone: +46 73 341 4983
  */
 grails.server.port.http = 48080
 grails.servlet.version = "2.5" // Change depending on target container compliance (2.5 or 3.0)
@@ -35,6 +35,7 @@ grails.project.source.level = 1.6
 //   run: [maxMemory:1024, minMemory:64, debug:false, maxPerm:256]
 //]
 
+grails.project.dependency.resolver = 'maven'
 grails.project.dependency.resolution = {
   pom true
   // inherit Grails' default dependencies
@@ -66,24 +67,25 @@ grails.project.dependency.resolution = {
 
   dependencies {
     // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes
-    runtime "xom:xom:1.2.10"
-    runtime "postgresql:postgresql:9.2-1002.jdbc4"
+    //    runtime "xom:xom:1.2.10"
+    //runtime "postgresql:postgresql:9.4-1201.jdbc41"
   }
 
   plugins {
-    runtime ":hibernate:$grailsVersion"
-    runtime ":jquery:1.8.3"
-    runtime ":resources:1.1.6"
+    runtime ":hibernate:3.6.10.19"
+    runtime ":jquery:1.11.1"
+    //runtime ":resources:1.2.14" ----- should not be used after 2.4
+    compile ":asset-pipeline:2.3.9"
 
     // Uncomment these (or add new ones) to enable additional resources capabilities
     //runtime ":zipped-resources:1.0"
     //runtime ":cached-resources:1.0"
     //runtime ":yui-minify-resources:0.1.5"
 
-    //build ":tomcat:$grailsVersion"
+    build ":tomcat:8.0.22"
 
-    runtime ":database-migration:1.3.2"
+    runtime ":database-migration:1.4.0"
 
-    compile ':cache:1.0.1'
+    compile ':cache:1.1.8'
   }
 }

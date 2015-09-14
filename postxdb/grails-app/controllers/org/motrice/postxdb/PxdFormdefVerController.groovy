@@ -1,8 +1,8 @@
 /* == Motrice Copyright Notice ==
  *
- * Motrice Service Platform
+ * Motrice BPM
  *
- * Copyright (C) 2011-2014 Motrice AB
+ * Copyright (C) 2011-2015 Motrice AB
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * e-mail: info _at_ motrice.se
- * mail: Motrice AB, Långsjövägen 8, SE-131 33 NACKA, SWEDEN
- * phone: +46 8 641 64 14
+ * mail: Motrice AB, Halmstadsvägen 16, SE-121 51 JOHANNESHOV, SWEDEN
+ * phone: +46 73 341 4983
  */
 package org.motrice.postxdb
 
@@ -41,21 +41,6 @@ class PxdFormdefVerController {
     [pxdFormdefVerObjList: PxdFormdefVer.list(params), pxdFormdefVerObjTotal: PxdFormdefVer.count()]
   }
 
-  def create() {
-    [pxdFormdefVerObj: new PxdFormdefVer(params)]
-  }
-
-  def save() {
-    def pxdFormdefVerObj = new PxdFormdefVer(params)
-    if (!pxdFormdefVerObj.save(flush: true)) {
-      render(view: "create", model: [pxdFormdefVerObj: pxdFormdefVerObj])
-      return
-    }
-
-    flash.message = message(code: 'default.created.message', args: [message(code: 'pxdFormdefVer.label', default: 'PxdFormdefVer'), pxdFormdefVerObj.id])
-    redirect(action: "show", id: pxdFormdefVerObj.id)
-  }
-
   def show(Long id) {
     def pxdFormdefVerObj = PxdFormdefVer.get(id)
     if (!pxdFormdefVerObj) {
@@ -66,46 +51,6 @@ class PxdFormdefVerController {
 
     def languages = restService.findAvailableLanguages(pxdFormdefVerObj)
     [pxdFormdefVerObj: pxdFormdefVerObj, formLanguages: languages]
-  }
-
-  def edit(Long id) {
-    def pxdFormdefVerObj = PxdFormdefVer.get(id)
-    if (!pxdFormdefVerObj) {
-      flash.message = message(code: 'default.not.found.message', args: [message(code: 'pxdFormdefVer.label', default: 'PxdFormdefVer'), id])
-      redirect(action: "list")
-      return
-    }
-
-    [pxdFormdefVerObj: pxdFormdefVerObj]
-  }
-
-  def update(Long id, Long version) {
-    def pxdFormdefVerObj = PxdFormdefVer.get(id)
-    if (!pxdFormdefVerObj) {
-      flash.message = message(code: 'default.not.found.message', args: [message(code: 'pxdFormdefVer.label', default: 'PxdFormdefVer'), id])
-      redirect(action: "list")
-      return
-    }
-
-    if (version != null) {
-      if (pxdFormdefVerObj.version > version) {
-	pxdFormdefVerObj.errors.rejectValue("version", "default.optimistic.locking.failure",
-					    [message(code: 'pxdFormdefVer.label', default: 'PxdFormdefVer')] as Object[],
-					    "Another user has updated this PxdFormdefVer while you were editing")
-	render(view: "edit", model: [pxdFormdefVerObj: pxdFormdefVerObj])
-	return
-      }
-    }
-
-    pxdFormdefVerObj.properties = params
-
-    if (!pxdFormdefVerObj.save(flush: true)) {
-      render(view: "edit", model: [pxdFormdefVerObj: pxdFormdefVerObj])
-      return
-    }
-
-    flash.message = message(code: 'default.updated.message', args: [message(code: 'pxdFormdefVer.label', default: 'PxdFormdefVer'), pxdFormdefVerObj.id])
-    redirect(action: "show", id: pxdFormdefVerObj.id)
   }
 
   def delete(Long id) {

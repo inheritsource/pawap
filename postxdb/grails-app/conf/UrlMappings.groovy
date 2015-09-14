@@ -1,8 +1,8 @@
 /* == Motrice Copyright Notice ==
  *
- * Motrice Service Platform
+ * Motrice BPM
  *
- * Copyright (C) 2011-2014 Motrice AB
+ * Copyright (C) 2011-2015 Motrice AB
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * e-mail: info _at_ motrice.se
- * mail: Motrice AB, Långsjövägen 8, SE-131 33 NACKA, SWEDEN
- * phone: +46 8 641 64 14
+ * mail: Motrice AB, Halmstadsvägen 16, SE-121 51 JOHANNESHOV, SWEDEN
+ * phone: +46 73 341 4983
  */
 class UrlMappings {
 
@@ -35,23 +35,13 @@ class UrlMappings {
     "/rest/db/orbeon-pe/fr/$app/$form/data/$uuid/$resource"(controller: 'RestFormdata') {
       action = [GET: 'getop', PUT: 'putop', DELETE: 'delete']
     }
+    // This is a non-Orbeon method that is closely related to the previous one.
+    "/rest/db/orbeon-pe/fr/$app/$form/newinstance"(controller: 'RestFormdata') {
+      action = [PUT: 'newop']
+    }
     "/rest/db/orbeon-pe/fr/orbeon/builder/data/$uuid/$resource"(controller: 'RestResource') {
       action = [GET: 'getop', PUT: 'putop', DELETE: 'delete']
     }
-    //----- Patterns for buggy Orbeon 4.8 -----
-    "/rest/db/orbeon-48/fr//$app/$form/form/$resource"(controller: 'RestFormdef') {
-      action = [GET: 'getop', PUT: 'putop', DELETE: 'delete']
-    }
-    "/rest/db/orbeon-48/fr//$app/$form/data/$uuid/$resource"(controller: 'RestFormdata') {
-      action = [GET: 'getop', PUT: 'putop', DELETE: 'delete']
-    }
-    "/rest/db/orbeon-48/fr//orbeon/builder/data/$uuid/$resource"(controller: 'RestResource') {
-      action = [GET: 'getop', PUT: 'putop', DELETE: 'delete']
-    }
-    "/rest/db/orbeon-48/fr"(controller: 'RestFormdata') {
-      action = [POST: 'collectionQuery']
-    }
-    "/rest/db/orbeon-48/fr/orbeon/builder/data"(controller: 'RestFormdef', action: 'list')
     //----- Here are the Postxdb (non-Orbeon) methods -----
     "/postxdb/formdef/$id?"(controller: 'RestPostxdb') {
       action = [GET: 'formdefget']

@@ -1,3 +1,27 @@
+<%-- == Motrice Copyright Notice ==
+
+  Motrice BPM
+
+  Copyright (C) 2011-2015 Motrice AB
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+  e-mail: info _at_ motrice.se
+  mail: Motrice AB, Halmstadsvägen 16, SE-121 51 JOHANNESHOV, SWEDEN
+  phone: +46 73 341 4983
+
+--%>
 %-- == Motrice Copyright Notice ==
 
   Motrice Service Platform
@@ -33,12 +57,6 @@
   </head>
   <body>
     <a href="#show-pxdItem" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-    <div class="nav" role="navigation">
-      <ul>
-	<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-	<li><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-      </ul>
-    </div>
     <div id="show-pxdItem" class="content scaffold-show" role="main">
       <h1><g:message code="default.show.label" args="[entityName]" /></h1>
       <g:if test="${flash.message}">

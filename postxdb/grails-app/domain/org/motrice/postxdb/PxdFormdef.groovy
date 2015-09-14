@@ -1,8 +1,8 @@
 /* == Motrice Copyright Notice ==
  *
- * Motrice Service Platform
+ * Motrice BPM
  *
- * Copyright (C) 2011-2014 Motrice AB
+ * Copyright (C) 2011-2015 Motrice AB
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * e-mail: info _at_ motrice.se
- * mail: Motrice AB, Långsjövägen 8, SE-131 33 NACKA, SWEDEN
- * phone: +46 8 641 64 14
+ * mail: Motrice AB, Halmstadsvägen 16, SE-121 51 JOHANNESHOV, SWEDEN
+ * phone: +46 73 341 4983
  */
 package org.motrice.postxdb
 
@@ -79,8 +79,11 @@ class PxdFormdef implements Comparable {
   SortedSet forms
   static hasMany = [forms: PxdFormdefVer]
 
+  static mapping = {
+    sort 'path'
+  }
   static constraints = {
-    path size: 3..256, unique: true
+    path size: 3..255, unique: true
     uuid maxSize: 200, unique: true
     appName size: 1..120
     formName size: 1..120
