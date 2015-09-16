@@ -13,9 +13,9 @@
       <destName>docbox.war</destName>
     </file>
     <file>
-      <source>../postxdb/target/exist.war</source>
+      <source>../postxdb/target/postxdb.war</source>
       <outputDirectory>/webapps</outputDirectory>
-      <destName>exist.war</destName>
+      <destName>postxdb.war</destName>
     </file>
     <file>
       <source>../inherit-service/inherit-service-rest-server/target/restrice.war</source>

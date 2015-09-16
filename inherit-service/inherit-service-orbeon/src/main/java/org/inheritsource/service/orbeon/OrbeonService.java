@@ -74,7 +74,7 @@ public class OrbeonService {
 	public static final Logger log = LoggerFactory.getLogger(OrbeonService.class
 			.getName());
 
-	private String persistenceApiBaseUrl = "http://localhost:8080/exist/rest/db/orbeon-pe/fr/";
+	private String persistenceApiBaseUrl = "http://localhost:8080/postxdb/rest/db/orbeon-pe/fr/";
 
 	// 3.9 "http://localhost:8080/orbeon/fr/service/exist/crud/";
 
@@ -374,10 +374,10 @@ public class OrbeonService {
 		// String dataUuid ="d32f9984-dd67-4e52-9c09-99c004c8650b" ; 
 		// String dataUri = service.persistenceApiBaseUrl + formPath + "/data/" + dataUuid
 		//		+ "/data.xml";
-//		String dataUri = "http://localhost:8080/exist/rest/db/orbeon-pe/fr/foerskola/inkomstanmalanbarnomsorg--v001/data/c2709591-d799-4728-8a22-2b7c5374da31/data.xml";
-//		String dataUri = "http://localhost:8080/exist/rest/db/orbeon-pe/fr/foerskola/inkomstanmalanbarnomsorg--v001/data/e5bea1fc-4c95-43c8-8446-c5714b767818/data.xml" ;
-		//String dataUri = "http://localhost:8080/exist/rest/db/orbeon-pe/fr/start/demo-ansokan--v003/data/d32f9984-dd67-4e52-9c09-99c004c8650b/data.xml" ;
-		String dataUri = "http://localhost:8080/exist/rest/db/orbeon-pe/fr/felanmalan/felanmalan--v001/data/c1f31ea1-9f15-470f-89dc-1f997e94a671/data.xml" ;
+//		String dataUri = "http://localhost:8080/postxdb/rest/db/orbeon-pe/fr/foerskola/inkomstanmalanbarnomsorg--v001/data/c2709591-d799-4728-8a22-2b7c5374da31/data.xml";
+//		String dataUri = "http://localhost:8080/postxdb/rest/db/orbeon-pe/fr/foerskola/inkomstanmalanbarnomsorg--v001/data/e5bea1fc-4c95-43c8-8446-c5714b767818/data.xml" ;
+		//String dataUri = "http://localhost:8080/postxdb/rest/db/orbeon-pe/fr/start/demo-ansokan--v003/data/d32f9984-dd67-4e52-9c09-99c004c8650b/data.xml" ;
+		String dataUri = "http://localhost:8080/postxdb/rest/db/orbeon-pe/fr/felanmalan/felanmalan--v001/data/c1f31ea1-9f15-470f-89dc-1f997e94a671/data.xml" ;
 		System.out
 				.println("data  : "
 						+ service.getVariableMap(dataUri,  
